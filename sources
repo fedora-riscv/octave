@@ -1,0 +1,5 @@
+dc990918d464e17ff7806b1053a40c12  octave-2.1.70.tar.bz2
+037327dc1628b29b3da436ed6f04a1a7  octave-2.1.70-glob.patch
+c60edeab87eaa2db951f9778e90c51b6  octave-2.1.70-libs.patch
+e32cbc0047313928a6f7833c55b7fed0  octave-2.1.70-toplev.patch
+0679149dcfd71fa004ad681caeb457d5  octave.spec
