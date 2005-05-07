@@ -1,0 +1,13 @@
+--- liboctave/Makefile.in.~1~	2005-03-04 10:13:57.000000000 -0600
++++ liboctave/Makefile.in	2005-05-06 12:53:58.324716584 -0500
+@@ -19,8 +19,8 @@
+ INSTALL_DATA = @INSTALL_DATA@
+ 
+ LINK_DEPS = \
+-  -L../libcruft -L../glob -L. $(RLD_FLAG) \
+-  $(LIBCRUFT) $(BLAS_LIBS) $(FFTW_LIBS) $(LIBREADLINE) -lglob $(LIBS) $(FLIBS)
++  -L../libcruft -L. $(RLD_FLAG) \
++  $(LIBCRUFT) $(BLAS_LIBS) $(FFTW_LIBS) $(LIBREADLINE) $(LIBS) $(FLIBS)
+ 
+ MATRIX_INC := Array.h Array2.h Array3.h ArrayN.h DiagArray2.h \
+ 	Array-flags.h Array-util.h ArrayN-idx.h MArray-defs.h \

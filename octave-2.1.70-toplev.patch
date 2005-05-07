@@ -1,0 +1,56 @@
+src/ChangeLog:
+
+2005-05-06  John W. Eaton  <jwe@octave.org>
+
+	* toplev.cc (Fsystem): Move enum exec_type declaration to file
+	scope and rename system_exec_type.  Change all uses.
+
+
+Index: src/toplev.cc
+===================================================================
+RCS file: /usr/local/cvsroot/octave/src/toplev.cc,v
+retrieving revision 1.153.2.5
+diff -u -r1.153.2.5 toplev.cc
+--- src/toplev.cc	6 May 2005 18:59:41 -0000	1.153.2.5
++++ src/toplev.cc	6 May 2005 19:02:49 -0000
+@@ -400,6 +400,8 @@
+   return retval;
+ }
+ 
++enum system_exec_type { et_sync, et_async };
++
+ DEFUN (system, args, nargout,
+   "-*- texinfo -*-\n\
+ @deftypefn {Built-in Function} {} system (@var{string}, @var{return_output}, @var{type})\n\
+@@ -454,9 +456,7 @@
+ 
+       std::string cmd_str = args(0).string_value ();
+ 
+-      enum exec_type { sync, async };
+-
+-      exec_type type = sync;
++      system_exec_type type = et_sync;
+ 
+       if (! error_state)
+ 	{
+@@ -467,9 +467,9 @@
+ 	      if (! error_state)
+ 		{
+ 		  if (type_str == "sync")
+-		    type = sync;
++		    type = et_sync;
+ 		  else if (type_str == "async")
+-		    type = async;
++		    type = et_async;
+ 		  else
+ 		    error ("system: third arg must be \"sync\" or \"async\"");
+ 		}
+@@ -482,7 +482,7 @@
+ 
+       if (! error_state)
+ 	{
+-	  if (type == async)
++	  if (type == et_async)
+ 	    {
+ #ifdef HAVE_FORK
+ 	      pid_t pid = fork ();
