@@ -1,26 +1,24 @@
 %define __libtoolize /bin/true
 
-Summary: A high-level language for numerical computations.
-Name: octave
-Version: 2.1.70
-Release: 1
-Epoch: 6
-License: GPL
-Group: Applications/Engineering
-Source: ftp://ftp.octave.org/pub/octave/bleeding-edge/octave-%{version}.tar.bz2
-URL: http://www.octave.org
-Requires: gnuplot less info texinfo 
-Requires: /sbin/install-info
-BuildPrereq: gnuplot bison flex less tetex gcc-c++ gcc-gfortran gperf lapack blas 
-BuildPrereq: ncurses-devel zlib-devel libtermcap-devel libstdc++-devel
-BuildPrereq: readline-devel glibc-devel fftw3-devel autoconf
-Prereq: /sbin/ldconfig
-BuildRoot: %{_tmppath}/%{name}-%{version}-root
-Requires: /etc/ld.so.conf.d
-Patch0: octave-2.1.70-glob.patch
-Patch1: octave-2.1.70-libs.patch
-Patch2: octave-2.1.70-toplev.patch
-ExcludeArch: ppc64 s390x
+Name:           octave
+Version:        2.1.71
+Release:        1
+Summary:        A high-level language for numerical computations
+Epoch:          6
+
+Group:          Applications/Engineering
+License:        GPL
+Source:         ftp://ftp.octave.org/pub/octave/bleeding-edge/octave-%{version}.tar.bz2
+URL:            http://www.octave.org
+Requires:       gnuplot less info texinfo 
+Requires:       /sbin/install-info
+BuildPrereq:    gnuplot bison flex less tetex gcc-c++ gcc-gfortran lapack blas 
+BuildPrereq:    ncurses-devel zlib-devel libtermcap-devel libstdc++-devel
+BuildPrereq:    readline-devel glibc-devel fftw3-devel autoconf gperf
+Prereq:         /sbin/ldconfig
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Requires:       /etc/ld.so.conf.d
+ExcludeArch:    ppc64 s390x
 
 %description
 GNU Octave is a high-level language, primarily intended for numerical
@@ -38,8 +36,8 @@ C++, C, Fortran, or other languages.
 
 
 %package devel
-Summary: Development headers and files for Octave
-Group: Development/Libraries
+Summary:        Development headers and files for Octave
+Group:          Development/Libraries
 
 %description devel
 The octave-devel package contains files needed for developing
@@ -48,9 +46,6 @@ applications which use GNU Octave.
 
 %prep
 %setup -q
-%patch0 -p0
-%patch1 -p0
-%patch2 -p0
 ./autogen.sh
 
 
@@ -63,9 +58,9 @@ applications which use GNU Octave.
 %build
 LC_ALL=POSIX
 export LC_ALL
-CFLAGS="$RPM_OPT_FLAGS -fPIC -D_GNU_SOURCE" ./configure --enable-dl --enable-shared=yes --enable-rpath --enable-lite-kernel --enable-picky-flags --enable-static=no --with-g77 --prefix=/usr --infodir=/usr/share/info
+%configure --enable-shared=yes --enable-static=no --enable-lite-kernel
+make %{?_smp_mflags}
 
-make
 
 #empty
 rm -f interpreter/octave.{ky,pg,tp}
@@ -128,7 +123,13 @@ fi
 
 
 %changelog
-* Mon May  3 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.69-1
+* Mon May 20 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-1
+- Imported 2.1.71 from upstream, removed 2.1.70 patches (in upstream).
+- Begin cleanup of spec file, including the big configure command
+  (some options are obsolete, others appear unneeded if rpm configure
+  macro is used).
+
+* Mon May  3 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.70-1
 - Imported 2.1.70 from upstream, removed old patches (resolved in new version)
 - Changed g77 dependency to gfortran.
 - Added fftw3 to BuildRequires.
