@@ -2,7 +2,7 @@
 
 Name:           octave
 Version:        2.1.71
-Release:        1
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -123,7 +123,10 @@ fi
 
 
 %changelog
-* Mon May 20 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-1
+* Thu May 26 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-2
+- Added dist tag.
+
+* Fri May 20 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-1
 - Imported 2.1.71 from upstream, removed 2.1.70 patches (in upstream).
 - Begin cleanup of spec file, including the big configure command
   (some options are obsolete, others appear unneeded if rpm configure
