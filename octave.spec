@@ -2,13 +2,14 @@
 
 Name:           octave
 Version:        2.1.71
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
 Group:          Applications/Engineering
 License:        GPL
 Source:         ftp://ftp.octave.org/pub/octave/bleeding-edge/octave-%{version}.tar.bz2
+Patch0:         octave-2.1.71-save.patch
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires:       /sbin/install-info
@@ -46,6 +47,7 @@ applications which use GNU Octave.
 
 %prep
 %setup -q
+%patch0 -p0
 ./autogen.sh
 
 
@@ -123,6 +125,9 @@ fi
 
 
 %changelog
+* Fri May 27 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-3
+- Added patch for http://www.octave.org/mailing-lists/bug-octave/2005/617 
+
 * Thu May 26 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-2
 - Added dist tag.
 
