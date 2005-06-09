@@ -2,7 +2,7 @@
 
 Name:           octave
 Version:        2.1.71
-Release:        3%{?dist}
+Release:        7%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -13,8 +13,8 @@ Patch0:         octave-2.1.71-save.patch
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires:       /sbin/install-info
-BuildPrereq:    gnuplot bison flex less tetex gcc-c++ gcc-gfortran lapack blas 
-BuildPrereq:    ncurses-devel zlib-devel libtermcap-devel libstdc++-devel
+BuildPrereq:    gnuplot bison flex less tetex gcc-gfortran lapack blas 
+BuildPrereq:    ncurses-devel zlib-devel libtermcap-devel
 BuildPrereq:    readline-devel glibc-devel fftw3-devel autoconf gperf
 Prereq:         /sbin/ldconfig
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -60,7 +60,9 @@ applications which use GNU Octave.
 %build
 LC_ALL=POSIX
 export LC_ALL
-%configure --enable-shared=yes --enable-static=no --enable-lite-kernel
+CXXFLAGS="$RPM_OPT_FLAGS -D_GNU_SOURCE" ./configure \
+	--enable-shared=yes --enable-lite-kernel --enable-static=no \
+	--prefix=%{_prefix} --infodir=%{_infodir}
 make %{?_smp_mflags}
 
 
@@ -101,8 +103,8 @@ fi
 
 %files
 %defattr(-,root,root)
-%doc COPYING NEWS* PROJECTS README* ROADMAP SENDING-PATCHES
-%doc THANKS
+%doc COPYING NEWS* PROJECTS README README.Linux README.kpathsea ROADMAP
+%doc SENDING-PATCHES THANKS
 %doc doc/faq doc/liboctave doc/refcard emacs examples
 %{_bindir}/octave
 %{_bindir}/octave-%{version}
@@ -125,6 +127,17 @@ fi
 
 
 %changelog
+* Wed Jun  8 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-7
+- Fix configure command again. The prefix isn't used for the install step
+  but it is used to calculate internal variables in octave.
+
+* Thu Jun  2 2005 Michael Schwendt <mschwendt[AT]users.sf.net> 2.1.71-6
+- disable explicit gcc-c++/libstdc++-devel BR and bump for another
+  rebuild attempt
+
+* Wed Jun  1 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-4
+- Fix configure command. Remove irrelevant files from docs.
+
 * Fri May 27 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-3
 - Added patch for http://www.octave.org/mailing-lists/bug-octave/2005/617 
 
