@@ -2,7 +2,7 @@
 
 Name:           octave
 Version:        2.1.71
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -39,6 +39,7 @@ C++, C, Fortran, or other languages.
 %package devel
 Summary:        Development headers and files for Octave
 Group:          Development/Libraries
+Requires:       %{name} = %{version}-%{release}
 
 %description devel
 The octave-devel package contains files needed for developing
@@ -127,6 +128,9 @@ fi
 
 
 %changelog
+* Sat Jun 18 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-8
+- Force octave-devel to require octave.
+
 * Wed Jun  8 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-7
 - Fix configure command again. The prefix isn't used for the install step
   but it is used to calculate internal variables in octave.
