@@ -2,7 +2,7 @@
 
 Name:           octave
 Version:        2.1.71
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -39,7 +39,7 @@ C++, C, Fortran, or other languages.
 %package devel
 Summary:        Development headers and files for Octave
 Group:          Development/Libraries
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name} = %{epoch}:%{version}-%{release}
 
 %description devel
 The octave-devel package contains files needed for developing
@@ -128,6 +128,9 @@ fi
 
 
 %changelog
+* Tue Jun 21 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-10
+- Add epoch to BuildRequires in octave-devel.
+
 * Mon Jun 20 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-9
 - Rebuild.
 
