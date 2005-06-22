@@ -2,7 +2,7 @@
 
 Name:           octave
 Version:        2.1.71
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -39,7 +39,7 @@ C++, C, Fortran, or other languages.
 %package devel
 Summary:        Development headers and files for Octave
 Group:          Development/Libraries
-Requires:       %{name} = %{epoch}:%{version}-%{release}
+Requires:       %{name} = %{epoch}:%{version}-%{release} readline-devel
 
 %description devel
 The octave-devel package contains files needed for developing
@@ -128,6 +128,9 @@ fi
 
 
 %changelog
+* Wed Jun 22 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-11
+- Force octave-devel to require readline-devel.
+
 * Tue Jun 21 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-10
 - Add epoch to BuildRequires in octave-devel.
 
