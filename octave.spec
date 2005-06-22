@@ -63,7 +63,7 @@ LC_ALL=POSIX
 export LC_ALL
 CXXFLAGS="$RPM_OPT_FLAGS -D_GNU_SOURCE" ./configure \
 	--enable-shared=yes --enable-lite-kernel --enable-static=no \
-	--prefix=%{_prefix} --infodir=%{_infodir}
+	--prefix=%{_prefix} --infodir=%{_infodir} --libdir=%{_libdir}
 make %{?_smp_mflags}
 
 
@@ -130,6 +130,7 @@ fi
 %changelog
 * Wed Jun 22 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-11
 - Force octave-devel to require readline-devel.
+- Add _libdir to configure command (fixes broken mkoctfile on x86_64).
 
 * Tue Jun 21 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-10
 - Add epoch to BuildRequires in octave-devel.
