@@ -2,7 +2,7 @@
 
 Name:           octave
 Version:        2.1.71
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -14,7 +14,7 @@ URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires:       /sbin/install-info
 BuildPrereq:    gnuplot bison flex less tetex gcc-gfortran lapack blas 
-BuildPrereq:    ncurses-devel zlib-devel libtermcap-devel
+BuildPrereq:    ncurses-devel zlib-devel libtermcap-devel hdf5-devel
 BuildPrereq:    readline-devel glibc-devel fftw3-devel autoconf gperf
 Prereq:         /sbin/ldconfig
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -128,6 +128,9 @@ fi
 
 
 %changelog
+* Tue Jul 05 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-12
+- Require hdf5-devel for build.
+
 * Wed Jun 22 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-11
 - Force octave-devel to require readline-devel.
 - Add _libdir to configure command (fixes broken mkoctfile on x86_64).
