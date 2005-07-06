@@ -2,7 +2,7 @@
 
 Name:           octave
 Version:        2.1.71
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -128,6 +128,9 @@ fi
 
 
 %changelog
+* Wed Jul 06 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-13
+- Rebuild
+
 * Tue Jul 05 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-12
 - Require hdf5-devel for build.
 
