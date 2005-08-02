@@ -2,7 +2,7 @@
 
 Name:           octave
 Version:        2.9.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -39,7 +39,8 @@ C++, C, Fortran, or other languages.
 %package devel
 Summary:        Development headers and files for Octave
 Group:          Development/Libraries
-Requires:       %{name} = %{epoch}:%{version}-%{release} readline-devel
+Requires:       %{name} = %{epoch}:%{version}-%{release}
+Requires:       readline-devel hdf5-devel zlib-devel
 
 %description devel
 The octave-devel package contains files needed for developing
@@ -127,6 +128,9 @@ fi
 
 
 %changelog
+* Tue Jul 26 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-2
+- Add dependencies (hdf5-devel and zlib-devel) for devel
+
 * Tue Jul 26 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-1
 - Move to new 2.9.x development tree.
 - Add umfpack-devel as new build dependency.
