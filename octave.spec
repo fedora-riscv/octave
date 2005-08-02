@@ -1,21 +1,21 @@
 %define __libtoolize /bin/true
 
 Name:           octave
-Version:        2.1.71
-Release:        13%{?dist}
+Version:        2.9.3
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
 Group:          Applications/Engineering
 License:        GPL
 Source:         ftp://ftp.octave.org/pub/octave/bleeding-edge/octave-%{version}.tar.bz2
-Patch0:         octave-2.1.71-save.patch
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires:       /sbin/install-info
 BuildPrereq:    gnuplot bison flex less tetex gcc-gfortran lapack blas 
 BuildPrereq:    ncurses-devel zlib-devel libtermcap-devel hdf5-devel
 BuildPrereq:    readline-devel glibc-devel fftw3-devel autoconf gperf
+BuildPrereq:    umfpack-devel
 Prereq:         /sbin/ldconfig
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:       /etc/ld.so.conf.d
@@ -48,7 +48,6 @@ applications which use GNU Octave.
 
 %prep
 %setup -q
-%patch0 -p0
 ./autogen.sh
 
 
@@ -128,8 +127,9 @@ fi
 
 
 %changelog
-* Wed Jul 06 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-13
-- Rebuild
+* Tue Jul 26 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-1
+- Move to new 2.9.x development tree.
+- Add umfpack-devel as new build dependency.
 
 * Tue Jul 05 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-12
 - Require hdf5-devel for build.
