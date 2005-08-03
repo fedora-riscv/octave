@@ -40,7 +40,7 @@ C++, C, Fortran, or other languages.
 Summary:        Development headers and files for Octave
 Group:          Development/Libraries
 Requires:       %{name} = %{epoch}:%{version}-%{release}
-Requires:       readline-devel hdf5-devel zlib-devel
+Requires:       readline-devel fftw3-devel hdf5-devel zlib-devel
 
 %description devel
 The octave-devel package contains files needed for developing
@@ -128,6 +128,9 @@ fi
 
 
 %changelog
+* Wed Jul 27 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-3
+- Add fftw3-devel to dependencies for devel
+
 * Tue Jul 26 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-2
 - Add dependencies (hdf5-devel and zlib-devel) for devel
 
