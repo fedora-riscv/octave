@@ -1,8 +1,6 @@
-%define __libtoolize /bin/true
-
 Name:           octave
 Version:        2.9.3
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -19,7 +17,6 @@ BuildPrereq:    umfpack-devel
 Prereq:         /sbin/ldconfig
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:       /etc/ld.so.conf.d
-ExcludeArch:    ppc64 s390x
 
 %description
 GNU Octave is a high-level language, primarily intended for numerical
@@ -52,16 +49,13 @@ applications which use GNU Octave.
 ./autogen.sh
 
 
-%ifarch s390
-(cd readline && libtoolize --copy --force)
-(cd glob && libtoolize --copy --force)
-(cd kpathsea && libtoolize --copy --force)
-%endif
-
 %build
-LC_ALL=POSIX
-export LC_ALL
-CXXFLAGS="$RPM_OPT_FLAGS -D_GNU_SOURCE" ./configure \
+%ifarch x86_64
+%define enable64 --enable-64=yes
+%else
+%define enable64 --enable-64=no
+%endif
+CXXFLAGS="$RPM_OPT_FLAGS -D_GNU_SOURCE" ./configure %enable64 \
 	--enable-shared=yes --enable-lite-kernel --enable-static=no \
 	--prefix=%{_prefix} --infodir=%{_infodir} --libdir=%{_libdir}
 make %{?_smp_mflags}
@@ -128,6 +122,12 @@ fi
 
 
 %changelog
+* Mon Aug 08 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-4
+- Cleanup: remove redefinition of __libtoolize, ExcludeArch of two platforms,
+  old s390 workarounds, and LC_ALL setting. None of these appear to be
+  necessary any longer, even if the platforms were supported.
+- Add --enable-64 to configure to enable 64-bit array indexing on x86_64.
+
 * Wed Jul 27 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-3
 - Add fftw3-devel to dependencies for devel
 
