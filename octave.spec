@@ -13,7 +13,7 @@ Requires:       /sbin/install-info
 BuildPrereq:    gnuplot bison flex less tetex gcc-gfortran lapack blas 
 BuildPrereq:    ncurses-devel zlib-devel libtermcap-devel hdf5-devel
 BuildPrereq:    readline-devel glibc-devel fftw3-devel autoconf gperf
-BuildPrereq:    umfpack-devel
+BuildPrereq:    umfpack-devel glpk-devel
 Prereq:         /sbin/ldconfig
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:       /etc/ld.so.conf.d
@@ -55,6 +55,7 @@ applications which use GNU Octave.
 %else
 %define enable64 --enable-64=no
 %endif
+CPPFLAGS=-I%{_includedir}/glpk \
 CXXFLAGS="$RPM_OPT_FLAGS -D_GNU_SOURCE" ./configure %enable64 \
 	--enable-shared=yes --enable-lite-kernel --enable-static=no \
 	--prefix=%{_prefix} --infodir=%{_infodir} --libdir=%{_libdir}
@@ -127,6 +128,7 @@ fi
   old s390 workarounds, and LC_ALL setting. None of these appear to be
   necessary any longer, even if the platforms were supported.
 - Add --enable-64 to configure to enable 64-bit array indexing on x86_64.
+- Add support for GLPK (new build dependency and CPPFLAGS for configure).
 
 * Wed Jul 27 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-3
 - Add fftw3-devel to dependencies for devel
