@@ -1,6 +1,6 @@
 Name:           octave
 Version:        2.9.3
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -10,10 +10,10 @@ Source:         ftp://ftp.octave.org/pub/octave/bleeding-edge/octave-%{version}.
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires:       /sbin/install-info
-BuildPrereq:    gnuplot bison flex less tetex gcc-gfortran lapack blas 
+BuildPrereq:    bison flex less tetex gcc-gfortran lapack-devel blas-devel
 BuildPrereq:    ncurses-devel zlib-devel libtermcap-devel hdf5-devel
 BuildPrereq:    readline-devel glibc-devel fftw3-devel autoconf gperf
-BuildPrereq:    umfpack-devel glpk-devel
+BuildPrereq:    umfpack-devel glpk-devel gnuplot
 Prereq:         /sbin/ldconfig
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:       /etc/ld.so.conf.d
@@ -123,6 +123,9 @@ fi
 
 
 %changelog
+* Thu Sep 22 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-5
+- Change lapack and blas dependencies to lapack-devel and blas-devel
+
 * Mon Aug 08 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-4
 - Cleanup: remove redefinition of __libtoolize, ExcludeArch of two platforms,
   old s390 workarounds, and LC_ALL setting. None of these appear to be
