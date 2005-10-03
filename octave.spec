@@ -13,7 +13,7 @@ Requires:       /sbin/install-info
 BuildPrereq:    bison flex less tetex gcc-gfortran lapack-devel blas-devel
 BuildPrereq:    ncurses-devel zlib-devel libtermcap-devel hdf5-devel
 BuildPrereq:    readline-devel glibc-devel fftw3-devel autoconf gperf
-BuildPrereq:    umfpack-devel glpk-devel gnuplot
+BuildPrereq:    ufsparse-devel glpk-devel gnuplot
 Prereq:         /sbin/ldconfig
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:       /etc/ld.so.conf.d
@@ -123,6 +123,9 @@ fi
 
 
 %changelog
+* Mon Oct 03 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-5
+- Change umfpack-devel dependency to the new ufsparse-devel package.
+
 * Thu Sep 22 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-5
 - Change lapack and blas dependencies to lapack-devel and blas-devel
 
