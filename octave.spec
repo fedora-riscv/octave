@@ -9,14 +9,13 @@ License:        GPL
 Source:         ftp://ftp.octave.org/pub/octave/bleeding-edge/octave-%{version}.tar.bz2
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
-Requires:       /sbin/install-info
-BuildPrereq:    bison flex less tetex gcc-gfortran lapack-devel blas-devel
-BuildPrereq:    ncurses-devel zlib-devel libtermcap-devel hdf5-devel
-BuildPrereq:    readline-devel glibc-devel fftw3-devel autoconf gperf
-BuildPrereq:    ufsparse-devel glpk-devel gnuplot
-Prereq:         /sbin/ldconfig
+Requires:       /sbin/ldconfig /sbin/install-info /etc/ld.so.conf.d
+BuildRequires:  bison flex less tetex gcc-gfortran lapack-devel blas-devel
+BuildRequires:  ncurses-devel zlib-devel libtermcap-devel hdf5-devel
+BuildRequires:  readline-devel glibc-devel fftw3-devel autoconf gperf
+BuildRequires:  ufsparse-devel glpk-devel gnuplot
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires:       /etc/ld.so.conf.d
+
 
 %description
 GNU Octave is a high-level language, primarily intended for numerical
@@ -38,6 +37,7 @@ Summary:        Development headers and files for Octave
 Group:          Development/Libraries
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       readline-devel fftw3-devel hdf5-devel zlib-devel
+Requires:       lapack-devel blas-devel
 
 %description devel
 The octave-devel package contains files needed for developing
@@ -104,7 +104,7 @@ fi
 %doc doc/faq doc/liboctave doc/refcard emacs examples
 %{_bindir}/octave
 %{_bindir}/octave-%{version}
-/etc/ld.so.conf.d/*
+%config(noreplace) /etc/ld.so.conf.d/*
 %{_libdir}/octave*
 %{_datadir}/octave
 %{_libexecdir}/octave/%{version}
@@ -123,6 +123,9 @@ fi
 
 
 %changelog
+* Tue Oct 25 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-5
+- Add lapack-devel and blas-devel dependencies to devel package.
+
 * Mon Oct 03 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-5
 - Change umfpack-devel dependency to the new ufsparse-devel package.
 
