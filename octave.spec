@@ -1,6 +1,6 @@
 Name:           octave
 Version:        2.9.3
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -123,7 +123,7 @@ fi
 
 
 %changelog
-* Tue Oct 25 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-5
+* Tue Oct 25 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-6
 - Add lapack-devel and blas-devel dependencies to devel package.
 
 * Mon Oct 03 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-5
