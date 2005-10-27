@@ -1,6 +1,6 @@
 Name:           octave
 Version:        2.9.3
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -9,7 +9,10 @@ License:        GPL
 Source:         ftp://ftp.octave.org/pub/octave/bleeding-edge/octave-%{version}.tar.bz2
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
-Requires:       /sbin/ldconfig /sbin/install-info /etc/ld.so.conf.d
+Requires(post): /sbin/install-info
+Requires(postun): /sbin/ldconfig
+Requires(post): /sbin/ldconfig
+Requires(preun): /sbin/install-info
 BuildRequires:  bison flex less tetex gcc-gfortran lapack-devel blas-devel
 BuildRequires:  ncurses-devel zlib-devel libtermcap-devel hdf5-devel
 BuildRequires:  readline-devel glibc-devel fftw3-devel autoconf gperf
@@ -123,6 +126,9 @@ fi
 
 
 %changelog
+* Thu Oct 27 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-7
+- Cleanup errors in dependencies.
+
 * Tue Oct 25 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-6
 - Add lapack-devel and blas-devel dependencies to devel package.
 
