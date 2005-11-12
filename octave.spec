@@ -1,12 +1,13 @@
 Name:           octave
-Version:        2.9.3
-Release:        7%{?dist}
+Version:        2.9.4
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
 Group:          Applications/Engineering
 License:        GPL
 Source:         ftp://ftp.octave.org/pub/octave/bleeding-edge/octave-%{version}.tar.bz2
+Patch0:         octave-2.9.4-header.patch
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires(post): /sbin/install-info
@@ -49,6 +50,7 @@ applications which use GNU Octave.
 
 %prep
 %setup -q
+%patch0 -p0
 ./autogen.sh
 
 
@@ -80,6 +82,7 @@ echo "%{_libdir}/octave-%{version}" > $RPM_BUILD_ROOT/etc/ld.so.conf.d/octave-%{
 
 perl -pi -e "s,$RPM_BUILD_ROOT,," $RPM_BUILD_ROOT/%{_libexecdir}/%{name}/ls-R
 perl -pi -e "s,$RPM_BUILD_ROOT,," $RPM_BUILD_ROOT/%{_datadir}/%{name}/ls-R
+perl -pi -e "s,$RPM_BUILD_ROOT,," $RPM_BUILD_ROOT/%{_libexecdir}/%{name}/%{version}/oct/*/PKG_ADD
 
 
 # XXX Nuke unpackaged files
@@ -126,7 +129,10 @@ fi
 
 
 %changelog
-* Thu Oct 27 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-7
+* Fri Nov 11 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.4-1
+- New upstream release.
+- Patch to make sure all headers are included in -devel.
+- PKG_ADD file now needs $RPM_BUILD_ROOT stripped from it.
 - Cleanup errors in dependencies.
 
 * Tue Oct 25 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-6
