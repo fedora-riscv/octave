@@ -1,6 +1,6 @@
 Name:           octave
 Version:        2.9.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -131,6 +131,9 @@ fi
 
 
 %changelog
+* Thu Dec  1 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.4-3
+- Make sure patch applies correctly before building!
+
 * Thu Dec  1 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.4-2
 - Patch to enable compilation on x86_64.
 

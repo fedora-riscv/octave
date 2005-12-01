@@ -1,5 +1,5 @@
---- octave-2.9.4/src/DLD-FUNCTIONS/spchol.cc.orig	2005-11-11 10:44:05.000000000 -0700
-+++ octave-2.9.4/src/DLD-FUNCTIONS/spchol.cc	2005-11-30 15:41:35.000000000 -0700
+--- src/DLD-FUNCTIONS/spchol.cc.orig	2005-11-11 10:44:05.000000000 -0700
++++ src/DLD-FUNCTIONS/spchol.cc	2005-11-30 15:41:35.000000000 -0700
 @@ -609,7 +609,11 @@
  	  for (octave_idx_type k = 0 ; k < n ; k++)
  	    {
