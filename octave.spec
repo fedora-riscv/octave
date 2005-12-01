@@ -1,6 +1,6 @@
 Name:           octave
 Version:        2.9.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -8,6 +8,7 @@ Group:          Applications/Engineering
 License:        GPL
 Source:         ftp://ftp.octave.org/pub/octave/bleeding-edge/octave-%{version}.tar.bz2
 Patch0:         octave-2.9.4-header.patch
+Patch1:         octave-2.9.4-x86_64.patch
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires(post): /sbin/install-info
@@ -51,6 +52,7 @@ applications which use GNU Octave.
 %prep
 %setup -q
 %patch0 -p0
+%patch1 -p0
 ./autogen.sh
 
 
@@ -63,7 +65,8 @@ applications which use GNU Octave.
 CPPFLAGS=-I%{_includedir}/glpk \
 CXXFLAGS="$RPM_OPT_FLAGS -D_GNU_SOURCE" ./configure %enable64 \
 	--enable-shared=yes --enable-lite-kernel --enable-static=no \
-	--prefix=%{_prefix} --infodir=%{_infodir} --libdir=%{_libdir}
+	--prefix=%{_prefix} --infodir=%{_infodir} --libdir=%{_libdir} \
+	--mandir=%{_mandir}
 make %{?_smp_mflags}
 
 
@@ -72,7 +75,7 @@ rm -f interpreter/octave.{ky,pg,tp}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%makeinstall
+make install DESTDIR=$RPM_BUILD_ROOT
 rm -f doc/interpreter/munge-texi doc/interpreter/*.o
 strip $RPM_BUILD_ROOT/usr/libexec/octave/%{version}/oct/*/*.oct
 
@@ -82,7 +85,6 @@ echo "%{_libdir}/octave-%{version}" > $RPM_BUILD_ROOT/etc/ld.so.conf.d/octave-%{
 
 perl -pi -e "s,$RPM_BUILD_ROOT,," $RPM_BUILD_ROOT/%{_libexecdir}/%{name}/ls-R
 perl -pi -e "s,$RPM_BUILD_ROOT,," $RPM_BUILD_ROOT/%{_datadir}/%{name}/ls-R
-perl -pi -e "s,$RPM_BUILD_ROOT,," $RPM_BUILD_ROOT/%{_libexecdir}/%{name}/%{version}/oct/*/PKG_ADD
 
 
 # XXX Nuke unpackaged files
@@ -129,6 +131,9 @@ fi
 
 
 %changelog
+* Thu Dec  1 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.4-2
+- Patch to enable compilation on x86_64.
+
 * Fri Nov 11 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.4-1
 - New upstream release.
 - Patch to make sure all headers are included in -devel.
