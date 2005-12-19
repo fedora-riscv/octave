@@ -1,6 +1,6 @@
 Name:           octave
 Version:        2.9.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -131,6 +131,9 @@ fi
 
 
 %changelog
+* Mon Dec 19 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.4-4
+- Rebuild for gcc 4.1.
+
 * Thu Dec  1 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.4-3
 - Make sure patch applies correctly before building!
 
