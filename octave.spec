@@ -1,6 +1,6 @@
 Name:           octave
 Version:        2.9.4
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -17,7 +17,7 @@ Requires(post): /sbin/ldconfig
 Requires(preun): /sbin/install-info
 BuildRequires:  bison flex less tetex gcc-gfortran lapack-devel blas-devel
 BuildRequires:  ncurses-devel zlib-devel libtermcap-devel hdf5-devel
-BuildRequires:  readline-devel glibc-devel fftw3-devel autoconf gperf
+BuildRequires:  readline-devel glibc-devel fftw-devel autoconf gperf
 BuildRequires:  ufsparse-devel glpk-devel gnuplot
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -41,7 +41,7 @@ C++, C, Fortran, or other languages.
 Summary:        Development headers and files for Octave
 Group:          Development/Libraries
 Requires:       %{name} = %{epoch}:%{version}-%{release}
-Requires:       readline-devel fftw3-devel hdf5-devel zlib-devel
+Requires:       readline-devel fftw-devel hdf5-devel zlib-devel
 Requires:       lapack-devel blas-devel
 
 %description devel
@@ -131,6 +131,9 @@ fi
 
 
 %changelog
+* Wed Feb  1 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.4-6
+- Change dependency from fftw3 to fftw.
+
 * Thu Jan 26 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.4-5
 - Rebuild for new release of hdf5.
 
