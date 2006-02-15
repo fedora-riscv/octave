@@ -1,6 +1,6 @@
 Name:           octave
 Version:        2.9.4
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -131,6 +131,9 @@ fi
 
 
 %changelog
+* Wed Feb 15 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.4-7
+- Rebuild for Fedora Extras 5.
+
 * Wed Feb  1 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.4-6
 - Change dependency from fftw3 to fftw.
 
