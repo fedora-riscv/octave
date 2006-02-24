@@ -1,6 +1,6 @@
 Name:           octave
 Version:        2.9.4
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -86,8 +86,6 @@ echo "%{_libdir}/octave-%{version}" > $RPM_BUILD_ROOT/etc/ld.so.conf.d/octave-%{
 perl -pi -e "s,$RPM_BUILD_ROOT,," $RPM_BUILD_ROOT/%{_libexecdir}/%{name}/ls-R
 perl -pi -e "s,$RPM_BUILD_ROOT,," $RPM_BUILD_ROOT/%{_datadir}/%{name}/ls-R
 
-
-# XXX Nuke unpackaged files
 rm -f ${RPM_BUILD_ROOT}%{_infodir}/dir
 
 %clean
@@ -115,8 +113,7 @@ fi
 %config(noreplace) /etc/ld.so.conf.d/*
 %{_libdir}/octave*
 %{_datadir}/octave
-%{_libexecdir}/octave/%{version}
-%{_libexecdir}/octave/site
+%{_libexecdir}/octave
 %{_mandir}/man*/octave*
 %{_infodir}/octave.info*
 
@@ -127,10 +124,12 @@ fi
 %{_bindir}/octave-config*
 %{_includedir}/octave*
 %{_mandir}/man*/mkoctfile*
-%{_libexecdir}/octave/ls-R
 
 
 %changelog
+* Fri Feb 24 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.4-8
+- Make sure /usr/libexec/octave is owned by octave.
+
 * Wed Feb 15 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.4-7
 - Rebuild for Fedora Extras 5.
 
