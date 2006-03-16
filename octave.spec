@@ -63,10 +63,9 @@ applications which use GNU Octave.
 %define enable64 --enable-64=no
 %endif
 CPPFLAGS=-I%{_includedir}/glpk \
-CXXFLAGS="$RPM_OPT_FLAGS -D_GNU_SOURCE" ./configure %enable64 \
-	--enable-shared=yes --enable-lite-kernel --enable-static=no \
-	--prefix=%{_prefix} --infodir=%{_infodir} --libdir=%{_libdir} \
-	--mandir=%{_mandir}
+CXXFLAGS="$RPM_OPT_FLAGS" ./configure %enable64 \
+	--enable-shared --disable-static --prefix=%{_prefix} \
+	--infodir=%{_infodir} --libdir=%{_libdir} --mandir=%{_mandir}
 make %{?_smp_mflags}
 
 
@@ -128,6 +127,8 @@ fi
 
 %changelog
 * Fri Feb 24 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.4-8
+- Rebuild for new hdf5.
+- Remove obsolete configure options.
 - Make sure /usr/libexec/octave is owned by octave.
 
 * Wed Feb 15 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.4-7
