@@ -1,14 +1,13 @@
 Name:           octave
-Version:        2.9.4
-Release:        8%{?dist}
+Version:        2.9.5
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
 Group:          Applications/Engineering
 License:        GPL
 Source:         ftp://ftp.octave.org/pub/octave/bleeding-edge/octave-%{version}.tar.bz2
-Patch0:         octave-2.9.4-header.patch
-Patch1:         octave-2.9.4-x86_64.patch
+Patch0:         octave-2.9.5-sparse.patch
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires(post): /sbin/install-info
@@ -18,7 +17,7 @@ Requires(preun): /sbin/install-info
 BuildRequires:  bison flex less tetex gcc-gfortran lapack-devel blas-devel
 BuildRequires:  ncurses-devel zlib-devel libtermcap-devel hdf5-devel
 BuildRequires:  readline-devel glibc-devel fftw-devel autoconf gperf
-BuildRequires:  ufsparse-devel glpk-devel gnuplot
+BuildRequires:  ufsparse-devel glpk-devel gnuplot desktop-file-utils
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 
@@ -42,7 +41,7 @@ Summary:        Development headers and files for Octave
 Group:          Development/Libraries
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       readline-devel fftw-devel hdf5-devel zlib-devel
-Requires:       lapack-devel blas-devel
+Requires:       lapack-devel blas-devel gcc-c++
 
 %description devel
 The octave-devel package contains files needed for developing
@@ -52,47 +51,53 @@ applications which use GNU Octave.
 %prep
 %setup -q
 %patch0 -p0
-%patch1 -p0
-./autogen.sh
 
 
 %build
 %ifarch x86_64
-%define enable64 --enable-64=yes
+%define enable64 yes
 %else
-%define enable64 --enable-64=no
+%define enable64 no
 %endif
-CPPFLAGS=-I%{_includedir}/glpk \
-CXXFLAGS="$RPM_OPT_FLAGS" ./configure %enable64 \
-	--enable-shared --disable-static --prefix=%{_prefix} \
-	--infodir=%{_infodir} --libdir=%{_libdir} --mandir=%{_mandir}
-make %{?_smp_mflags}
+export CPPFLAGS=-I%{_includedir}/glpk
+%configure --enable-shared --disable-static --enable-64=%enable64
+make %{?_smp_mflags} OCTAVE_RELEASE="Fedora Extras %{version}-%{release}"
 
-
-#empty
-rm -f interpreter/octave.{ky,pg,tp}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-rm -f doc/interpreter/munge-texi doc/interpreter/*.o
 strip $RPM_BUILD_ROOT/usr/libexec/octave/%{version}/oct/*/*.oct
+rm -f ${RPM_BUILD_ROOT}%{_infodir}/dir
 
 # Make library links
 mkdir -p $RPM_BUILD_ROOT/etc/ld.so.conf.d
 echo "%{_libdir}/octave-%{version}" > $RPM_BUILD_ROOT/etc/ld.so.conf.d/octave-%{_arch}.conf
 
-perl -pi -e "s,$RPM_BUILD_ROOT,," $RPM_BUILD_ROOT/%{_libexecdir}/%{name}/ls-R
-perl -pi -e "s,$RPM_BUILD_ROOT,," $RPM_BUILD_ROOT/%{_datadir}/%{name}/ls-R
+# Remove RPM_BUILD_ROOT from ls-R files
+perl -pi -e "s,$RPM_BUILD_ROOT,," $RPM_BUILD_ROOT%{_libexecdir}/%{name}/ls-R
+perl -pi -e "s,$RPM_BUILD_ROOT,," $RPM_BUILD_ROOT%{_datadir}/%{name}/ls-R
 
-rm -f ${RPM_BUILD_ROOT}%{_infodir}/dir
+# Clean doc directory
+pushd doc
+  make distclean
+  rm -f *.in */*.in */*.cc refcard/*.tex
+popd
+
+# Create desktop file
+rm $RPM_BUILD_ROOT%{_datadir}/applications/www.octave.org-octave.desktop
+desktop-file-install --vendor fedora --add-category X-Fedora \
+	--dir $RPM_BUILD_ROOT%{_datadir}/applications examples/octave.desktop
+
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/ldconfig
-/sbin/install-info --info-dir=%{_infodir}/ --section="Programming:" --entry="* Octave:(octave).		Interactive language for numerical computations." %{_infodir}/octave.info.gz
+/sbin/install-info --info-dir=%{_infodir} --section="Programming:" \
+	--entry="* Octave:(%{name}).	%{summary}." %{_infodir}/octave.info.gz
 
 %preun
 if [ "$1" = "0" ]; then
@@ -105,8 +110,8 @@ fi
 %files
 %defattr(-,root,root)
 %doc COPYING NEWS* PROJECTS README README.Linux README.kpathsea ROADMAP
-%doc SENDING-PATCHES THANKS
-%doc doc/faq doc/liboctave doc/refcard emacs examples
+%doc SENDING-PATCHES THANKS emacs examples doc/interpreter/octave.p*
+%doc doc/faq doc/interpreter/HTML doc/refcard
 %{_bindir}/octave
 %{_bindir}/octave-%{version}
 %config(noreplace) /etc/ld.so.conf.d/*
@@ -115,9 +120,11 @@ fi
 %{_libexecdir}/octave
 %{_mandir}/man*/octave*
 %{_infodir}/octave.info*
+%{_datadir}/applications/*
 
 %files devel
 %defattr(-,root,root)
+%doc doc/liboctave
 %{_bindir}/mkoctfile*
 %{_bindir}/octave-bug*
 %{_bindir}/octave-config*
@@ -126,6 +133,13 @@ fi
 
 
 %changelog
+* Thu Mar 23 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.5-1
+- New upstream release; remove old patches; add sparse patch.
+- Add gcc-c++ as dependency for devel package.
+- Add more docs; cleanup extra files in docs.
+- Simplify configure command.
+- Install desktop file.
+
 * Fri Feb 24 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.4-8
 - Rebuild for new hdf5.
 - Remove obsolete configure options.

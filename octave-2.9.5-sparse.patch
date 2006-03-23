@@ -1,0 +1,61 @@
+Index: liboctave/SparseCmplxQR.h
+===================================================================
+RCS file: /cvs/octave/liboctave/SparseCmplxQR.h,v
+retrieving revision 1.2
+diff -u -r1.2 SparseCmplxQR.h
+--- liboctave/SparseCmplxQR.h   8 Mar 2006 20:17:38 -0000       1.2
++++ liboctave/SparseCmplxQR.h   23 Mar 2006 17:56:07 -0000
+@@ -137,6 +137,23 @@
+ #endif
+ };
+
++
++// Publish externally used friend functions.
++
++extern ComplexMatrix qrsolve (const SparseComplexMatrix &a, const Matrix &b,
++                             octave_idx_type &info);
++
++extern SparseComplexMatrix qrsolve (const SparseComplexMatrix &a,
++                                   const SparseMatrix &b,
++                                   octave_idx_type &info);
++
++extern ComplexMatrix qrsolve (const SparseComplexMatrix &a,
++                             const ComplexMatrix &b,
++                             octave_idx_type &info);
++
++extern SparseComplexMatrix qrsolve (const SparseComplexMatrix &a,
++                                   const SparseComplexMatrix &b,
++                                   octave_idx_type &info);
+ #endif
+
+ /*
+Index: liboctave/SparseQR.h
+===================================================================
+RCS file: /cvs/octave/liboctave/SparseQR.h,v
+retrieving revision 1.2
+diff -u -r1.2 SparseQR.h
+--- liboctave/SparseQR.h        8 Mar 2006 20:17:38 -0000       1.2
++++ liboctave/SparseQR.h        23 Mar 2006 17:56:07 -0000
+@@ -133,6 +133,22 @@
+ #endif
+ };
+
++
++// Publish externally used friend functions.
++
++extern Matrix qrsolve (const SparseMatrix &a, const Matrix &b,
++                      octave_idx_type &info);
++
++extern SparseMatrix qrsolve (const SparseMatrix &a, const SparseMatrix &b,
++                            octave_idx_type &info);
++
++extern ComplexMatrix qrsolve (const SparseMatrix &a, const ComplexMatrix &b,
++                             octave_idx_type &info);
++
++extern SparseComplexMatrix qrsolve (const SparseMatrix &a,
++                                   const SparseComplexMatrix &b,
++                                   octave_idx_type &info);
++
+ #endif
+
+ /*
