@@ -1,6 +1,6 @@
 Name:           octave
 Version:        2.9.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -133,6 +133,9 @@ fi
 
 
 %changelog
+* Fri Mar 24 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.5-2
+- Add more changes to sparse patch.
+
 * Thu Mar 23 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.5-1
 - New upstream release; remove old patches; add sparse patch.
 - Add gcc-c++ as dependency for devel package.
