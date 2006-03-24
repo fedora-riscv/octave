@@ -1,147 +1,149 @@
-Index: liboctave/SparseCmplxQR.h
-===================================================================
-RCS file: /cvs/octave/liboctave/SparseCmplxQR.h,v
-retrieving revision 1.2
-diff -u -r1.2 SparseCmplxQR.h
---- liboctave/SparseCmplxQR.h   8 Mar 2006 20:17:38 -0000       1.2
-+++ liboctave/SparseCmplxQR.h   23 Mar 2006 17:56:07 -0000
-@@ -137,6 +137,23 @@
- #endif
- };
-
-+
-+// Publish externally used friend functions.
-+
-+extern ComplexMatrix qrsolve (const SparseComplexMatrix &a, const Matrix &b,
-+                             octave_idx_type &info);
-+
-+extern SparseComplexMatrix qrsolve (const SparseComplexMatrix &a,
-+                                   const SparseMatrix &b,
-+                                   octave_idx_type &info);
-+
-+extern ComplexMatrix qrsolve (const SparseComplexMatrix &a,
-+                             const ComplexMatrix &b,
-+                             octave_idx_type &info);
-+
-+extern SparseComplexMatrix qrsolve (const SparseComplexMatrix &a,
-+                                   const SparseComplexMatrix &b,
-+                                   octave_idx_type &info);
- #endif
-
- /*
-Index: liboctave/SparseQR.h
-===================================================================
-RCS file: /cvs/octave/liboctave/SparseQR.h,v
-retrieving revision 1.2
-diff -u -r1.2 SparseQR.h
---- liboctave/SparseQR.h        8 Mar 2006 20:17:38 -0000       1.2
-+++ liboctave/SparseQR.h        23 Mar 2006 17:56:07 -0000
-@@ -133,6 +133,22 @@
- #endif
- };
-
-+
-+// Publish externally used friend functions.
-+
-+extern Matrix qrsolve (const SparseMatrix &a, const Matrix &b,
-+                      octave_idx_type &info);
-+
-+extern SparseMatrix qrsolve (const SparseMatrix &a, const SparseMatrix &b,
-+                            octave_idx_type &info);
-+
-+extern ComplexMatrix qrsolve (const SparseMatrix &a, const ComplexMatrix &b,
-+                             octave_idx_type &info);
-+
-+extern SparseComplexMatrix qrsolve (const SparseMatrix &a,
-+                                   const SparseComplexMatrix &b,
-+                                   octave_idx_type &info);
-+
- #endif
-
- /*
 Index: liboctave/CSparse.cc
 ===================================================================
 RCS file: /cvs/octave/liboctave/CSparse.cc,v
 retrieving revision 1.22
 diff -u -r1.22 CSparse.cc
---- liboctave/CSparse.cc        22 Mar 2006 22:58:12 -0000      1.22
-+++ liboctave/CSparse.cc        24 Mar 2006 14:23:38 -0000
+--- liboctave/CSparse.cc	22 Mar 2006 22:58:12 -0000	1.22
++++ liboctave/CSparse.cc	24 Mar 2006 17:01:34 -0000
 @@ -4273,7 +4273,7 @@
-          // Calculate the norm of the matrix, for later use.
-          double anorm;
-          if (calc_cond)
--           anorm = m_band.abs().sum().row(0).max();
-+           anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
-
-          char job = 'L';
-          F77_XFCN (zpbtrf, ZPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
+ 	  // Calculate the norm of the matrix, for later use.
+ 	  double anorm;
+ 	  if (calc_cond)
+-	    anorm = m_band.abs().sum().row(0).max();
++	    anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
+ 
+ 	  char job = 'L';
+ 	  F77_XFCN (zpbtrf, ZPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
 @@ -4548,7 +4548,7 @@
-          // Calculate the norm of the matrix, for later use.
-          double anorm;
-          if (calc_cond)
--           anorm = m_band.abs().sum().row(0).max();
-+           anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
-
-          char job = 'L';
-          F77_XFCN (zpbtrf, ZPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
+ 	  // Calculate the norm of the matrix, for later use.
+ 	  double anorm;
+ 	  if (calc_cond)
+-	    anorm = m_band.abs().sum().row(0).max();
++	    anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
+ 
+ 	  char job = 'L';
+ 	  F77_XFCN (zpbtrf, ZPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
 @@ -4899,7 +4899,7 @@
-          // Calculate the norm of the matrix, for later use.
-          double anorm;
-          if (calc_cond)
--           anorm = m_band.abs().sum().row(0).max();
-+           anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
-
-          char job = 'L';
-          F77_XFCN (zpbtrf, ZPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
+ 	  // Calculate the norm of the matrix, for later use.
+ 	  double anorm;
+ 	  if (calc_cond)
+-	    anorm = m_band.abs().sum().row(0).max();
++	    anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
+ 
+ 	  char job = 'L';
+ 	  F77_XFCN (zpbtrf, ZPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
 @@ -5176,7 +5176,7 @@
-          // Calculate the norm of the matrix, for later use.
-          double anorm;
-          if (calc_cond)
--           anorm = m_band.abs().sum().row(0).max();
-+           anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
-
-          char job = 'L';
-          F77_XFCN (zpbtrf, ZPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
+ 	  // Calculate the norm of the matrix, for later use.
+ 	  double anorm;
+ 	  if (calc_cond)
+-	    anorm = m_band.abs().sum().row(0).max();
++	    anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
+ 
+ 	  char job = 'L';
+ 	  F77_XFCN (zpbtrf, ZPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
+Index: liboctave/SparseCmplxQR.h
+===================================================================
+RCS file: /cvs/octave/liboctave/SparseCmplxQR.h,v
+retrieving revision 1.2
+retrieving revision 1.3
+diff -u -r1.2 -r1.3
+--- liboctave/SparseCmplxQR.h	8 Mar 2006 20:17:38 -0000	1.2
++++ liboctave/SparseCmplxQR.h	23 Mar 2006 18:22:51 -0000	1.3
+@@ -137,6 +137,23 @@
+ #endif
+ };
+ 
++
++// Publish externally used friend functions.
++
++extern ComplexMatrix qrsolve (const SparseComplexMatrix &a, const Matrix &b,
++			      octave_idx_type &info);
++
++extern SparseComplexMatrix qrsolve (const SparseComplexMatrix &a, 
++				    const SparseMatrix &b,
++				    octave_idx_type &info);
++
++extern ComplexMatrix qrsolve (const SparseComplexMatrix &a, 
++			      const ComplexMatrix &b,
++			      octave_idx_type &info);
++
++extern SparseComplexMatrix qrsolve (const SparseComplexMatrix &a, 
++				    const SparseComplexMatrix &b,
++				    octave_idx_type &info);
+ #endif
+ 
+ /*
+Index: liboctave/SparseQR.h
+===================================================================
+RCS file: /cvs/octave/liboctave/SparseQR.h,v
+retrieving revision 1.2
+retrieving revision 1.3
+diff -u -r1.2 -r1.3
+--- liboctave/SparseQR.h	8 Mar 2006 20:17:38 -0000	1.2
++++ liboctave/SparseQR.h	23 Mar 2006 18:22:51 -0000	1.3
+@@ -133,6 +133,22 @@
+ #endif
+ };
+ 
++
++// Publish externally used friend functions.
++
++extern Matrix qrsolve (const SparseMatrix &a, const Matrix &b, 
++		       octave_idx_type &info);
++
++extern SparseMatrix qrsolve (const SparseMatrix &a, const SparseMatrix &b,
++			     octave_idx_type &info);
++
++extern ComplexMatrix qrsolve (const SparseMatrix &a, const ComplexMatrix &b,
++			      octave_idx_type &info);
++
++extern SparseComplexMatrix qrsolve (const SparseMatrix &a, 
++				    const SparseComplexMatrix &b,
++				    octave_idx_type &info);
++
+ #endif
+ 
+ /*
 Index: liboctave/dSparse.cc
 ===================================================================
 RCS file: /cvs/octave/liboctave/dSparse.cc,v
 retrieving revision 1.21
 diff -u -r1.21 dSparse.cc
---- liboctave/dSparse.cc        22 Mar 2006 22:58:12 -0000      1.21
-+++ liboctave/dSparse.cc        24 Mar 2006 14:23:39 -0000
+--- liboctave/dSparse.cc	22 Mar 2006 22:58:12 -0000	1.21
++++ liboctave/dSparse.cc	24 Mar 2006 17:01:35 -0000
 @@ -4376,7 +4376,7 @@
-          // Calculate the norm of the matrix, for later use.
-          double anorm;
-          if (calc_cond)
--           anorm = m_band.abs().sum().row(0).max();
-+           anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
-
-          char job = 'L';
-          F77_XFCN (dpbtrf, DPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
+ 	  // Calculate the norm of the matrix, for later use.
+ 	  double anorm;
+ 	  if (calc_cond)
+-	    anorm = m_band.abs().sum().row(0).max();
++	    anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
+ 
+ 	  char job = 'L';
+ 	  F77_XFCN (dpbtrf, DPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
 @@ -4652,7 +4652,7 @@
-          // Calculate the norm of the matrix, for later use.
-          double anorm;
-          if (calc_cond)
--           anorm = m_band.abs().sum().row(0).max();
-+           anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
-
-          char job = 'L';
-          F77_XFCN (dpbtrf, DPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
+ 	  // Calculate the norm of the matrix, for later use.
+ 	  double anorm;
+ 	  if (calc_cond)
+-	    anorm = m_band.abs().sum().row(0).max();
++	    anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
+ 
+ 	  char job = 'L';
+ 	  F77_XFCN (dpbtrf, DPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
 @@ -5003,7 +5003,7 @@
-          // Calculate the norm of the matrix, for later use.
-          double anorm;
-          if (calc_cond)
--           anorm = m_band.abs().sum().row(0).max();
-+           anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
-
-          char job = 'L';
-          F77_XFCN (dpbtrf, DPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
+ 	  // Calculate the norm of the matrix, for later use.
+ 	  double anorm;
+ 	  if (calc_cond)
+-	    anorm = m_band.abs().sum().row(0).max();
++	    anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
+ 
+ 	  char job = 'L';
+ 	  F77_XFCN (dpbtrf, DPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
 @@ -5350,7 +5350,7 @@
-          // Calculate the norm of the matrix, for later use.
-          double anorm;
-          if (calc_cond)
--           anorm = m_band.abs().sum().row(0).max();
-+           anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
-
-          char job = 'L';
-          F77_XFCN (dpbtrf, DPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
+ 	  // Calculate the norm of the matrix, for later use.
+ 	  double anorm;
+ 	  if (calc_cond)
+-	    anorm = m_band.abs().sum().row(0).max();
++	    anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
+ 
+ 	  char job = 'L';
+ 	  F77_XFCN (dpbtrf, DPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),

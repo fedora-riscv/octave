@@ -1,6 +1,6 @@
 Name:           octave
 Version:        2.9.5
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -133,6 +133,9 @@ fi
 
 
 %changelog
+* Fri Mar 24 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.5-3
+- Fix broken patch.
+
 * Fri Mar 24 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.5-2
 - Add more changes to sparse patch.
 
