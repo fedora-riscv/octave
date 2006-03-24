@@ -1,46 +1,3 @@
-Index: liboctave/CSparse.cc
-===================================================================
-RCS file: /cvs/octave/liboctave/CSparse.cc,v
-retrieving revision 1.22
-diff -u -r1.22 CSparse.cc
---- liboctave/CSparse.cc	22 Mar 2006 22:58:12 -0000	1.22
-+++ liboctave/CSparse.cc	24 Mar 2006 17:01:34 -0000
-@@ -4273,7 +4273,7 @@
- 	  // Calculate the norm of the matrix, for later use.
- 	  double anorm;
- 	  if (calc_cond)
--	    anorm = m_band.abs().sum().row(0).max();
-+	    anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
- 
- 	  char job = 'L';
- 	  F77_XFCN (zpbtrf, ZPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
-@@ -4548,7 +4548,7 @@
- 	  // Calculate the norm of the matrix, for later use.
- 	  double anorm;
- 	  if (calc_cond)
--	    anorm = m_band.abs().sum().row(0).max();
-+	    anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
- 
- 	  char job = 'L';
- 	  F77_XFCN (zpbtrf, ZPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
-@@ -4899,7 +4899,7 @@
- 	  // Calculate the norm of the matrix, for later use.
- 	  double anorm;
- 	  if (calc_cond)
--	    anorm = m_band.abs().sum().row(0).max();
-+	    anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
- 
- 	  char job = 'L';
- 	  F77_XFCN (zpbtrf, ZPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
-@@ -5176,7 +5176,7 @@
- 	  // Calculate the norm of the matrix, for later use.
- 	  double anorm;
- 	  if (calc_cond)
--	    anorm = m_band.abs().sum().row(0).max();
-+	    anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
- 
- 	  char job = 'L';
- 	  F77_XFCN (zpbtrf, ZPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
 Index: liboctave/SparseCmplxQR.h
 ===================================================================
 RCS file: /cvs/octave/liboctave/SparseCmplxQR.h,v
@@ -104,46 +61,342 @@ diff -u -r1.2 -r1.3
  #endif
  
  /*
+Index: liboctave/CMatrix.cc
+===================================================================
+RCS file: /cvs/octave/liboctave/CMatrix.cc,v
+retrieving revision 1.114
+diff -u -r1.114 CMatrix.cc
+--- liboctave/CMatrix.cc	2 Mar 2006 03:40:00 -0000	1.114
++++ liboctave/CMatrix.cc	24 Mar 2006 18:53:58 -0000
+@@ -889,27 +889,6 @@
+   return retval;
+ }
+ 
+-ComplexRowVector
+-ComplexMatrix::row (char *s) const
+-{
+-  if (! s)
+-    {
+-      (*current_liboctave_error_handler) ("invalid row selection");
+-      return ComplexRowVector ();
+-    }
+-
+-  char c = *s;
+-  if (c == 'f' || c == 'F')
+-    return row (static_cast<octave_idx_type>(0));
+-  else if (c == 'l' || c == 'L')
+-    return row (rows () - 1);
+-  else
+-    {
+-      (*current_liboctave_error_handler) ("invalid row selection");
+-      return ComplexRowVector ();
+-    }
+-}
+-
+ ComplexColumnVector
+ ComplexMatrix::column (octave_idx_type i) const
+ {
+@@ -927,27 +906,6 @@
+   return retval;
+ }
+ 
+-ComplexColumnVector
+-ComplexMatrix::column (char *s) const
+-{
+-  if (! s)
+-    {
+-      (*current_liboctave_error_handler) ("invalid column selection");
+-      return ComplexColumnVector ();
+-    }
+-
+-  char c = *s;
+-  if (c == 'f' || c == 'F')
+-    return column (static_cast<octave_idx_type>(0));
+-  else if (c == 'l' || c == 'L')
+-    return column (cols () - 1);
+-  else
+-    {
+-      (*current_liboctave_error_handler) ("invalid column selection");
+-      return ComplexColumnVector ();
+-    }
+-}
+-
+ ComplexMatrix
+ ComplexMatrix::inverse (void) const
+ {
+Index: liboctave/CMatrix.h
+===================================================================
+RCS file: /cvs/octave/liboctave/CMatrix.h,v
+retrieving revision 1.55
+diff -u -r1.55 CMatrix.h
+--- liboctave/CMatrix.h	26 Oct 2005 15:24:08 -0000	1.55
++++ liboctave/CMatrix.h	24 Mar 2006 18:53:58 -0000
+@@ -130,10 +130,8 @@
+   // extract row or column i.
+ 
+   ComplexRowVector row (octave_idx_type i) const;
+-  ComplexRowVector row (char *s) const;
+ 
+   ComplexColumnVector column (octave_idx_type i) const;
+-  ComplexColumnVector column (char *s) const;
+ 
+   ComplexMatrix inverse (void) const;
+   ComplexMatrix inverse (octave_idx_type& info) const;
+Index: liboctave/dMatrix.cc
+===================================================================
+RCS file: /cvs/octave/liboctave/dMatrix.cc,v
+retrieving revision 1.120
+diff -u -r1.120 dMatrix.cc
+--- liboctave/dMatrix.cc	2 Mar 2006 03:40:01 -0000	1.120
++++ liboctave/dMatrix.cc	24 Mar 2006 18:53:59 -0000
+@@ -559,27 +559,6 @@
+   return retval;
+ }
+ 
+-RowVector
+-Matrix::row (char *s) const
+-{
+-  if (! s)
+-    {
+-      (*current_liboctave_error_handler) ("invalid row selection");
+-      return RowVector ();
+-    }
+-
+-  char c = *s;
+-  if (c == 'f' || c == 'F')
+-    return row ( static_cast<octave_idx_type>(0) );
+-  else if (c == 'l' || c == 'L')
+-    return row (rows () - 1);
+-  else
+-    {
+-      (*current_liboctave_error_handler) ("invalid row selection");
+-      return RowVector ();
+-    }
+-}
+-
+ ColumnVector
+ Matrix::column (octave_idx_type i) const
+ {
+@@ -597,27 +576,6 @@
+   return retval;
+ }
+ 
+-ColumnVector
+-Matrix::column (char *s) const
+-{
+-  if (! s)
+-    {
+-      (*current_liboctave_error_handler) ("invalid column selection");
+-      return ColumnVector ();
+-    }
+-
+-  char c = *s;
+-  if (c == 'f' || c == 'F')
+-    return column (static_cast<octave_idx_type> (0));
+-  else if (c == 'l' || c == 'L')
+-    return column (cols () - 1);
+-  else
+-    {
+-      (*current_liboctave_error_handler) ("invalid column selection");
+-      return ColumnVector ();
+-    }
+-}
+-
+ Matrix
+ Matrix::inverse (void) const
+ {
+Index: liboctave/dMatrix.h
+===================================================================
+RCS file: /cvs/octave/liboctave/dMatrix.h,v
+retrieving revision 1.61
+diff -u -r1.61 dMatrix.h
+--- liboctave/dMatrix.h	26 Oct 2005 15:24:08 -0000	1.61
++++ liboctave/dMatrix.h	24 Mar 2006 18:53:59 -0000
+@@ -102,10 +102,8 @@
+   // extract row or column i.
+ 
+   RowVector row (octave_idx_type i) const;
+-  RowVector row (char *s) const;
+ 
+   ColumnVector column (octave_idx_type i) const;
+-  ColumnVector column (char *s) const;
+ 
+   Matrix inverse (void) const;
+   Matrix inverse (octave_idx_type& info) const;
 Index: liboctave/dSparse.cc
 ===================================================================
 RCS file: /cvs/octave/liboctave/dSparse.cc,v
 retrieving revision 1.21
 diff -u -r1.21 dSparse.cc
 --- liboctave/dSparse.cc	22 Mar 2006 22:58:12 -0000	1.21
-+++ liboctave/dSparse.cc	24 Mar 2006 17:01:35 -0000
-@@ -4376,7 +4376,7 @@
- 	  // Calculate the norm of the matrix, for later use.
- 	  double anorm;
- 	  if (calc_cond)
--	    anorm = m_band.abs().sum().row(0).max();
-+	    anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
++++ liboctave/dSparse.cc	24 Mar 2006 18:54:00 -0000
+@@ -4404,7 +4404,7 @@
+ 		      Array<double> z (3 * nr);
+ 		      double *pz = z.fortran_vec ();
+ 		      Array<octave_idx_type> iz (nr);
+-		      int *piz = iz.fortran_vec ();
++		      octave_idx_type *piz = iz.fortran_vec ();
  
- 	  char job = 'L';
- 	  F77_XFCN (dpbtrf, DPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
-@@ -4652,7 +4652,7 @@
- 	  // Calculate the norm of the matrix, for later use.
- 	  double anorm;
- 	  if (calc_cond)
--	    anorm = m_band.abs().sum().row(0).max();
-+	    anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
+ 		      F77_XFCN (dpbcon, DGBCON, 
+ 		      	(F77_CONST_CHAR_ARG2 (&job, 1),
+@@ -4540,7 +4540,7 @@
+ 		      Array<double> z (3 * nr);
+ 		      double *pz = z.fortran_vec ();
+ 		      Array<octave_idx_type> iz (nr);
+-		      int *piz = iz.fortran_vec ();
++		      octave_idx_type *piz = iz.fortran_vec ();
  
- 	  char job = 'L';
- 	  F77_XFCN (dpbtrf, DPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
-@@ -5003,7 +5003,7 @@
- 	  // Calculate the norm of the matrix, for later use.
- 	  double anorm;
- 	  if (calc_cond)
--	    anorm = m_band.abs().sum().row(0).max();
-+	    anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
+ 		      F77_XFCN (dgbcon, DGBCON, 
+ 		      	(F77_CONST_CHAR_ARG2 (&job, 1),
+@@ -4678,7 +4678,7 @@
+ 		      Array<double> z (3 * nr);
+ 		      double *pz = z.fortran_vec ();
+ 		      Array<octave_idx_type> iz (nr);
+-		      int *piz = iz.fortran_vec ();
++		      octave_idx_type *piz = iz.fortran_vec ();
  
- 	  char job = 'L';
- 	  F77_XFCN (dpbtrf, DPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
-@@ -5350,7 +5350,7 @@
- 	  // Calculate the norm of the matrix, for later use.
- 	  double anorm;
- 	  if (calc_cond)
--	    anorm = m_band.abs().sum().row(0).max();
-+	    anorm = m_band.abs().sum().row(static_cast<octave_idx_type>(0)).max();
+ 		      F77_XFCN (dpbcon, DGBCON, 
+ 		      	(F77_CONST_CHAR_ARG2 (&job, 1),
+@@ -4851,7 +4851,7 @@
+ 		      Array<double> z (3 * nr);
+ 		      double *pz = z.fortran_vec ();
+ 		      Array<octave_idx_type> iz (nr);
+-		      int *piz = iz.fortran_vec ();
++		      octave_idx_type *piz = iz.fortran_vec ();
  
- 	  char job = 'L';
- 	  F77_XFCN (dpbtrf, DPBTRF, (F77_CONST_CHAR_ARG2 (&job, 1),
+ 		      F77_XFCN (dgbcon, DGBCON, 
+ 		      	(F77_CONST_CHAR_ARG2 (&job, 1),
+@@ -5031,7 +5031,7 @@
+ 		      Array<double> z (3 * nr);
+ 		      double *pz = z.fortran_vec ();
+ 		      Array<octave_idx_type> iz (nr);
+-		      int *piz = iz.fortran_vec ();
++		      octave_idx_type *piz = iz.fortran_vec ();
+ 
+ 		      F77_XFCN (dpbcon, DGBCON, 
+ 		      	(F77_CONST_CHAR_ARG2 (&job, 1),
+@@ -5208,7 +5208,7 @@
+ 		      Array<double> z (3 * nr);
+ 		      double *pz = z.fortran_vec ();
+ 		      Array<octave_idx_type> iz (nr);
+-		      int *piz = iz.fortran_vec ();
++		      octave_idx_type *piz = iz.fortran_vec ();
+ 
+ 		      F77_XFCN (dpbcon, DGBCON, 
+ 		      	(F77_CONST_CHAR_ARG2 (&job, 1),
+@@ -5379,7 +5379,7 @@
+ 		      Array<double> z (3 * nr);
+ 		      double *pz = z.fortran_vec ();
+ 		      Array<octave_idx_type> iz (nr);
+-		      int *piz = iz.fortran_vec ();
++		      octave_idx_type *piz = iz.fortran_vec ();
+ 
+ 		      F77_XFCN (dpbcon, DGBCON, 
+ 		      	(F77_CONST_CHAR_ARG2 (&job, 1),
+@@ -5586,7 +5586,7 @@
+ 		      Array<double> z (3 * nr);
+ 		      double *pz = z.fortran_vec ();
+ 		      Array<octave_idx_type> iz (nr);
+-		      int *piz = iz.fortran_vec ();
++		      octave_idx_type *piz = iz.fortran_vec ();
+ 
+ 		      F77_XFCN (dgbcon, DGBCON, 
+ 		      	(F77_CONST_CHAR_ARG2 (&job, 1),
+Index: src/ov-cell.cc
+===================================================================
+RCS file: /cvs/octave/src/ov-cell.cc,v
+retrieving revision 1.58
+diff -u -r1.58 ov-cell.cc
+--- src/ov-cell.cc	24 Mar 2006 16:42:44 -0000	1.58
++++ src/ov-cell.cc	24 Mar 2006 19:14:32 -0000
+@@ -783,10 +783,12 @@
+   
+   for (octave_idx_type i = 0; i < dv.numel (); i++)
+     {
+-      char s[20];
+-      sprintf (s, "_%d", i);
++      OSSTREAM buf;
++      buf << "_" << i << OSSTREAM_ENDS;
++      std::string s = OSSTREAM_STR (buf);
++      OSSTREAM_FREEZE (buf);
+ 
+-      if (! add_hdf5_data(data_hid, tmp.elem (i), s, "", false,
++      if (! add_hdf5_data(data_hid, tmp.elem (i), s.c_str (), "", false,
+ 			  save_as_floats))
+ 	{
+ 	  H5Gclose (data_hid);
+Index: src/ov-list.cc
+===================================================================
+RCS file: /cvs/octave/src/ov-list.cc,v
+retrieving revision 1.44
+diff -u -r1.44 ov-list.cc
+--- src/ov-list.cc	26 Apr 2005 19:24:33 -0000	1.44
++++ src/ov-list.cc	24 Mar 2006 19:14:32 -0000
+@@ -536,9 +536,13 @@
+   for (int i = 0; i < lst.length (); ++i)
+     {
+       // should we use lst.name_tags () to label the elements?
+-      char s[20];
+-      sprintf (s, "_%d", i);
+-      bool b = save_ascii_data (os, lst (i), s, infnan_warned, 
++
++      OSSTREAM buf;
++      buf << "_" << i << OSSTREAM_ENDS;
++      std::string s = OSSTREAM_STR (buf);
++      OSSTREAM_FREEZE (buf);
++
++      bool b = save_ascii_data (os, lst (i), s.c_str (), infnan_warned, 
+ 				strip_nan_and_inf, 0, 0);
+       
+       if (! b)
+@@ -607,11 +611,15 @@
+   for (int i = 0; i < lst.length (); i++)
+     {
+       // should we use lst.name_tags () to label the elements?
+-      char s[20];
+-      sprintf (s, "_%d", i);
++
++      OSSTREAM buf;
++      buf << "_" << i << OSSTREAM_ENDS;
++      std::string s = OSSTREAM_STR (buf);
++      OSSTREAM_FREEZE (buf);
+ 
+       // Recurse to print sub-value.
+-      bool b = save_binary_data (os, lst(i), s, "", 0, save_as_floats);
++      bool b = save_binary_data (os, lst(i), s.c_str (), "", 0,
++				 save_as_floats);
+ 	      
+       if (! b)
+ 	return false;
+@@ -683,9 +691,13 @@
+   for (octave_idx_type i = 0; i < lst.length (); ++i)
+     {
+       // should we use lst.name_tags () to label the elements?
+-      char s[20];
+-      sprintf (s, "_%d", i);
+-      bool retval2 = add_hdf5_data (data_hid, lst (i), s, "",
++
++      OSSTREAM buf;
++      buf << "_" << i << OSSTREAM_ENDS;
++      std::string s = OSSTREAM_STR (buf);
++      OSSTREAM_FREEZE (buf);
++
++      bool retval2 = add_hdf5_data (data_hid, lst (i), s.c_str (), "",
+ 				    false, save_as_floats);
+       if (! retval2)
+ 	break;
+Index: src/DLD-FUNCTIONS/spchol.cc
+===================================================================
+RCS file: /cvs/octave/src/DLD-FUNCTIONS/spchol.cc,v
+retrieving revision 1.7
+diff -u -r1.7 spchol.cc
+--- src/DLD-FUNCTIONS/spchol.cc	22 Mar 2006 22:58:12 -0000	1.7
++++ src/DLD-FUNCTIONS/spchol.cc	24 Mar 2006 19:55:38 -0000
+@@ -607,7 +607,7 @@
+ 	  for (octave_idx_type k = 0 ; k < n ; k++)
+ 	    {
+ 	      // get the kth row of L and store in the columns of L
+-	      cholmod_row_subtree (A1, A2, k, Parent, R, cm) ;
++	      CHOLMOD_NAME (row_subtree) (A1, A2, k, Parent, R, cm) ;
+ 	      for (octave_idx_type p = 0 ; p < Rp [1] ; p++)
+ 		L.xridx (W [Ri [p]]++) = k ;
