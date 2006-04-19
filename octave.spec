@@ -1,6 +1,6 @@
 Name:           octave
 Version:        2.9.5
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -8,6 +8,7 @@ Group:          Applications/Engineering
 License:        GPL
 Source:         ftp://ftp.octave.org/pub/octave/bleeding-edge/octave-%{version}.tar.bz2
 Patch0:         octave-2.9.5-sparse.patch
+Patch1:         octave-2.9.5-config.patch
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires(post): /sbin/install-info
@@ -51,6 +52,7 @@ applications which use GNU Octave.
 %prep
 %setup -q
 %patch0 -p0
+%patch1 -p0
 
 
 %build
@@ -133,6 +135,9 @@ fi
 
 
 %changelog
+* Wed Apr 19 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.5-5
+- Add new patch to configure script (breaks octave-forge without it).
+
 * Fri Mar 24 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.5-4
 - Change patch again (suggested by the author on Octave mailing list).
 
