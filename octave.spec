@@ -1,6 +1,6 @@
 Name:           octave
 Version:        2.9.5
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -9,6 +9,7 @@ License:        GPL
 Source:         ftp://ftp.octave.org/pub/octave/bleeding-edge/octave-%{version}.tar.bz2
 Patch0:         octave-2.9.5-sparse.patch
 Patch1:         octave-2.9.5-config.patch
+Patch2:         octave-2.9.5-lex.patch
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires(post): /sbin/install-info
@@ -53,6 +54,7 @@ applications which use GNU Octave.
 %setup -q
 %patch0 -p0
 %patch1 -p0
+%patch2 -p0
 
 
 %build
@@ -69,7 +71,6 @@ make %{?_smp_mflags} OCTAVE_RELEASE="Fedora Extras %{version}-%{release}"
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-strip $RPM_BUILD_ROOT/usr/libexec/octave/%{version}/oct/*/*.oct
 rm -f ${RPM_BUILD_ROOT}%{_infodir}/dir
 
 # Make library links
@@ -135,6 +136,10 @@ fi
 
 
 %changelog
+* Wed Apr 27 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.5-6
+- Add patch for bug #190481
+- Manual stripping of .oct files is no longer necessary.
+
 * Wed Apr 19 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.5-5
 - Add new patch to configure script (breaks octave-forge without it).
 
