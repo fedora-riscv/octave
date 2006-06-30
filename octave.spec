@@ -1,15 +1,12 @@
 Name:           octave
-Version:        2.9.5
-Release:        6%{?dist}
+Version:        2.9.6
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
 Group:          Applications/Engineering
 License:        GPL
 Source:         ftp://ftp.octave.org/pub/octave/bleeding-edge/octave-%{version}.tar.bz2
-Patch0:         octave-2.9.5-sparse.patch
-Patch1:         octave-2.9.5-config.patch
-Patch2:         octave-2.9.5-lex.patch
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires(post): /sbin/install-info
@@ -18,7 +15,7 @@ Requires(post): /sbin/ldconfig
 Requires(preun): /sbin/install-info
 BuildRequires:  bison flex less tetex gcc-gfortran lapack-devel blas-devel
 BuildRequires:  ncurses-devel zlib-devel libtermcap-devel hdf5-devel
-BuildRequires:  readline-devel glibc-devel fftw-devel autoconf gperf
+BuildRequires:  readline-devel glibc-devel fftw-devel gperf
 BuildRequires:  ufsparse-devel glpk-devel gnuplot desktop-file-utils
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -43,7 +40,7 @@ Summary:        Development headers and files for Octave
 Group:          Development/Libraries
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       readline-devel fftw-devel hdf5-devel zlib-devel
-Requires:       lapack-devel blas-devel gcc-c++
+Requires:       lapack-devel blas-devel gcc-c++ gcc-gfortran
 
 %description devel
 The octave-devel package contains files needed for developing
@@ -52,17 +49,10 @@ applications which use GNU Octave.
 
 %prep
 %setup -q
-%patch0 -p0
-%patch1 -p0
-%patch2 -p0
 
 
 %build
-%ifarch x86_64
-%define enable64 yes
-%else
 %define enable64 no
-%endif
 export CPPFLAGS=-I%{_includedir}/glpk
 %configure --enable-shared --disable-static --enable-64=%enable64
 make %{?_smp_mflags} OCTAVE_RELEASE="Fedora Extras %{version}-%{release}"
@@ -99,9 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/ldconfig
-/sbin/install-info --info-dir=%{_infodir} --section="Programming:" \
-	--entry="* Octave:(%{name}).	%{summary}." %{_infodir}/octave.info.gz
-
+/sbin/install-info --info-dir=%{_infodir} --section="Programming" \
+	%{_infodir}/octave.info.gz
+ 
 %preun
 if [ "$1" = "0" ]; then
    /sbin/install-info --delete --info-dir=%{_infodir} %{_infodir}/octave.info.gz
@@ -115,8 +105,7 @@ fi
 %doc COPYING NEWS* PROJECTS README README.Linux README.kpathsea ROADMAP
 %doc SENDING-PATCHES THANKS emacs examples doc/interpreter/octave.p*
 %doc doc/faq doc/interpreter/HTML doc/refcard
-%{_bindir}/octave
-%{_bindir}/octave-%{version}
+%{_bindir}/octave*
 %config(noreplace) /etc/ld.so.conf.d/*
 %{_libdir}/octave*
 %{_datadir}/octave
@@ -129,13 +118,18 @@ fi
 %defattr(-,root,root)
 %doc doc/liboctave
 %{_bindir}/mkoctfile*
-%{_bindir}/octave-bug*
-%{_bindir}/octave-config*
-%{_includedir}/octave*
+%{_includedir}/octave-%{version}
 %{_mandir}/man*/mkoctfile*
 
 
 %changelog
+* Mon Jun 27 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.6-1
+- New release. Remove old patches.
+- Disable 64-bit extensions (some libraries don't support 64-bit indexing yet).
+- Add gcc-gfortran to -devel dependencies (mkoctfile fails without it).
+- Move octave-bug and octave-config from devel to main package.
+- Fix categorization of info files (bug 196760).
+
 * Wed Apr 27 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.5-6
 - Add patch for bug #190481
 - Manual stripping of .oct files is no longer necessary.
