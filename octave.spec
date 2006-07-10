@@ -123,7 +123,7 @@ fi
 
 
 %changelog
-* Mon Jun 27 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.6-1
+* Mon Jul 10 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.6-1
 - New release. Remove old patches.
 - Disable 64-bit extensions (some libraries don't support 64-bit indexing yet).
 - Add gcc-gfortran to -devel dependencies (mkoctfile fails without it).
