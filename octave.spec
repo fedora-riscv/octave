@@ -1,12 +1,14 @@
 Name:           octave
 Version:        2.9.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
 Group:          Applications/Engineering
 License:        GPL
 Source:         ftp://ftp.octave.org/pub/octave/bleeding-edge/octave-%{version}.tar.bz2
+Patch0:         octave-2.9.6-parse.patch
+Patch1:         octave-2.9.6-path.patch
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires(post): /sbin/install-info
@@ -49,6 +51,8 @@ applications which use GNU Octave.
 
 %prep
 %setup -q
+%patch0 -p0
+%patch1 -p0
 
 
 %build
@@ -123,6 +127,9 @@ fi
 
 
 %changelog
+* Tue Jul 11 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.6-2
+- Patch for some erroneous warnings and a file path bug.
+
 * Mon Jul 10 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.6-1
 - New release. Remove old patches.
 - Disable 64-bit extensions (some libraries don't support 64-bit indexing yet).

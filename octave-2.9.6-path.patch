@@ -1,0 +1,95 @@
+liboctave/ChangeLog:
+
+2006-06-30  John W. Eaton  <jwe@octave.org>
+
+	* dir-ops.cc (dir_entry::open): Perform tilde expansion here.
+	* file-stat.cc (stat::update_internal): Ditto.
+
+src/ChangeLog:
+
+2006-06-30  John W. Eaton  <jwe@octave.org>
+
+	* load-path.cc (genpath): Don't perform tilde expansion on name.
+	(load_path::do_add): Don't warn about moving "." to front of list.
+
+
+Index: liboctave/dir-ops.cc
+===================================================================
+RCS file: /cvs/octave/liboctave/dir-ops.cc,v
+retrieving revision 1.8
+diff -u -u -r1.8 dir-ops.cc
+--- liboctave/dir-ops.cc	26 Apr 2005 19:24:28 -0000	1.8
++++ liboctave/dir-ops.cc	30 Jun 2006 16:45:59 -0000
+@@ -32,6 +32,7 @@
+ #include "sysdir.h"
+ 
+ #include "dir-ops.h"
++#include "file-ops.h"
+ #include "lo-error.h"
+ #include "lo-sysdep.h"
+ #include "str-vec.h"
+@@ -47,8 +48,10 @@
+   if (! name.empty ())
+     {
+       close ();
++      
++      std::string fullname = file_ops::tilde_expand (name);
+ 
+-      dir = static_cast<void *> (opendir (name.c_str ()));
++      dir = static_cast<void *> (opendir (fullname.c_str ()));
+ 
+       if (dir)
+ 	fail = false;
+Index: liboctave/file-stat.cc
+===================================================================
+RCS file: /cvs/octave/liboctave/file-stat.cc,v
+retrieving revision 1.8
+diff -u -u -r1.8 file-stat.cc
+--- liboctave/file-stat.cc	24 Apr 2006 19:13:07 -0000	1.8
++++ liboctave/file-stat.cc	30 Jun 2006 16:45:59 -0000
+@@ -35,6 +35,7 @@
+ #include <unistd.h>
+ #endif
+ 
++#include "file-ops.h"
+ #include "file-stat.h"
+ #include "statdefs.h"
+ 
+@@ -196,8 +197,10 @@
+     {
+       initialized = false;
+       fail = false;
++      
++      std::string full_file_name = file_ops::tilde_expand (file_name);
+ 
+-      const char *cname = file_name.c_str ();
++      const char *cname = full_file_name.c_str ();
+ 
+       struct stat buf;
+ 
+Index: src/load-path.cc
+===================================================================
+RCS file: /cvs/octave/src/load-path.cc,v
+retrieving revision 1.4
+diff -u -u -r1.4 load-path.cc
+--- src/load-path.cc	28 Jun 2006 22:11:51 -0000	1.4
++++ src/load-path.cc	30 Jun 2006 16:46:03 -0000
+@@ -1140,9 +1135,7 @@
+ {
+   std::string retval;
+ 
+-  std::string full_dirname = file_ops::tilde_expand (dirname);
+-
+-  dir_entry dir (full_dirname);
++  dir_entry dir (dirname);
+ 
+   if (dir)
+     {
+@@ -1172,7 +1165,7 @@
+ 
+ 	      if (! skip_p)
+ 		{
+-		  std::string nm = full_dirname + file_ops::dir_sep_str + elt;
++		  std::string nm = dirname + file_ops::dir_sep_str + elt;
+ 
+ 		  file_stat fs (nm);
