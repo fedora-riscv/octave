@@ -1,6 +1,6 @@
 Name:           octave
 Version:        2.9.7
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -16,7 +16,7 @@ Requires(post): /sbin/ldconfig
 Requires(preun): /sbin/install-info
 BuildRequires:  bison flex less tetex gcc-gfortran lapack-devel blas-devel
 BuildRequires:  ncurses-devel zlib-devel libtermcap-devel hdf5-devel
-BuildRequires:  readline-devel glibc-devel fftw-devel gperf
+BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
 BuildRequires:  ufsparse-devel glpk-devel gnuplot desktop-file-utils
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -125,8 +125,11 @@ fi
 
 
 %changelog
+* Tue Aug 15 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.7-3
+- Add ghostscript as a build dependency.
+
 * Tue Aug 15 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.7-2
-- Update patch to fix several small bug, including #201087.
+- Update patch to fix several small bugs, including #201087.
 
 * Fri Jul 28 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.7-1
 - New release. Remove old patches and add one new one.
