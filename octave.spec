@@ -124,7 +124,7 @@ fi
 
 %changelog
 * Fri Aug 25 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.8-1
-- New release. Remove old patch.
+- New release. Remove old patch. This fixes bug #203676.
 
 * Tue Aug 15 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.7-3
 - Add ghostscript as a build dependency.
