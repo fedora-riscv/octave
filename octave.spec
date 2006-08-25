@@ -1,13 +1,12 @@
 Name:           octave
-Version:        2.9.7
-Release:        3%{?dist}
+Version:        2.9.8
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
 Group:          Applications/Engineering
 License:        GPL
 Source:         ftp://ftp.octave.org/pub/octave/bleeding-edge/octave-%{version}.tar.bz2
-Patch0:         octave-2.9.7-misc.patch
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires(post): /sbin/install-info
@@ -50,7 +49,6 @@ applications which use GNU Octave.
 
 %prep
 %setup -q
-%patch0 -p0
 
 
 %build
@@ -125,6 +123,9 @@ fi
 
 
 %changelog
+* Fri Aug 25 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.8-1
+- New release. Remove old patch.
+
 * Tue Aug 15 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.7-3
 - Add ghostscript as a build dependency.
 
