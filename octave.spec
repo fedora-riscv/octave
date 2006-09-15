@@ -1,12 +1,13 @@
 Name:           octave
 Version:        2.9.8
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
 Group:          Applications/Engineering
 License:        GPL
 Source:         ftp://ftp.octave.org/pub/octave/bleeding-edge/octave-%{version}.tar.bz2
+Patch0:         octave-2.9.8-misc.patch
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires(post): /sbin/install-info
@@ -49,6 +50,7 @@ applications which use GNU Octave.
 
 %prep
 %setup -q
+%patch0 -p0
 
 
 %build
@@ -91,7 +93,7 @@ rm -rf $RPM_BUILD_ROOT
 /sbin/ldconfig
 /sbin/install-info --info-dir=%{_infodir} --section="Programming" \
 	%{_infodir}/octave.info.gz
- 
+
 %preun
 if [ "$1" = "0" ]; then
    /sbin/install-info --delete --info-dir=%{_infodir} %{_infodir}/octave.info.gz
@@ -123,6 +125,10 @@ fi
 
 
 %changelog
+* Fri Sep 15 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.8-2
+- Fix this bug:
+  https://www.cae.wisc.edu/pipermail/bug-octave/2006-September/000687.html
+
 * Fri Aug 25 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.8-1
 - New release. Remove old patch. This fixes bug #203676.
 
