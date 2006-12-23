@@ -1,6 +1,6 @@
 Name:           octave
 Version:        2.9.9
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -90,11 +90,11 @@ rm -rf $RPM_BUILD_ROOT
 %post
 /sbin/ldconfig
 /sbin/install-info --info-dir=%{_infodir} --section="Programming" \
-	%{_infodir}/octave.info.gz
+	%{_infodir}/octave.info || :
 
 %preun
 if [ "$1" = "0" ]; then
-   /sbin/install-info --delete --info-dir=%{_infodir} %{_infodir}/octave.info.gz
+   /sbin/install-info --delete --info-dir=%{_infodir} %{_infodir}/octave.info || :
 fi
 
 
@@ -123,6 +123,9 @@ fi
 
 
 %changelog
+* Sat Dec 23 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.9-2
+- Fix bug 219404.
+
 * Mon Oct  3 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.9-1
 - New release. Remove old patch.
 
