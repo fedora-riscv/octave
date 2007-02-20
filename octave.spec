@@ -1,3 +1,6 @@
+# From src/version.h:#define OCTAVE_API_VERSION
+%define octave_api api-v22
+
 Name:           octave
 Version:        2.9.9
 Release:        2%{?dist}
@@ -14,9 +17,10 @@ Requires(postun): /sbin/ldconfig
 Requires(post): /sbin/ldconfig
 Requires(preun): /sbin/install-info
 BuildRequires:  bison flex less tetex gcc-gfortran lapack-devel blas-devel
-BuildRequires:  ncurses-devel zlib-devel libtermcap-devel hdf5-devel
+BuildRequires:  ncurses-devel zlib-devel hdf5-devel
 BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
 BuildRequires:  ufsparse-devel glpk-devel gnuplot desktop-file-utils
+Provides:       octave(api) = %{octave_api}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 
@@ -49,6 +53,12 @@ applications which use GNU Octave.
 
 %prep
 %setup -q
+# Check that octave_api is set correctly
+if ! grep -q '^#define OCTAVE_API_VERSION "%{octave_api}"' src/version.h
+then
+  echo "octave_api variable in spec does not match src/version.h"
+  exit 1
+fi
 
 
 %build
@@ -123,8 +133,10 @@ fi
 
 
 %changelog
-* Sat Dec 23 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.9-2
-- Fix bug 
+* Tue Feb 20 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.9-2
+- Fix install-info bug (Bug 219404). 
+- Add dependency on octave API so that breakages will be detected. (Bug 224050).
+- Remove libtermcap-devel as build dependency (Bug 226768).
 
 * Mon Oct  3 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.9-1
 - New release. Remove old patch.
