@@ -1,9 +1,9 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%define octave_api api-v22
+%define octave_api api-v24
 
 Name:           octave
-Version:        2.9.9
-Release:        2%{?dist}
+Version:        2.9.12
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -133,6 +133,9 @@ fi
 
 
 %changelog
+* Wed May 23 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.12-1
+- New release.
+
 * Tue Feb 20 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.9-2
 - Fix install-info bug (Bug 219404). 
 - Add dependency on octave API so that breakages will be detected. (Bug 224050).
