@@ -94,8 +94,8 @@ desktop-file-install --vendor fedora --add-category X-Fedora \
 
 # Create directories for add-on packages
 HOST_TYPE=`$RPM_BUILD_ROOT%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
-mkdir -p $RPM_BUILD_ROOT%{_libexecdir}/%{name}/site/%{octave_api}/$HOST_TYPE
-mkdir -p $RPM_BUILD_ROOT%{_libexecdir}/%{name}/site/$HOST_TYPE
+mkdir -p $RPM_BUILD_ROOT%{_libexecdir}/%{name}/site/oct/%{octave_api}/$HOST_TYPE
+mkdir -p $RPM_BUILD_ROOT%{_libexecdir}/%{name}/site/oct/$HOST_TYPE
 
 
 %clean
