@@ -19,7 +19,7 @@ Requires(preun): /sbin/install-info
 BuildRequires:  bison flex less tetex gcc-gfortran lapack-devel blas-devel
 BuildRequires:  ncurses-devel zlib-devel hdf5-devel
 BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
-BuildRequires:  ufsparse-devel glpk-devel gnuplot desktop-file-utils
+BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
 Provides:       octave(api) = %{octave_api}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -135,6 +135,7 @@ fi
 %changelog
 * Thu Jul 26 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.13-1
 - New release.
+- Changed ufsparse-devel dependency to suitesparse-devel.
 
 * Wed May 23 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.12-1
 - New release.
