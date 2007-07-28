@@ -1,8 +1,8 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%define octave_api api-v24
+%define octave_api api-v25
 
 Name:           octave
-Version:        2.9.12
+Version:        2.9.13
 Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
@@ -17,9 +17,9 @@ Requires(postun): /sbin/ldconfig
 Requires(post): /sbin/ldconfig
 Requires(preun): /sbin/install-info
 BuildRequires:  bison flex less tetex gcc-gfortran lapack-devel blas-devel
-BuildRequires:  ncurses-devel zlib-devel hdf5-devel
-BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
-BuildRequires:  ufsparse-devel glpk-devel gnuplot desktop-file-utils
+BuildRequires:  ncurses-devel zlib-devel hdf5-devel texinfo
+BuildRequires:  readline-devel glibc-devel fftw3-devel gperf ghostscript
+BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
 Provides:       octave(api) = %{octave_api}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -64,7 +64,7 @@ fi
 %build
 %define enable64 no
 export CPPFLAGS=-I%{_includedir}/glpk
-%configure --enable-shared --disable-static --enable-64=%enable64
+%configure --enable-shared --disable-static --enable-64=%enable64 --with-f77=gfortran
 make %{?_smp_mflags} OCTAVE_RELEASE="Fedora Extras %{version}-%{release}"
 
 
@@ -92,6 +92,10 @@ rm $RPM_BUILD_ROOT%{_datadir}/applications/www.octave.org-octave.desktop
 desktop-file-install --vendor fedora --add-category X-Fedora \
 	--dir $RPM_BUILD_ROOT%{_datadir}/applications examples/octave.desktop
 
+# Create directories for add-on packages
+HOST_TYPE=`$RPM_BUILD_ROOT%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
+mkdir -p $RPM_BUILD_ROOT%{_libexecdir}/%{name}/site/oct/%{octave_api}/$HOST_TYPE
+mkdir -p $RPM_BUILD_ROOT%{_libexecdir}/%{name}/site/oct/$HOST_TYPE
 
 
 %clean
@@ -133,6 +137,14 @@ fi
 
 
 %changelog
+* Thu Jul 26 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.13-1
+- New release.
+- Changed ufsparse-devel dependency to suitesparse-devel.
+- Add configure flag to close bug 245562.
+- Add directories for add-on packages (bug 234012).
+- Since texinfo is now separate from tetex, it is a build requirement.
+- In EPEL, fftw is called fftw3.
+
 * Wed May 23 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.12-1
 - New release.
 
