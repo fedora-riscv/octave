@@ -17,7 +17,7 @@ Requires(postun): /sbin/ldconfig
 Requires(post): /sbin/ldconfig
 Requires(preun): /sbin/install-info
 BuildRequires:  bison flex less tetex gcc-gfortran lapack-devel blas-devel
-BuildRequires:  ncurses-devel zlib-devel hdf5-devel
+BuildRequires:  ncurses-devel zlib-devel hdf5-devel texinfo
 BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
 BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
 Provides:       octave(api) = %{octave_api}
@@ -142,6 +142,7 @@ fi
 - Changed ufsparse-devel dependency to suitesparse-devel.
 - Add configure flag to close bug 245562.
 - Add directories for add-on packages (bug 234012).
+- Since texinfo is now separate from tetex, it is a build requirement.
 
 * Wed May 23 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.12-1
 - New release.
