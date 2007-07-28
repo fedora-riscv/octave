@@ -64,7 +64,7 @@ fi
 %build
 %define enable64 no
 export CPPFLAGS=-I%{_includedir}/glpk
-%configure --enable-shared --disable-static --enable-64=%enable64
+%configure --enable-shared --disable-static --enable-64=%enable64 --with-f77=gfortran
 make %{?_smp_mflags} OCTAVE_RELEASE="Fedora Extras %{version}-%{release}"
 
 
@@ -92,6 +92,10 @@ rm $RPM_BUILD_ROOT%{_datadir}/applications/www.octave.org-octave.desktop
 desktop-file-install --vendor fedora --add-category X-Fedora \
 	--dir $RPM_BUILD_ROOT%{_datadir}/applications examples/octave.desktop
 
+# Create directories for add-on packages
+HOST_TYPE=`$RPM_BUILD_ROOT%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
+mkdir -p $RPM_BUILD_ROOT%{_libexecdir}/%{name}/site/%{octave_api}/$HOST_TYPE
+mkdir -p $RPM_BUILD_ROOT%{_libexecdir}/%{name}/site/$HOST_TYPE
 
 
 %clean
@@ -136,6 +140,8 @@ fi
 * Thu Jul 26 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.13-1
 - New release.
 - Changed ufsparse-devel dependency to suitesparse-devel.
+- Add configure flag to close bug 245562.
+- Add directories for add-on packages (bug 234012).
 
 * Wed May 23 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.12-1
 - New release.
