@@ -3,7 +3,7 @@
 
 Name:           octave
 Version:        2.9.13
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -89,7 +89,7 @@ popd
 
 # Create desktop file
 rm $RPM_BUILD_ROOT%{_datadir}/applications/www.octave.org-octave.desktop
-desktop-file-install --vendor fedora --add-category X-Fedora \
+desktop-file-install --vendor fedora --add-category X-Fedora --remove-category Development \
 	--dir $RPM_BUILD_ROOT%{_datadir}/applications examples/octave.desktop
 
 # Create directories for add-on packages
@@ -137,6 +137,9 @@ fi
 
 
 %changelog
+* Mon Sep 10 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.13-3
+- Remove redundant menu category in desktop file (bug 274431).
+
 * Thu Jul 26 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.13-1
 - New release.
 - Changed ufsparse-devel dependency to suitesparse-devel.
