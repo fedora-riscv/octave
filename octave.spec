@@ -1,14 +1,14 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%define octave_api api-v25
+%define octave_api api-v26
 
 Name:           octave
-Version:        2.9.13
-Release:        2%{?dist}
+Version:        2.9.14
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
 Group:          Applications/Engineering
-License:        GPL
+License:        GPLv2+
 Source:         ftp://ftp.octave.org/pub/octave/bleeding-edge/octave-%{version}.tar.bz2
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
@@ -17,7 +17,7 @@ Requires(postun): /sbin/ldconfig
 Requires(post): /sbin/ldconfig
 Requires(preun): /sbin/install-info
 BuildRequires:  bison flex less tetex gcc-gfortran lapack-devel blas-devel
-BuildRequires:  ncurses-devel zlib-devel hdf5-devel texinfo
+BuildRequires:  ncurses-devel zlib-devel hdf5-devel texinfo qhull-devel
 BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
 BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
 Provides:       octave(api) = %{octave_api}
@@ -137,8 +137,11 @@ fi
 
 
 %changelog
-* Mon Sep 10 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.13-3
+* Tue Sep 18 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.14-1
+- New release.
 - Remove redundant menu category in desktop file (bug 274431).
+- Update license tag.
+- Add qhull-devel as new build dependency.
 
 * Thu Jul 26 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.13-1
 - New release.
