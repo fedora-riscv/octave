@@ -99,6 +99,7 @@ HOST_TYPE=`$RPM_BUILD_ROOT%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
 mkdir -p $RPM_BUILD_ROOT%{_libexecdir}/%{name}/site/oct/%{octave_api}/$HOST_TYPE
 mkdir -p $RPM_BUILD_ROOT%{_libexecdir}/%{name}/site/oct/$HOST_TYPE
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name}/packages
+touch $RPM_BUILD_ROOT%{_datadir}/%{name}/octave_packages
 
 
 %clean
@@ -143,7 +144,7 @@ fi
 %changelog
 * Tue Sep 25 2007 Orion Poplawski <orion@ora.nwra.com> 2.9.14-2
 - Add /usr/share/octave/packages for add on packages and %%ghost 
-  /usr/share/octave/packages/octave_packages
+  /usr/share/octave/octave_packages
 - Add patch for octave package manager that will be going upstream
 
 * Tue Sep 18 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.14-1
