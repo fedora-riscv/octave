@@ -3,13 +3,14 @@
 
 Name:           octave
 Version:        2.9.14
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
 Group:          Applications/Engineering
 License:        GPLv2+
 Source:         ftp://ftp.octave.org/pub/octave/bleeding-edge/octave-%{version}.tar.bz2
+Patch0:         octave-2.9.14-pkg.patch
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires(post): /sbin/install-info
@@ -53,6 +54,7 @@ applications which use GNU Octave.
 
 %prep
 %setup -q
+%patch -p1 -b .pkg
 # Check that octave_api is set correctly
 if ! grep -q '^#define OCTAVE_API_VERSION "%{octave_api}"' src/version.h
 then
@@ -96,6 +98,7 @@ desktop-file-install --vendor fedora --add-category X-Fedora --remove-category D
 HOST_TYPE=`$RPM_BUILD_ROOT%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
 mkdir -p $RPM_BUILD_ROOT%{_libexecdir}/%{name}/site/oct/%{octave_api}/$HOST_TYPE
 mkdir -p $RPM_BUILD_ROOT%{_libexecdir}/%{name}/site/oct/$HOST_TYPE
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name}/packages
 
 
 %clean
@@ -123,6 +126,7 @@ fi
 %config(noreplace) /etc/ld.so.conf.d/*
 %{_libdir}/octave*
 %{_datadir}/octave
+%ghost %{_datadir}/octave/octave_packages
 %{_libexecdir}/octave
 %{_mandir}/man*/octave*
 %{_infodir}/octave.info*
@@ -137,6 +141,11 @@ fi
 
 
 %changelog
+* Tue Sep 25 2007 Orion Poplawski <orion@ora.nwra.com> 2.9.14-2
+- Add /usr/share/octave/packages for add on packages and %%ghost 
+  /usr/share/octave/packages/octave_packages
+- Add patch for octave package manager that will be going upstream
+
 * Tue Sep 18 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.14-1
 - New release.
 - Remove redundant menu category in desktop file (bug 274431).
