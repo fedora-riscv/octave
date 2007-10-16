@@ -1,0 +1,21 @@
+Index: scripts/pkg/pkg.m
+===================================================================
+RCS file: /usr/local/cvsroot/octave/scripts/pkg/pkg.m,v
+retrieving revision 1.63
+retrieving revision 1.64
+diff -u -r1.63 -r1.64
+--- scripts/pkg/pkg.m	12 Oct 2007 21:27:23 -0000	1.63
++++ scripts/pkg/pkg.m	14 Oct 2007 19:28:42 -0000	1.64
+@@ -1095,7 +1095,11 @@
+     endif
+ 
+     ## Split into architecture dependent and independent files
+-    idx = cellfun (@(x) is_architecture_dependent (x), filenames);
++    if (isempty (filenames))
++      idx = [];
++    else
++      idx = cellfun (@(x) is_architecture_dependent (x), filenames);
++    endif
+     archdependent = filenames (idx);
+     archindependent = filenames (!idx);
+ 
