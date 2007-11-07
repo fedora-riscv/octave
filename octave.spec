@@ -1,16 +1,15 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%define octave_api api-v27
+%define octave_api api-v28
 
 Name:           octave
-Version:        2.9.15
-Release:        2%{?dist}
+Version:        2.9.16
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
 Group:          Applications/Engineering
-License:        GPLv2+
+License:        GPLv3+
 Source:         ftp://ftp.octave.org/pub/octave/bleeding-edge/octave-%{version}.tar.bz2
-Patch:          octave-2.9.15-pkg.patch
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires(post): /sbin/install-info
@@ -54,7 +53,6 @@ applications which use GNU Octave.
 
 %prep
 %setup -q
-%patch -p0 -b .pkg
 # Check that octave_api is set correctly
 if ! grep -q '^#define OCTAVE_API_VERSION "%{octave_api}"' src/version.h
 then
@@ -65,7 +63,6 @@ fi
 
 %build
 %define enable64 no
-export CPPFLAGS=-I%{_includedir}/glpk
 %configure --enable-shared --disable-static --enable-64=%enable64 --with-f77=gfortran
 make %{?_smp_mflags} OCTAVE_RELEASE="Fedora Extras %{version}-%{release}"
 
@@ -142,6 +139,11 @@ fi
 
 
 %changelog
+* Mon Nov  5 2007 Quentin Spencer <qspencer@users.sf.net> 2.9.16-1
+- Update to 2.9.16, remove old patch.
+- Update licencse from GPLv2+ to GPLv3+.
+- Detection of glpk no longer needs special CPPFLAGS.
+
 * Tue Oct 16 2007 Orion Poplawski <orion@ora.nwra.com> 2.9.15-2
 - Updated pkg.m patch
 
