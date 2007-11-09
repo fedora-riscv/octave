@@ -1,14 +1,14 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%define octave_api api-v22
+%define octave_api api-v28
 
 Name:           octave
-Version:        2.9.9
-Release:        2%{?dist}
+Version:        2.9.16
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
 Group:          Applications/Engineering
-License:        GPL
+License:        GPLv3+
 Source:         ftp://ftp.octave.org/pub/octave/bleeding-edge/octave-%{version}.tar.bz2
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
@@ -17,7 +17,7 @@ Requires(postun): /sbin/ldconfig
 Requires(post): /sbin/ldconfig
 Requires(preun): /sbin/install-info
 BuildRequires:  bison flex less tetex gcc-gfortran lapack-devel blas-devel
-BuildRequires:  ncurses-devel zlib-devel hdf5-devel
+BuildRequires:  ncurses-devel zlib-devel hdf5-devel texinfo qhull-devel
 BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
 BuildRequires:  ufsparse-devel glpk-devel gnuplot desktop-file-utils
 Provides:       octave(api) = %{octave_api}
@@ -63,8 +63,7 @@ fi
 
 %build
 %define enable64 no
-export CPPFLAGS=-I%{_includedir}/glpk
-%configure --enable-shared --disable-static --enable-64=%enable64
+%configure --enable-shared --disable-static --enable-64=%enable64 --with-f77=gfortran
 make %{?_smp_mflags} OCTAVE_RELEASE="Fedora Extras %{version}-%{release}"
 
 
@@ -89,9 +88,15 @@ popd
 
 # Create desktop file
 rm $RPM_BUILD_ROOT%{_datadir}/applications/www.octave.org-octave.desktop
-desktop-file-install --vendor fedora --add-category X-Fedora \
+desktop-file-install --vendor fedora --add-category X-Fedora --remove-category Development \
 	--dir $RPM_BUILD_ROOT%{_datadir}/applications examples/octave.desktop
 
+# Create directories for add-on packages
+HOST_TYPE=`$RPM_BUILD_ROOT%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
+mkdir -p $RPM_BUILD_ROOT%{_libexecdir}/%{name}/site/oct/%{octave_api}/$HOST_TYPE
+mkdir -p $RPM_BUILD_ROOT%{_libexecdir}/%{name}/site/oct/$HOST_TYPE
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name}/packages
+touch $RPM_BUILD_ROOT%{_datadir}/%{name}/octave_packages
 
 
 %clean
@@ -119,6 +124,7 @@ fi
 %config(noreplace) /etc/ld.so.conf.d/*
 %{_libdir}/octave*
 %{_datadir}/octave
+%ghost %{_datadir}/octave/octave_packages
 %{_libexecdir}/octave
 %{_mandir}/man*/octave*
 %{_infodir}/octave.info*
@@ -133,6 +139,14 @@ fi
 
 
 %changelog
+* Mon Nov  5 2007 Quentin Spencer <qspencer@users.sf.net> 2.9.16-1
+- Update to version 2.9.16.
+- Update licencse from GPLv2+ to GPLv3+.
+- Add qhull-devel and texinfo as dependencies.
+- Detection of glpk no longer needs special CPPFLAGS.
+- Other changes from development branch, including new octave packages
+  directory and changes to desktop file install.
+
 * Tue Feb 20 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.9-2
 - Fix install-info bug (Bug 219404). 
 - Add dependency on octave API so that breakages will be detected. (Bug 224050).
