@@ -1,8 +1,8 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%define octave_api api-v29
+%define octave_api api-v30
 
 Name:           octave
-Version:        2.9.17
+Version:        2.9.18
 Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
@@ -139,6 +139,9 @@ fi
 
 
 %changelog
+* Wed Dec  5 2007 Quentin Spencer <qspencer@users.sf.net> 2.9.18-1
+- Update to 2.9.18 and update octave_api.
+
 * Wed Nov 28 2007 Quentin Spencer <qspencer@users.sf.net> 2.9.17-1
 - Update to 2.9.17 and update octave_api.
 
