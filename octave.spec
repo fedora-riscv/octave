@@ -3,7 +3,7 @@
 
 Name:           octave
 Version:        2.9.19
-Release:        1%{?dist}
+Release:        1%{?dist}.1
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
