@@ -1,15 +1,15 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%define octave_api api-v31
+%define octave_api api-v32
 
 Name:           octave
-Version:        2.9.19
-Release:        1%{?dist}.1
+Version:        3.0.0
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
 Group:          Applications/Engineering
 License:        GPLv3+
-Source:         ftp://ftp.octave.org/pub/octave/bleeding-edge/octave-%{version}.tar.bz2
+Source:         ftp://ftp.octave.org/pub/octave/octave-%{version}.tar.bz2
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires(post): /sbin/install-info
@@ -139,6 +139,9 @@ fi
 
 
 %changelog
+* Wed Dec 26 2007 Quentin Spencer <qspencer@users.sf.net> 3.0.0-1
+- Update to 3.0.0.
+
 * Thu Dec 13 2007 Quentin Spencer <qspencer@users.sf.net> 2.9.19-1
 - Update to 2.9.19 and update octave_api.
 
