@@ -1,15 +1,15 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%define octave_api api-v25
+%define octave_api api-v32
 
 Name:           octave
-Version:        2.9.13
+Version:        3.0.0
 Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
 Group:          Applications/Engineering
-License:        GPL
-Source:         ftp://ftp.octave.org/pub/octave/bleeding-edge/octave-%{version}.tar.bz2
+License:        GPLv3+
+Source:         ftp://ftp.octave.org/pub/octave/octave-%{version}.tar.bz2
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires(post): /sbin/install-info
@@ -17,7 +17,7 @@ Requires(postun): /sbin/ldconfig
 Requires(post): /sbin/ldconfig
 Requires(preun): /sbin/install-info
 BuildRequires:  bison flex less tetex gcc-gfortran lapack-devel blas-devel
-BuildRequires:  ncurses-devel zlib-devel hdf5-devel texinfo
+BuildRequires:  ncurses-devel zlib-devel hdf5-devel texinfo qhull-devel
 BuildRequires:  readline-devel glibc-devel fftw3-devel gperf ghostscript
 BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
 Provides:       octave(api) = %{octave_api}
@@ -63,7 +63,6 @@ fi
 
 %build
 %define enable64 no
-export CPPFLAGS=-I%{_includedir}/glpk
 %configure --enable-shared --disable-static --enable-64=%enable64 --with-f77=gfortran
 make %{?_smp_mflags} OCTAVE_RELEASE="Fedora Extras %{version}-%{release}"
 
@@ -89,13 +88,15 @@ popd
 
 # Create desktop file
 rm $RPM_BUILD_ROOT%{_datadir}/applications/www.octave.org-octave.desktop
-desktop-file-install --vendor fedora --add-category X-Fedora \
+desktop-file-install --vendor fedora --add-category X-Fedora --remove-category Development \
 	--dir $RPM_BUILD_ROOT%{_datadir}/applications examples/octave.desktop
 
 # Create directories for add-on packages
 HOST_TYPE=`$RPM_BUILD_ROOT%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
 mkdir -p $RPM_BUILD_ROOT%{_libexecdir}/%{name}/site/oct/%{octave_api}/$HOST_TYPE
 mkdir -p $RPM_BUILD_ROOT%{_libexecdir}/%{name}/site/oct/$HOST_TYPE
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name}/packages
+touch $RPM_BUILD_ROOT%{_datadir}/%{name}/octave_packages
 
 
 %clean
@@ -123,6 +124,7 @@ fi
 %config(noreplace) /etc/ld.so.conf.d/*
 %{_libdir}/octave*
 %{_datadir}/octave
+%ghost %{_datadir}/octave/octave_packages
 %{_libexecdir}/octave
 %{_mandir}/man*/octave*
 %{_infodir}/octave.info*
@@ -137,6 +139,11 @@ fi
 
 
 %changelog
+* Thu Jan  3 2008 Quentin Spencer <qspencer@users.sf.net> 3.0.0-1
+- Update to 3.0.0.
+- Update license tag.
+- Port other spec file changes from devel branch.
+
 * Thu Jul 26 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.13-1
 - New release.
 - Changed ufsparse-devel dependency to suitesparse-devel.
