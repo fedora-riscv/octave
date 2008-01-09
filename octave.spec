@@ -3,7 +3,7 @@
 
 Name:           octave
 Version:        3.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -19,6 +19,7 @@ Requires(preun): /sbin/install-info
 BuildRequires:  bison flex less tetex gcc-gfortran lapack-devel blas-devel
 BuildRequires:  ncurses-devel zlib-devel hdf5-devel texinfo qhull-devel
 BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
+BuildRequires:  curl-devel pcre-devel
 BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
 Provides:       octave(api) = %{octave_api}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -139,6 +140,9 @@ fi
 
 
 %changelog
+* Wed Jan  9 2008 Quentin Spencer <qspencer@users.sf.net> 3.0.0-2
+- Add curl-devel and pcre-devel as build dependencies. Closes bug 302231.
+
 * Fri Dec 21 2007 Quentin Spencer <qspencer@users.sf.net> 3.0.0-1
 - Update to 3.0.0.
 
