@@ -3,7 +3,7 @@
 
 Name:           octave
 Version:        3.0.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -140,6 +140,9 @@ fi
 
 
 %changelog
+* Tue Feb 19 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 6:3.0.0-3
+- Autorebuild for GCC 4.3
+
 * Wed Jan  9 2008 Quentin Spencer <qspencer@users.sf.net> 3.0.0-2
 - Add curl-devel and pcre-devel as build dependencies. Closes bug 302231.
 
