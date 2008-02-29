@@ -3,13 +3,14 @@
 
 Name:           octave
 Version:        3.0.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
 Group:          Applications/Engineering
 License:        GPLv3+
 Source:         ftp://ftp.octave.org/pub/octave/octave-%{version}.tar.bz2
+Patch:          octave-3.0.0-gcc43.patch
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires(post): /sbin/install-info
@@ -54,6 +55,7 @@ applications which use GNU Octave.
 
 %prep
 %setup -q
+%patch -p1 -b .gcc43
 # Check that octave_api is set correctly
 if ! grep -q '^#define OCTAVE_API_VERSION "%{octave_api}"' src/version.h
 then
@@ -64,6 +66,7 @@ fi
 
 %build
 %define enable64 no
+export CPPFLAGS="-DH5_USE_16_API"
 %configure --enable-shared --disable-static --enable-64=%enable64 --with-f77=gfortran
 make %{?_smp_mflags} OCTAVE_RELEASE="Fedora Extras %{version}-%{release}"
 
@@ -140,6 +143,10 @@ fi
 
 
 %changelog
+* Fri Feb 29 2008 Orion Poplawski <orion@cora.nwra.com> 3.0.0-4
+- Rebuild for hdf5 1.8.0 using compatability API define
+- Add gcc43 patch
+
 * Tue Feb 19 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 6:3.0.0-3
 - Autorebuild for GCC 4.3
 
