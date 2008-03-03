@@ -145,7 +145,7 @@ fi
 %changelog
 * Mon Mar  3 2008 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.0.0-6
 - Re-enable patch, but change cstring -> string.h so it works for C as
-  well as C++
+  well as C++.  Hopefully this will #435600 for real.
 
 * Sun Mar  2 2008 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.0.0-5
 - Backout GCC 4.3 patch temporarily, causes trouble for octave-forge and 
