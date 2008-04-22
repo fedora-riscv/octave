@@ -2,15 +2,14 @@
 %define octave_api api-v32
 
 Name:           octave
-Version:        3.0.0
-Release:        6%{?dist}
+Version:        3.0.1
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
 Group:          Applications/Engineering
 License:        GPLv3+
 Source:         ftp://ftp.octave.org/pub/octave/octave-%{version}.tar.bz2
-Patch:          octave-3.0.0-gcc43.patch
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires(post): /sbin/install-info
@@ -55,7 +54,6 @@ applications which use GNU Octave.
 
 %prep
 %setup -q
-%patch -p1 -b .gcc43
 # Check that octave_api is set correctly
 if ! grep -q '^#define OCTAVE_API_VERSION "%{octave_api}"' src/version.h
 then
@@ -68,7 +66,7 @@ fi
 %define enable64 no
 export CPPFLAGS="-DH5_USE_16_API"
 %configure --enable-shared --disable-static --enable-64=%enable64 --with-f77=gfortran
-make %{?_smp_mflags} OCTAVE_RELEASE="Fedora Extras %{version}-%{release}"
+make %{?_smp_mflags} OCTAVE_RELEASE="Fedora %{version}-%{release}"
 
 
 %install
@@ -143,6 +141,9 @@ fi
 
 
 %changelog
+* Mon Apr 21 2008 Quentin Spencer <qspencer@users.sf.net> 3.0.1-1
+- New release of octave. Remove gcc 4.3 patch.
+
 * Mon Mar  3 2008 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.0.0-6
 - Re-enable patch, but change cstring -> string.h so it works for C as
   well as C++.  Hopefully this will #435600 for real.
