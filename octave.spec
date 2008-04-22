@@ -2,8 +2,8 @@
 %define octave_api api-v32
 
 Name:           octave
-Version:        3.0.0
-Release:        2%{?dist}
+Version:        3.0.1
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -65,7 +65,7 @@ fi
 %build
 %define enable64 no
 %configure --enable-shared --disable-static --enable-64=%enable64 --with-f77=gfortran
-make %{?_smp_mflags} OCTAVE_RELEASE="Fedora Extras %{version}-%{release}"
+make %{?_smp_mflags} OCTAVE_RELEASE="Fedora %{version}-%{release}"
 
 
 %install
@@ -140,6 +140,9 @@ fi
 
 
 %changelog
+* Tue Apr 22 2008 Quentin Spencer <qspencer@users.sf.net> 3.0.1-1
+- New release of octave.
+
 * Wed Jan  9 2008 Quentin Spencer <qspencer@users.sf.net> 3.0.0-2
 - Add curl-devel and pcre-devel as build dependencies. Closes bug 302231.
 
