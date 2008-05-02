@@ -3,7 +3,7 @@
 
 Name:           octave
 Version:        3.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -140,6 +140,9 @@ fi
 
 
 %changelog
+* Fri May  2 2008 Quentin Spencer <qspencer@users.sf.net> 3.0.1-2
+- Rebuild for updated suitesparse library.
+
 * Wed Apr 30 2008 Quentin Spencer <qspencer@users.sf.net> 3.0.1-1
 - New release of octave.
 
