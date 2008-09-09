@@ -2,7 +2,7 @@
 %define octave_api api-v32
 
 Name:           octave
-Version:        3.0.1
+Version:        3.0.2
 Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
@@ -141,6 +141,9 @@ fi
 
 
 %changelog
+* Mon Sep 8 2008 Orion Poplawski <orion@cora.nwra.com> 3.0.2-1
+- Update to 3.0.2
+
 * Mon Apr 21 2008 Quentin Spencer <qspencer@users.sf.net> 3.0.1-1
 - New release of octave. Remove gcc 4.3 patch.
 
