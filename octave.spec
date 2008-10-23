@@ -2,14 +2,15 @@
 %define octave_api api-v32
 
 Name:           octave
-Version:        3.0.1
-Release:        1%{?dist}
+Version:        3.0.2
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
 Group:          Applications/Engineering
 License:        GPLv3+
 Source:         ftp://ftp.octave.org/pub/octave/octave-%{version}.tar.bz2
+Patch1:         octave-sh-arch.patch
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires(post): /sbin/install-info
@@ -19,8 +20,8 @@ Requires(preun): /sbin/install-info
 BuildRequires:  bison flex less tetex gcc-gfortran lapack-devel blas-devel
 BuildRequires:  ncurses-devel zlib-devel hdf5-devel texinfo qhull-devel
 BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
-BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
 BuildRequires:  curl-devel pcre-devel
+BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
 Provides:       octave(api) = %{octave_api}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -61,9 +62,12 @@ then
   exit 1
 fi
 
+# patch for sh arch
+%patch1 -p1 -b .sh-arch
 
 %build
 %define enable64 no
+export CPPFLAGS="-DH5_USE_16_API"
 %configure --enable-shared --disable-static --enable-64=%enable64 --with-f77=gfortran
 make %{?_smp_mflags} OCTAVE_RELEASE="Fedora %{version}-%{release}"
 
@@ -140,17 +144,44 @@ fi
 
 
 %changelog
-* Tue Apr 22 2008 Quentin Spencer <qspencer@users.sf.net> 3.0.1-1
-- New release of octave.
+* Thu Oct 23 2008 Rakesh Pandit <rakesh@fedoraproject.org> 3.0.2-2
+- patch for sh arch: it adds '-little' flag
+
+* Mon Sep 8 2008 Orion Poplawski <orion@cora.nwra.com> 3.0.2-1
+- Update to 3.0.2
+
+* Mon Apr 21 2008 Quentin Spencer <qspencer@users.sf.net> 3.0.1-1
+- New release of octave. Remove gcc 4.3 patch.
+
+* Mon Mar  3 2008 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.0.0-6
+- Re-enable patch, but change cstring -> string.h so it works for C as
+  well as C++.  Hopefully this will #435600 for real.
+
+* Sun Mar  2 2008 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.0.0-5
+- Backout GCC 4.3 patch temporarily, causes trouble for octave-forge and 
+  may not be necessary (#435600)
+
+* Fri Feb 29 2008 Orion Poplawski <orion@cora.nwra.com> 3.0.0-4
+- Rebuild for hdf5 1.8.0 using compatability API define
+- Add gcc43 patch
+
+* Tue Feb 19 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 6:3.0.0-3
+- Autorebuild for GCC 4.3
 
 * Wed Jan  9 2008 Quentin Spencer <qspencer@users.sf.net> 3.0.0-2
 - Add curl-devel and pcre-devel as build dependencies. Closes bug 302231.
 
-* Wed Dec 26 2007 Quentin Spencer <qspencer@users.sf.net> 3.0.0-1
+* Fri Dec 21 2007 Quentin Spencer <qspencer@users.sf.net> 3.0.0-1
 - Update to 3.0.0.
 
-* Thu Dec 13 2007 Quentin Spencer <qspencer@users.sf.net> 2.9.19-1
+* Wed Dec 12 2007 Quentin Spencer <qspencer@users.sf.net> 2.9.19-1
 - Update to 2.9.19 and update octave_api.
+
+* Wed Dec  5 2007 Quentin Spencer <qspencer@users.sf.net> 2.9.18-1
+- Update to 2.9.18 and update octave_api.
+
+* Wed Nov 28 2007 Quentin Spencer <qspencer@users.sf.net> 2.9.17-1
+- Update to 2.9.17 and update octave_api.
 
 * Mon Nov  5 2007 Quentin Spencer <qspencer@users.sf.net> 2.9.16-1
 - Update to 2.9.16, remove old patch.
