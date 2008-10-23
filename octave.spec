@@ -3,13 +3,14 @@
 
 Name:           octave
 Version:        3.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
 Group:          Applications/Engineering
 License:        GPLv3+
 Source:         ftp://ftp.octave.org/pub/octave/octave-%{version}.tar.bz2
+Patch1:         octave-sh-arch.patch
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires(post): /sbin/install-info
@@ -61,6 +62,8 @@ then
   exit 1
 fi
 
+# patch for sh arch
+%patch1 -p1 -b .sh-arch
 
 %build
 %define enable64 no
@@ -141,6 +144,9 @@ fi
 
 
 %changelog
+* Thu Oct 23 2008 Rakesh Pandit <rakesh@fedoraproject.org> 3.0.2-2
+- patch for sh arch: it adds '-little' flag
+
 * Mon Sep 8 2008 Orion Poplawski <orion@cora.nwra.com> 3.0.2-1
 - Update to 3.0.2
 
