@@ -2,8 +2,8 @@
 %define octave_api api-v32
 
 Name:           octave
-Version:        3.0.2
-Release:        2%{?dist}
+Version:        3.0.3
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
@@ -144,6 +144,9 @@ fi
 
 
 %changelog
+* Wed Dec 10 2008 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.0.3-1
+- Update to latest upstream (3.0.3)
+
 * Thu Oct 23 2008 Rakesh Pandit <rakesh@fedoraproject.org> 3.0.2-2
 - patch for sh arch: it adds '-little' flag
 
