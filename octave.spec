@@ -2,16 +2,16 @@
 %define octave_api api-v32
 
 Name:           octave
-Version:        3.0.3
-Release:        2%{?dist}
+Version:        3.0.5
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
 Group:          Applications/Engineering
 License:        GPLv3+
 Source:         ftp://ftp.octave.org/pub/octave/octave-%{version}.tar.bz2
-Patch1:         %{name}-sh-arch.patch
-Patch2:         %{name}-gcc44.patch
+#Patch1:         %{name}-sh-arch.patch
+#Patch2:         %{name}-gcc44.patch
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires(post): /sbin/install-info
@@ -64,9 +64,9 @@ then
 fi
 
 # patch for sh arch
-%patch1 -p1 -b .sh-arch
+#%patch1 -p1 -b .sh-arch
 # patch for gcc 4.4
-%patch2 -p1 -b .gcc44
+#%patch2 -p1 -b .gcc44
 
 %build
 %define enable64 no
@@ -147,6 +147,9 @@ fi
 
 
 %changelog
+* Sun Apr 12 2009 Rakesh Pandit <rakesh@fedoraproject.org> - 6:3.0.5-1
+- Updated to latest upstream (3.0.5)
+
 * Mon Feb 23 2009 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.0.3-2
 - Add patches from upstream for compiling against GCC 4.4
   http://hg.savannah.gnu.org/hgweb/octave/rev/93cf10950334
