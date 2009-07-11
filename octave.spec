@@ -19,6 +19,7 @@ BuildRequires:  ncurses-devel zlib-devel hdf5-devel texinfo qhull-devel
 BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
 BuildRequires:  curl-devel pcre-devel texinfo-tex arpack-devel libX11-devel
 BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
+BuildRequires:  GraphicsMagick-c++-devel fltk-devel
 # FIXME: Uncomment when qrupdate is available in Fedora
 #BuildRequires:  qrupdate-devel
 
@@ -83,6 +84,8 @@ echo "%{_libdir}/octave-%{version}" > $RPM_BUILD_ROOT/etc/ld.so.conf.d/octave-%{
 # Remove RPM_BUILD_ROOT from ls-R files
 perl -pi -e "s,$RPM_BUILD_ROOT,," $RPM_BUILD_ROOT%{_libexecdir}/%{name}/ls-R
 perl -pi -e "s,$RPM_BUILD_ROOT,," $RPM_BUILD_ROOT%{_datadir}/%{name}/ls-R
+# Make sure ls-R exists
+touch $RPM_BUILD_ROOT%{_datadir}/%{name}/ls-R
 
 # Clean doc directory
 pushd doc
@@ -121,7 +124,7 @@ fi
 %files
 %defattr(-,root,root,-)
 %doc COPYING NEWS* PROJECTS README README.Linux README.kpathsea ROADMAP
-%doc SENDING-PATCHES emacs/ examples/ doc/interpreter/octave.p*
+%doc SENDING-PATCHES emacs/ examples/ doc/interpreter/octave.pdf
 %doc doc/faq/ doc/interpreter/HTML/ doc/refcard/
 %config /etc/ld.so.conf.d/octave-*.conf
 %{_bindir}/octave*
