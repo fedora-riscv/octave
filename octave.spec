@@ -2,14 +2,16 @@
 %define octave_api api-v32
 
 Name:           octave
-Version:        3.0.1
-Release:        2%{?dist}
+Version:        3.0.5
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 
 Group:          Applications/Engineering
 License:        GPLv3+
 Source:         ftp://ftp.octave.org/pub/octave/octave-%{version}.tar.bz2
+#Patch1:         %{name}-sh-arch.patch
+#Patch2:         %{name}-gcc44.patch
 URL:            http://www.octave.org
 Requires:       gnuplot less info texinfo 
 Requires(post): /sbin/install-info
@@ -18,9 +20,9 @@ Requires(post): /sbin/ldconfig
 Requires(preun): /sbin/install-info
 BuildRequires:  bison flex less tetex gcc-gfortran lapack-devel blas-devel
 BuildRequires:  ncurses-devel zlib-devel hdf5-devel texinfo qhull-devel
-BuildRequires:  readline-devel glibc-devel fftw3-devel gperf ghostscript
-BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
+BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
 BuildRequires:  curl-devel pcre-devel
+BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
 Provides:       octave(api) = %{octave_api}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -61,11 +63,16 @@ then
   exit 1
 fi
 
+# patch for sh arch
+#%patch1 -p1 -b .sh-arch
+# patch for gcc 4.4
+#%patch2 -p1 -b .gcc44
 
 %build
 %define enable64 no
+export CPPFLAGS="-DH5_USE_16_API"
 %configure --enable-shared --disable-static --enable-64=%enable64 --with-f77=gfortran
-make %{?_smp_mflags} OCTAVE_RELEASE="EPEL %{version}-%{release}"
+make %{?_smp_mflags} OCTAVE_RELEASE="Fedora %{version}-%{release}"
 
 
 %install
@@ -140,19 +147,77 @@ fi
 
 
 %changelog
-* Fri May  2 2008 Quentin Spencer <qspencer@users.sf.net> 3.0.1-2
-- Rebuild for updated suitesparse library.
+* Sun Apr 12 2009 Rakesh Pandit <rakesh@fedoraproject.org> - 6:3.0.5-1
+- Updated to latest upstream (3.0.5)
 
-* Wed Apr 30 2008 Quentin Spencer <qspencer@users.sf.net> 3.0.1-1
-- New release of octave.
+* Mon Feb 23 2009 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.0.3-2
+- Add patches from upstream for compiling against GCC 4.4
+  http://hg.savannah.gnu.org/hgweb/octave/rev/93cf10950334
+  http://hg.tw-math.de/release-3-0-x/rev/712d9e045b1e
+
+* Wed Dec 10 2008 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.0.3-1
+- Update to latest upstream (3.0.3)
+
+* Thu Oct 23 2008 Rakesh Pandit <rakesh@fedoraproject.org> 6:3.0.2-2
+- patch for sh arch: it adds '-little' flag
+
+* Mon Sep 8 2008 Orion Poplawski <orion@cora.nwra.com> 6:3.0.2-1
+- Update to 3.0.2
+
+* Mon Apr 21 2008 Quentin Spencer <qspencer@users.sf.net> 6:3.0.1-1
+- New release of octave. Remove gcc 4.3 patch.
+
+* Mon Mar  3 2008 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.0.0-6
+- Re-enable patch, but change cstring -> string.h so it works for C as
+  well as C++.  Hopefully this will #435600 for real.
+
+* Sun Mar  2 2008 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.0.0-5
+- Backout GCC 4.3 patch temporarily, causes trouble for octave-forge and 
+  may not be necessary (#435600)
+
+* Fri Feb 29 2008 Orion Poplawski <orion@cora.nwra.com> 3.0.0-4
+- Rebuild for hdf5 1.8.0 using compatability API define
+- Add gcc43 patch
+
+* Tue Feb 19 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 6:3.0.0-3
+- Autorebuild for GCC 4.3
 
 * Wed Jan  9 2008 Quentin Spencer <qspencer@users.sf.net> 3.0.0-2
 - Add curl-devel and pcre-devel as build dependencies. Closes bug 302231.
 
-* Thu Jan  3 2008 Quentin Spencer <qspencer@users.sf.net> 3.0.0-1
+* Fri Dec 21 2007 Quentin Spencer <qspencer@users.sf.net> 3.0.0-1
 - Update to 3.0.0.
+
+* Wed Dec 12 2007 Quentin Spencer <qspencer@users.sf.net> 2.9.19-1
+- Update to 2.9.19 and update octave_api.
+
+* Wed Dec  5 2007 Quentin Spencer <qspencer@users.sf.net> 2.9.18-1
+- Update to 2.9.18 and update octave_api.
+
+* Wed Nov 28 2007 Quentin Spencer <qspencer@users.sf.net> 2.9.17-1
+- Update to 2.9.17 and update octave_api.
+
+* Mon Nov  5 2007 Quentin Spencer <qspencer@users.sf.net> 2.9.16-1
+- Update to 2.9.16, remove old patch.
+- Update licencse from GPLv2+ to GPLv3+.
+- Detection of glpk no longer needs special CPPFLAGS.
+
+* Tue Oct 16 2007 Orion Poplawski <orion@ora.nwra.com> 2.9.15-2
+- Updated pkg.m patch
+
+* Mon Oct 15 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.15-1
+- New release. Remove old patch.
+
+* Tue Sep 25 2007 Orion Poplawski <orion@ora.nwra.com> 2.9.14-2
+- Add /usr/share/octave/packages for add on packages and %%ghost 
+  /usr/share/octave/octave_packages
+- Add patch for octave package manager that will be going upstream
+
+* Tue Sep 18 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.14-1
+- New release.
+- Remove redundant menu category in desktop file (bug 274431).
 - Update license tag.
-- Port other spec file changes from devel branch.
+- Add qhull-devel as new build dependency.
 
 * Thu Jul 26 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.13-1
 - New release.
@@ -160,7 +225,6 @@ fi
 - Add configure flag to close bug 245562.
 - Add directories for add-on packages (bug 234012).
 - Since texinfo is now separate from tetex, it is a build requirement.
-- In EPEL, fftw is called fftw3.
 
 * Wed May 23 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.12-1
 - New release.
@@ -442,73 +506,73 @@ does not exist.
 * Sat Aug 10 2002 Elliot Lee <sopwith@redhat.com>
 - rebuilt with gcc-3.2 (we hope)
 
-* Mon Aug  5 2002 Trond Eivind Glomsrød <teg@redhat.com> 2.1.36-7
+* Mon Aug  5 2002 Trond Eivind GlomsrÃ¸d <teg@redhat.com> 2.1.36-7
 - Rebuild
 
-* Tue Jul 23 2002 Trond Eivind Glomsrød <teg@redhat.com> 2.1.36-6
+* Tue Jul 23 2002 Trond Eivind GlomsrÃ¸d <teg@redhat.com> 2.1.36-6
 - Rebuild
 
-* Thu Jul 11 2002 Trond Eivind Glomsrød <teg@redhat.com>
+* Thu Jul 11 2002 Trond Eivind GlomsrÃ¸d <teg@redhat.com>
 - Rebuild with new readline
 
 * Fri Jun 21 2002 Tim Powers <timp@redhat.com>
 - automated rebuild
 
-* Fri Jun 14 2002 Trond Eivind Glomsrød <teg@redhat.com> 2.1.36-3
+* Fri Jun 14 2002 Trond Eivind GlomsrÃ¸d <teg@redhat.com> 2.1.36-3
 - Get rid of 0 size doc files (#66116)
 
-* Thu May 23 2002 Trond Eivind Glomsrød <teg@redhat.com> 2.1.36-2
+* Thu May 23 2002 Trond Eivind GlomsrÃ¸d <teg@redhat.com> 2.1.36-2
 - Rebuild
 - Patch C++ code gcc changed its opinion of the last 3 weeks
 
-* Wed May  1 2002 Trond Eivind Glomsrød <teg@redhat.com> 2.1.36-1
+* Wed May  1 2002 Trond Eivind GlomsrÃ¸d <teg@redhat.com> 2.1.36-1
 - 2.1.36
 - Disable patch
 
-* Wed Feb 27 2002 Trond Eivind Glomsrød <teg@redhat.com> 2.1.35-4
+* Wed Feb 27 2002 Trond Eivind GlomsrÃ¸d <teg@redhat.com> 2.1.35-4
 - Rebuild
 
 * Wed Jan 09 2002 Tim Powers <timp@redhat.com>
 - automated rebuild
 
-* Tue Nov 27 2001 Trond Eivind Glomsrød <teg@redhat.com> 2.1.35-2
+* Tue Nov 27 2001 Trond Eivind GlomsrÃ¸d <teg@redhat.com> 2.1.35-2
 - Add patch for kpathsea to avoid segfaults
 
-* Tue Nov  6 2001 Trond Eivind Glomsrød <teg@redhat.com> 2.1.35-1
+* Tue Nov  6 2001 Trond Eivind GlomsrÃ¸d <teg@redhat.com> 2.1.35-1
 - 2.1.35
 - s/Copyright/License/
 
 * Wed Sep 12 2001 Tim Powers <timp@redhat.com>
 - rebuild with new gcc and binutils
 
-* Wed Jun 20 2001 Trond Eivind Glomsrød <teg@redhat.com>
+* Wed Jun 20 2001 Trond Eivind GlomsrÃ¸d <teg@redhat.com>
 - Add more dependencies in BuildPrereq (#45184)
 
-* Fri Jun 08 2001 Trond Eivind Glomsrød <teg@redhat.com>
+* Fri Jun 08 2001 Trond Eivind GlomsrÃ¸d <teg@redhat.com>
 - No longer exclude ia64
 
-* Mon Apr 23 2001 Trond Eivind Glomsrød <teg@redhat.com>
+* Mon Apr 23 2001 Trond Eivind GlomsrÃ¸d <teg@redhat.com>
 - 2.1.34
 
-* Tue Mar 27 2001 Trond Eivind Glomsrød <teg@redhat.com>
+* Tue Mar 27 2001 Trond Eivind GlomsrÃ¸d <teg@redhat.com>
 - set LC_ALL to POSIX before building, otherwise the generated paths.h is bad
 
-* Wed Jan 10 2001 Trond Eivind Glomsrød <teg@redhat.com>
+* Wed Jan 10 2001 Trond Eivind GlomsrÃ¸d <teg@redhat.com>
 - 2.1.33
 
 * Mon Jan 08 2001 Florian La Roche <Florian.LaRoche@redhat.de>
 - do not require compat-egcs-c++, but gcc-c++
 - add some libtoolize calls to add newest versions
 
-* Fri Dec 15 2000 Trond Eivind Glomsrød <teg@redhat.com>
+* Fri Dec 15 2000 Trond Eivind GlomsrÃ¸d <teg@redhat.com>
 - 2.1.32, no longer use CVS as our needed fixes are in now
 - add Prereq for info
 
-* Thu Dec 07 2000 Trond Eivind Glomsrød <teg@redhat.com>
+* Thu Dec 07 2000 Trond Eivind GlomsrÃ¸d <teg@redhat.com>
 - use a development version, as they have now been fixed
   to compile with the our current toolchain.
 
-* Thu Aug 24 2000 Trond Eivind Glomsrød <teg@redhat.com>
+* Thu Aug 24 2000 Trond Eivind GlomsrÃ¸d <teg@redhat.com>
 - 2.0.16, with compat C++ compiler and new C and f77 compilers
   The C++ code is too broken for our new toolchain (C++ reserved
   words used as enums and function names, arcane macros), but
@@ -518,13 +582,13 @@ does not exist.
 * Tue Jul 25 2000 Jakub Jelinek <jakub@redhat.com>
 - make sure #line commands are not output within macro arguments
 
-* Wed Jul 19 2000 Trond Eivind Glomsrød <teg@redhat.com>
+* Wed Jul 19 2000 Trond Eivind GlomsrÃ¸d <teg@redhat.com>
 - 2.1.31
 
 * Wed Jul 12 2000 Prospector <bugzilla@redhat.com>
 - automatic rebuild
 
-* Thu Jul 06 2000 Trond Eivind Glomsrød <teg@redhat.com>
+* Thu Jul 06 2000 Trond Eivind GlomsrÃ¸d <teg@redhat.com>
 - no longer disable optimizations, sparc excepted
 
 * Tue Jul  4 2000 Jakub Jelinek <jakub@redhat.com>
@@ -533,21 +597,21 @@ does not exist.
 * Mon Jul  3 2000 Matt Wilson <msw@redhat.com>
 - added missing %% before {_infodir} in the %%post 
 
-* Sat Jun 09 2000 Trond Eivind Glomsrød <teg@redhat.com>
+* Sat Jun 09 2000 Trond Eivind GlomsrÃ¸d <teg@redhat.com>
 - 2.1.30 - the old version contains invalid C++ code
   accepted by older compilers.
 
-* Sat Jun 09 2000 Trond Eivind Glomsrød <teg@redhat.com>
+* Sat Jun 09 2000 Trond Eivind GlomsrÃ¸d <teg@redhat.com>
 - disable optimization for C++ code
 
-* Fri Jun 08 2000 Trond Eivind Glomsrød <teg@redhat.com>
+* Fri Jun 08 2000 Trond Eivind GlomsrÃ¸d <teg@redhat.com>
 - add "Excludearch: " for Alpha - it triggers compiler bugs
 
-* Fri Jun 08 2000 Trond Eivind Glomsrød <teg@redhat.com>
+* Fri Jun 08 2000 Trond Eivind GlomsrÃ¸d <teg@redhat.com>
 - use %%configure, %%makeinstall, %{_infodir}. %{_mandir}
 - remove prefix
 
-* Tue May 09 2000 Trond Eivind Glomsrød <teg@redhat.com>
+* Tue May 09 2000 Trond Eivind GlomsrÃ¸d <teg@redhat.com>
 - upgraded to 2.0.16
 - removed "--enable-g77" from the configure flags - let autoconf find it
 
