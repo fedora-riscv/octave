@@ -17,7 +17,7 @@ Provides:       octave(api) = %{octave_api}
 BuildRequires:  bison flex less tetex gcc-gfortran lapack-devel blas-devel
 BuildRequires:  ncurses-devel zlib-devel hdf5-devel texinfo qhull-devel
 BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
-BuildRequires:  curl-devel pcre-devel texinfo-tex arpack-devel
+BuildRequires:  curl-devel pcre-devel texinfo-tex arpack-devel libX11-devel
 BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
 # FIXME: Uncomment when qrupdate is available in Fedora
 #BuildRequires:  qrupdate-devel
