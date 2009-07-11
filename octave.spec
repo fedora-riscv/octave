@@ -19,11 +19,9 @@ BuildRequires:  ncurses-devel zlib-devel hdf5-devel texinfo qhull-devel
 BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
 BuildRequires:  curl-devel pcre-devel texinfo-tex arpack-devel libX11-devel
 BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
-BuildRequires:  GraphicsMagick-c++-devel fltk-devel tex(latex)
-# FIXME: Uncomment when qrupdate is available in Fedora
-#BuildRequires:  qrupdate-devel
+BuildRequires:  GraphicsMagick-c++-devel fltk-devel qrupdate-devel
 
-Requires:        gnuplot less info texinfo 
+Requires:        gnuplot gnuplot-common less info texinfo 
 Requires(post):  info
 Requires(preun): info
 
