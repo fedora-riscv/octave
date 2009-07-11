@@ -1,30 +1,30 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%define octave_api api-v32
+%define octave_api api-v37
 
 Name:           octave
-Version:        3.0.5
+Version:        3.2.0
 Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
-
 Group:          Applications/Engineering
 License:        GPLv3+
 Source:         ftp://ftp.octave.org/pub/octave/octave-%{version}.tar.bz2
-#Patch1:         %{name}-sh-arch.patch
-#Patch2:         %{name}-gcc44.patch
 URL:            http://www.octave.org
-Requires:       gnuplot less info texinfo 
-Requires(post): /sbin/install-info
-Requires(postun): /sbin/ldconfig
-Requires(post): /sbin/ldconfig
-Requires(preun): /sbin/install-info
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+Provides:       octave(api) = %{octave_api}
+
 BuildRequires:  bison flex less tetex gcc-gfortran lapack-devel blas-devel
 BuildRequires:  ncurses-devel zlib-devel hdf5-devel texinfo qhull-devel
 BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
-BuildRequires:  curl-devel pcre-devel
+BuildRequires:  curl-devel pcre-devel texinfo-tex arpack-devel
 BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
-Provides:       octave(api) = %{octave_api}
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+# FIXME: Uncomment when qrupdate is available in Fedora
+#BuildRequires:  qrupdate-devel
+
+Requires:        gnuplot less info texinfo 
+Requires(post):  info
+Requires(preun): info
 
 
 %description
@@ -63,16 +63,12 @@ then
   exit 1
 fi
 
-# patch for sh arch
-#%patch1 -p1 -b .sh-arch
-# patch for gcc 4.4
-#%patch2 -p1 -b .gcc44
-
 %build
-%define enable64 no
+%global enable64 no
 export CPPFLAGS="-DH5_USE_16_API"
-%configure --enable-shared --disable-static --enable-64=%enable64 --with-f77=gfortran
-make %{?_smp_mflags} OCTAVE_RELEASE="Fedora %{version}-%{release}"
+%configure --enable-shared --disable-static --enable-64=%enable64 F77=gfortran
+#make %{?_smp_mflags} OCTAVE_RELEASE="Fedora %{version}-%{release}"
+make OCTAVE_RELEASE="Fedora %{version}-%{release}"
 
 
 %install
@@ -97,7 +93,7 @@ popd
 # Create desktop file
 rm $RPM_BUILD_ROOT%{_datadir}/applications/www.octave.org-octave.desktop
 desktop-file-install --vendor fedora --add-category X-Fedora --remove-category Development \
-	--dir $RPM_BUILD_ROOT%{_datadir}/applications examples/octave.desktop
+        --dir $RPM_BUILD_ROOT%{_datadir}/applications examples/octave.desktop
 
 # Create directories for add-on packages
 HOST_TYPE=`$RPM_BUILD_ROOT%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
@@ -113,40 +109,49 @@ rm -rf $RPM_BUILD_ROOT
 %post
 /sbin/ldconfig
 /sbin/install-info --info-dir=%{_infodir} --section="Programming" \
-	%{_infodir}/octave.info || :
+        %{_infodir}/octave.info || :
 
 %preun
 if [ "$1" = "0" ]; then
    /sbin/install-info --delete --info-dir=%{_infodir} %{_infodir}/octave.info || :
 fi
 
-
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root)
+%defattr(-,root,root,-)
 %doc COPYING NEWS* PROJECTS README README.Linux README.kpathsea ROADMAP
-%doc SENDING-PATCHES THANKS emacs examples doc/interpreter/octave.p*
-%doc doc/faq doc/interpreter/HTML doc/refcard
+%doc SENDING-PATCHES emacs/ examples/ doc/interpreter/octave.p*
+%doc doc/faq/ doc/interpreter/HTML/ doc/refcard/
+%config /etc/ld.so.conf.d/octave-*.conf
 %{_bindir}/octave*
-%config(noreplace) /etc/ld.so.conf.d/*
-%{_libdir}/octave*
-%{_datadir}/octave
-%ghost %{_datadir}/octave/octave_packages
-%{_libexecdir}/octave
-%{_mandir}/man*/octave*
+%{_libdir}/octave-%{version}/
+%{_libexecdir}/octave/
+%{_mandir}/man1/octave*.1.*
 %{_infodir}/octave.info*
-%{_datadir}/applications/*
+%{_datadir}/applications/fedora-octave.desktop
+# octave_packages is %ghost, so need to list everything else separately
+%dir %{_datadir}/octave
+%{_datadir}/octave/%{version}/
+%{_datadir}/octave/ls-R
+%ghost %{_datadir}/octave/octave_packages
+%{_datadir}/octave/packages/
+%{_datadir}/octave/site/
+
 
 %files devel
-%defattr(-,root,root)
-%doc doc/liboctave
-%{_bindir}/mkoctfile*
-%{_includedir}/octave-%{version}
-%{_mandir}/man*/mkoctfile*
+%defattr(-,root,root,-)
+%doc doc/liboctave/HTML/ doc/liboctave/liboctave.pdf
+%{_bindir}/mkoctfile
+%{_bindir}/mkoctfile-%{version}
+%{_includedir}/octave-%{version}/
+%{_mandir}/man1/mkoctfile.1.*
 
 
 %changelog
+* Sat Jul 11 2009 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.2.0-1
+- Update to latest upstream (3.2.0).
+
 * Sun Apr 12 2009 Rakesh Pandit <rakesh@fedoraproject.org> - 6:3.0.5-1
 - Updated to latest upstream (3.0.5)
 
@@ -634,7 +639,7 @@ does not exist.
 - repackage in powertools.
 
 * Thu Jun 11 1998 Andrew Veliath <andrewtv@usa.net>
-- Add %attr, build as user.
+- Add %%attr, build as user.
 
 * Mon Jun 1 1998 Andrew Veliath <andrewtv@usa.net>
 - Add BuildRoot, installinfo, require gnuplot, description from
