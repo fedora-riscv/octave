@@ -3,7 +3,7 @@
 
 Name:           octave
 Version:        3.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -19,7 +19,7 @@ BuildRequires:  ncurses-devel zlib-devel hdf5-devel texinfo qhull-devel
 BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
 BuildRequires:  curl-devel pcre-devel texinfo-tex arpack-devel libX11-devel
 BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
-BuildRequires:  GraphicsMagick-c++-devel fltk-devel qrupdate-devel
+BuildRequires:  GraphicsMagick-c++-devel fltk-devel ftgl-devel qrupdate-devel
 
 Requires:        gnuplot gnuplot-common less info texinfo 
 Requires(post):  info
@@ -53,6 +53,16 @@ The octave-devel package contains files needed for developing
 applications which use GNU Octave.
 
 
+%package doc
+Summary:        Documentation for Octave
+Group:          Documentation
+%if 0%{?fedora} > 10 || 0%{?rhel} > 5
+BuildArch:      noarch
+%endif
+
+%description doc
+This package contains documentation for Octave.
+
 %prep
 %setup -q
 # Check that octave_api is set correctly
@@ -66,24 +76,25 @@ fi
 %global enable64 no
 export CPPFLAGS="-DH5_USE_16_API"
 %configure --enable-shared --disable-static --enable-64=%enable64 F77=gfortran
+# SMP make doesn't work in Octave 3.2.0
 #make %{?_smp_mflags} OCTAVE_RELEASE="Fedora %{version}-%{release}"
 make OCTAVE_RELEASE="Fedora %{version}-%{release}"
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
-rm -f ${RPM_BUILD_ROOT}%{_infodir}/dir
+rm -rf %{buildroot}
+make install DESTDIR=%{buildroot}
+rm -f %{buildroot}%{_infodir}/dir
 
 # Make library links
-mkdir -p $RPM_BUILD_ROOT/etc/ld.so.conf.d
-echo "%{_libdir}/octave-%{version}" > $RPM_BUILD_ROOT/etc/ld.so.conf.d/octave-%{_arch}.conf
+mkdir -p %{buildroot}/etc/ld.so.conf.d
+echo "%{_libdir}/octave-%{version}" > %{buildroot}/etc/ld.so.conf.d/octave-%{_arch}.conf
 
 # Remove RPM_BUILD_ROOT from ls-R files
-perl -pi -e "s,$RPM_BUILD_ROOT,," $RPM_BUILD_ROOT%{_libexecdir}/%{name}/ls-R
-perl -pi -e "s,$RPM_BUILD_ROOT,," $RPM_BUILD_ROOT%{_datadir}/%{name}/ls-R
+perl -pi -e "s,%{buildroot},," %{buildroot}%{_libexecdir}/%{name}/ls-R
+perl -pi -e "s,%{buildroot},," %{buildroot}%{_datadir}/%{name}/ls-R
 # Make sure ls-R exists
-touch $RPM_BUILD_ROOT%{_datadir}/%{name}/ls-R
+touch %{buildroot}%{_datadir}/%{name}/ls-R
 
 # Clean doc directory
 pushd doc
@@ -92,20 +103,23 @@ pushd doc
 popd
 
 # Create desktop file
-rm $RPM_BUILD_ROOT%{_datadir}/applications/www.octave.org-octave.desktop
-desktop-file-install --vendor fedora --add-category X-Fedora --remove-category Development \
-        --dir $RPM_BUILD_ROOT%{_datadir}/applications examples/octave.desktop
+rm %{buildroot}%{_datadir}/applications/www.octave.org-octave.desktop
+desktop-file-install --vendor fedora --remove-category Development \
+        --dir %{buildroot}%{_datadir}/applications examples/octave.desktop
 
 # Create directories for add-on packages
-HOST_TYPE=`$RPM_BUILD_ROOT%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
-mkdir -p $RPM_BUILD_ROOT%{_libexecdir}/%{name}/site/oct/%{octave_api}/$HOST_TYPE
-mkdir -p $RPM_BUILD_ROOT%{_libexecdir}/%{name}/site/oct/$HOST_TYPE
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name}/packages
-touch $RPM_BUILD_ROOT%{_datadir}/%{name}/octave_packages
+HOST_TYPE=`%{buildroot}%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
+mkdir -p %{buildroot}%{_libexecdir}/%{name}/site/oct/%{octave_api}/$HOST_TYPE
+mkdir -p %{buildroot}%{_libexecdir}/%{name}/site/oct/$HOST_TYPE
+mkdir -p %{buildroot}%{_datadir}/%{name}/packages
+touch %{buildroot}%{_datadir}/%{name}/octave_packages
 
+# Create interpreter documentation directory
+mkdir interpreter
+cp -a doc/interpreter/*.pdf doc/interpreter/HTML/ interpreter/
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %post
 /sbin/ldconfig
@@ -122,8 +136,8 @@ fi
 %files
 %defattr(-,root,root,-)
 %doc COPYING NEWS* PROJECTS README README.Linux README.kpathsea ROADMAP
-%doc SENDING-PATCHES emacs/ examples/ doc/interpreter/octave.pdf
-%doc doc/faq/ doc/interpreter/HTML/ doc/refcard/
+%doc SENDING-PATCHES emacs/
+# FIXME: Create an -emacs package that has the emacs addon
 %config /etc/ld.so.conf.d/octave-*.conf
 %{_bindir}/octave*
 %{_libdir}/octave-%{version}/
@@ -139,17 +153,27 @@ fi
 %{_datadir}/octave/packages/
 %{_datadir}/octave/site/
 
-
 %files devel
 %defattr(-,root,root,-)
-%doc doc/liboctave/HTML/ doc/liboctave/liboctave.pdf
 %{_bindir}/mkoctfile
 %{_bindir}/mkoctfile-%{version}
 %{_includedir}/octave-%{version}/
 %{_mandir}/man1/mkoctfile.1.*
 
+%files doc
+%defattr(-,root,root,-)
+%doc doc/liboctave/HTML/ doc/liboctave/liboctave.pdf
+%doc doc/faq/Octave-FAQ.pdf doc/refcard/*.pdf
+%doc examples/ interpreter 
+
 
 %changelog
+* Mon Jul 13 2009 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.2.0-2
+- Added BR: ftgl-devel for native graphics.
+- Dropped obsolete X-Fedora category from desktop file.
+- Macro use unifications.
+- Branch documentation into its own subpackage.
+
 * Sat Jul 11 2009 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.2.0-1
 - Update to latest upstream (3.2.0).
 
@@ -318,7 +342,7 @@ fi
 * Fri Nov 11 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.4-1
 - New upstream release.
 - Patch to make sure all headers are included in -devel.
-- PKG_ADD file now needs $RPM_BUILD_ROOT stripped from it.
+- PKG_ADD file now needs %{buildroot} stripped from it.
 - Cleanup errors in dependencies.
 
 * Tue Oct 25 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-6
