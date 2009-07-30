@@ -3,7 +3,7 @@
 
 Name:           octave
 Version:        3.2.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -168,6 +168,9 @@ fi
 
 
 %changelog
+* Sat Jul 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6:3.2.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
 * Mon Jul 13 2009 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.2.0-2
 - Added BR: ftgl-devel for native graphics.
 - Dropped obsolete X-Fedora category from desktop file.
