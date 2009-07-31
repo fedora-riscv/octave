@@ -2,8 +2,8 @@
 %define octave_api api-v37
 
 Name:           octave
-Version:        3.2.0
-Release:        3%{?dist}
+Version:        3.2.2
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -76,10 +76,9 @@ fi
 %global enable64 no
 export CPPFLAGS="-DH5_USE_16_API"
 %configure --enable-shared --disable-static --enable-64=%enable64 F77=gfortran
-# SMP make doesn't work in Octave 3.2.0
+# SMP make doesn't work in Octave 3.2.2
 #make %{?_smp_mflags} OCTAVE_RELEASE="Fedora %{version}-%{release}"
 make OCTAVE_RELEASE="Fedora %{version}-%{release}"
-
 
 %install
 rm -rf %{buildroot}
@@ -168,6 +167,9 @@ fi
 
 
 %changelog
+* Fri Jul 31 2009 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.2.2-1
+- Update to latest upstream (3.2.2).
+
 * Sat Jul 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6:3.2.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
