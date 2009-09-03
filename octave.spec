@@ -3,7 +3,7 @@
 
 Name:           octave
 Version:        3.2.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -117,6 +117,9 @@ touch %{buildroot}%{_datadir}/%{name}/octave_packages
 mkdir interpreter
 cp -a doc/interpreter/*.pdf doc/interpreter/HTML/ interpreter/
 
+%check
+make check
+
 %clean
 rm -rf %{buildroot}
 
@@ -167,6 +170,9 @@ fi
 
 
 %changelog
+* Wed Sep 2 2009 Orion Poplawski <orion@cora.nwra.com> - 6:3.2.2-2
+- Add make check
+
 * Fri Jul 31 2009 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.2.2-1
 - Update to latest upstream (3.2.2).
 
