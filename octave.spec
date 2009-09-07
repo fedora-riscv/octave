@@ -3,7 +3,7 @@
 
 Name:           octave
 Version:        3.2.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -170,6 +170,9 @@ fi
 
 
 %changelog
+* Mon Sep  7 2009 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.2.2-4
+- Rebuild against new ATLAS
+
 * Sun Sep  6 2009 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.2.2-3
 - Disable make check temporarily to get a build against newly fixed lapack
 
