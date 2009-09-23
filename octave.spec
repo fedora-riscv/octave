@@ -3,7 +3,7 @@
 
 Name:           octave
 Version:        3.2.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -103,8 +103,9 @@ popd
 
 # Create desktop file
 rm %{buildroot}%{_datadir}/applications/www.octave.org-octave.desktop
-desktop-file-install --vendor fedora --remove-category Development \
-        --dir %{buildroot}%{_datadir}/applications examples/octave.desktop
+desktop-file-install --vendor fedora --remove-category Development --add-category "Education" \
+  --add-category "DataVisualization" --add-category "NumericalAnalysis" --add-category "Engineering" --add-category "Physics" \
+  --dir %{buildroot}%{_datadir}/applications examples/octave.desktop
 
 # Create directories for add-on packages
 HOST_TYPE=`%{buildroot}%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
@@ -170,6 +171,9 @@ fi
 
 
 %changelog
+* Tue Sep 22 2009 Rakesh Pandit <rakesh@fedoraproject.org> - 6:3.2.2-5
+- Added categories to desktop file: Education, DataVisualization, NumericalAnalysis 
+
 * Mon Sep  7 2009 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.2.2-4
 - Rebuild against new ATLAS
 
