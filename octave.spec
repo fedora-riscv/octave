@@ -2,8 +2,8 @@
 %define octave_api api-v37
 
 Name:           octave
-Version:        3.2.2
-Release:        5%{?dist}
+Version:        3.2.3
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -118,8 +118,8 @@ touch %{buildroot}%{_datadir}/%{name}/octave_packages
 mkdir interpreter
 cp -a doc/interpreter/*.pdf doc/interpreter/HTML/ interpreter/
 
-#check
-#make check
+%check
+make check
 
 %clean
 rm -rf %{buildroot}
@@ -171,6 +171,10 @@ fi
 
 
 %changelog
+* Tue Sep 29 2009 Orion Poplawski <orion@cora.nwra.com> - 6:3.2.3-1
+- Update to 3.2.3
+- Re-add make check
+
 * Tue Sep 22 2009 Rakesh Pandit <rakesh@fedoraproject.org> - 6:3.2.2-5
 - Added categories to desktop file: Education, DataVisualization, NumericalAnalysis 
 
