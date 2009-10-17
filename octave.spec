@@ -1,30 +1,29 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%define octave_api api-v32
+%define octave_api api-v37
 
 Name:           octave
-Version:        3.0.5
+Version:        3.2.3
 Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
-
 Group:          Applications/Engineering
 License:        GPLv3+
 Source:         ftp://ftp.octave.org/pub/octave/octave-%{version}.tar.bz2
-#Patch1:         %{name}-sh-arch.patch
-#Patch2:         %{name}-gcc44.patch
 URL:            http://www.octave.org
-Requires:       gnuplot less info texinfo 
-Requires(post): /sbin/install-info
-Requires(postun): /sbin/ldconfig
-Requires(post): /sbin/ldconfig
-Requires(preun): /sbin/install-info
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+Provides:       octave(api) = %{octave_api}
+
 BuildRequires:  bison flex less tetex gcc-gfortran lapack-devel blas-devel
 BuildRequires:  ncurses-devel zlib-devel hdf5-devel texinfo qhull-devel
 BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
-BuildRequires:  curl-devel pcre-devel
+BuildRequires:  curl-devel pcre-devel texinfo-tex arpack-devel libX11-devel
 BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
-Provides:       octave(api) = %{octave_api}
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:  GraphicsMagick-c++-devel fltk-devel ftgl-devel qrupdate-devel
+
+Requires:        gnuplot gnuplot-common less info texinfo 
+Requires(post):  info
+Requires(preun): info
 
 
 %description
@@ -54,6 +53,16 @@ The octave-devel package contains files needed for developing
 applications which use GNU Octave.
 
 
+%package doc
+Summary:        Documentation for Octave
+Group:          Documentation
+%if 0%{?fedora} > 10 || 0%{?rhel} > 5
+BuildArch:      noarch
+%endif
+
+%description doc
+This package contains documentation for Octave.
+
 %prep
 %setup -q
 # Check that octave_api is set correctly
@@ -63,30 +72,28 @@ then
   exit 1
 fi
 
-# patch for sh arch
-#%patch1 -p1 -b .sh-arch
-# patch for gcc 4.4
-#%patch2 -p1 -b .gcc44
-
 %build
-%define enable64 no
+%global enable64 no
 export CPPFLAGS="-DH5_USE_16_API"
-%configure --enable-shared --disable-static --enable-64=%enable64 --with-f77=gfortran
-make %{?_smp_mflags} OCTAVE_RELEASE="Fedora %{version}-%{release}"
-
+%configure --enable-shared --disable-static --enable-64=%enable64 F77=gfortran
+# SMP make doesn't work in Octave 3.2.2
+#make %{?_smp_mflags} OCTAVE_RELEASE="Fedora %{version}-%{release}"
+make OCTAVE_RELEASE="Fedora %{version}-%{release}"
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
-rm -f ${RPM_BUILD_ROOT}%{_infodir}/dir
+rm -rf %{buildroot}
+make install DESTDIR=%{buildroot}
+rm -f %{buildroot}%{_infodir}/dir
 
 # Make library links
-mkdir -p $RPM_BUILD_ROOT/etc/ld.so.conf.d
-echo "%{_libdir}/octave-%{version}" > $RPM_BUILD_ROOT/etc/ld.so.conf.d/octave-%{_arch}.conf
+mkdir -p %{buildroot}/etc/ld.so.conf.d
+echo "%{_libdir}/octave-%{version}" > %{buildroot}/etc/ld.so.conf.d/octave-%{_arch}.conf
 
 # Remove RPM_BUILD_ROOT from ls-R files
-perl -pi -e "s,$RPM_BUILD_ROOT,," $RPM_BUILD_ROOT%{_libexecdir}/%{name}/ls-R
-perl -pi -e "s,$RPM_BUILD_ROOT,," $RPM_BUILD_ROOT%{_datadir}/%{name}/ls-R
+perl -pi -e "s,%{buildroot},," %{buildroot}%{_libexecdir}/%{name}/ls-R
+perl -pi -e "s,%{buildroot},," %{buildroot}%{_datadir}/%{name}/ls-R
+# Make sure ls-R exists
+touch %{buildroot}%{_datadir}/%{name}/ls-R
 
 # Clean doc directory
 pushd doc
@@ -95,58 +102,106 @@ pushd doc
 popd
 
 # Create desktop file
-rm $RPM_BUILD_ROOT%{_datadir}/applications/www.octave.org-octave.desktop
-desktop-file-install --vendor fedora --add-category X-Fedora --remove-category Development \
-	--dir $RPM_BUILD_ROOT%{_datadir}/applications examples/octave.desktop
+rm %{buildroot}%{_datadir}/applications/www.octave.org-octave.desktop
+desktop-file-install --vendor fedora --remove-category Development --add-category "Education" \
+  --add-category "DataVisualization" --add-category "NumericalAnalysis" --add-category "Engineering" --add-category "Physics" \
+  --dir %{buildroot}%{_datadir}/applications examples/octave.desktop
 
 # Create directories for add-on packages
-HOST_TYPE=`$RPM_BUILD_ROOT%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
-mkdir -p $RPM_BUILD_ROOT%{_libexecdir}/%{name}/site/oct/%{octave_api}/$HOST_TYPE
-mkdir -p $RPM_BUILD_ROOT%{_libexecdir}/%{name}/site/oct/$HOST_TYPE
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name}/packages
-touch $RPM_BUILD_ROOT%{_datadir}/%{name}/octave_packages
+HOST_TYPE=`%{buildroot}%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
+mkdir -p %{buildroot}%{_libexecdir}/%{name}/site/oct/%{octave_api}/$HOST_TYPE
+mkdir -p %{buildroot}%{_libexecdir}/%{name}/site/oct/$HOST_TYPE
+mkdir -p %{buildroot}%{_datadir}/%{name}/packages
+touch %{buildroot}%{_datadir}/%{name}/octave_packages
 
+# Create interpreter documentation directory
+mkdir interpreter
+cp -a doc/interpreter/*.pdf doc/interpreter/HTML/ interpreter/
+
+%check
+make check
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %post
 /sbin/ldconfig
 /sbin/install-info --info-dir=%{_infodir} --section="Programming" \
-	%{_infodir}/octave.info || :
+        %{_infodir}/octave.info || :
 
 %preun
 if [ "$1" = "0" ]; then
    /sbin/install-info --delete --info-dir=%{_infodir} %{_infodir}/octave.info || :
 fi
 
-
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root)
+%defattr(-,root,root,-)
 %doc COPYING NEWS* PROJECTS README README.Linux README.kpathsea ROADMAP
-%doc SENDING-PATCHES THANKS emacs examples doc/interpreter/octave.p*
-%doc doc/faq doc/interpreter/HTML doc/refcard
+%doc SENDING-PATCHES emacs/
+# FIXME: Create an -emacs package that has the emacs addon
+%config /etc/ld.so.conf.d/octave-*.conf
 %{_bindir}/octave*
-%config(noreplace) /etc/ld.so.conf.d/*
-%{_libdir}/octave*
-%{_datadir}/octave
-%ghost %{_datadir}/octave/octave_packages
-%{_libexecdir}/octave
-%{_mandir}/man*/octave*
+%{_libdir}/octave-%{version}/
+%{_libexecdir}/octave/
+%{_mandir}/man1/octave*.1.*
 %{_infodir}/octave.info*
-%{_datadir}/applications/*
+%{_datadir}/applications/fedora-octave.desktop
+# octave_packages is %ghost, so need to list everything else separately
+%dir %{_datadir}/octave
+%{_datadir}/octave/%{version}/
+%{_datadir}/octave/ls-R
+%ghost %{_datadir}/octave/octave_packages
+%{_datadir}/octave/packages/
+%{_datadir}/octave/site/
 
 %files devel
-%defattr(-,root,root)
-%doc doc/liboctave
-%{_bindir}/mkoctfile*
-%{_includedir}/octave-%{version}
-%{_mandir}/man*/mkoctfile*
+%defattr(-,root,root,-)
+%{_bindir}/mkoctfile
+%{_bindir}/mkoctfile-%{version}
+%{_includedir}/octave-%{version}/
+%{_mandir}/man1/mkoctfile.1.*
+
+%files doc
+%defattr(-,root,root,-)
+%doc doc/liboctave/HTML/ doc/liboctave/liboctave.pdf
+%doc doc/faq/Octave-FAQ.pdf doc/refcard/*.pdf
+%doc examples/ interpreter 
 
 
 %changelog
+* Tue Sep 29 2009 Orion Poplawski <orion@cora.nwra.com> - 6:3.2.3-1
+- Update to 3.2.3
+- Re-add make check
+
+* Tue Sep 22 2009 Rakesh Pandit <rakesh@fedoraproject.org> - 6:3.2.2-5
+- Added categories to desktop file: Education, DataVisualization, NumericalAnalysis 
+
+* Mon Sep  7 2009 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.2.2-4
+- Rebuild against new ATLAS
+
+* Sun Sep  6 2009 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.2.2-3
+- Disable make check temporarily to get a build against newly fixed lapack
+
+* Wed Sep 2 2009 Orion Poplawski <orion@cora.nwra.com> - 6:3.2.2-2
+- Add make check
+
+* Fri Jul 31 2009 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.2.2-1
+- Update to latest upstream (3.2.2).
+
+* Sat Jul 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6:3.2.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
+* Mon Jul 13 2009 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.2.0-2
+- Added BR: ftgl-devel for native graphics.
+- Dropped obsolete X-Fedora category from desktop file.
+- Macro use unifications.
+- Branch documentation into its own subpackage.
+
+* Sat Jul 11 2009 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.2.0-1
+- Update to latest upstream (3.2.0).
+
 * Sun Apr 12 2009 Rakesh Pandit <rakesh@fedoraproject.org> - 6:3.0.5-1
 - Updated to latest upstream (3.0.5)
 
@@ -312,7 +367,7 @@ fi
 * Fri Nov 11 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.4-1
 - New upstream release.
 - Patch to make sure all headers are included in -devel.
-- PKG_ADD file now needs $RPM_BUILD_ROOT stripped from it.
+- PKG_ADD file now needs %{buildroot} stripped from it.
 - Cleanup errors in dependencies.
 
 * Tue Oct 25 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-6
@@ -634,7 +689,7 @@ does not exist.
 - repackage in powertools.
 
 * Thu Jun 11 1998 Andrew Veliath <andrewtv@usa.net>
-- Add %attr, build as user.
+- Add %%attr, build as user.
 
 * Mon Jun 1 1998 Andrew Veliath <andrewtv@usa.net>
 - Add BuildRoot, installinfo, require gnuplot, description from
