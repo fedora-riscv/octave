@@ -3,12 +3,13 @@
 
 Name:           octave
 Version:        3.2.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
 License:        GPLv3+
 Source:         ftp://ftp.octave.org/pub/octave/octave-%{version}.tar.bz2
+Source1:        octave.conf
 URL:            http://www.octave.org
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -118,6 +119,10 @@ touch %{buildroot}%{_datadir}/%{name}/octave_packages
 mkdir interpreter
 cp -a doc/interpreter/*.pdf doc/interpreter/HTML/ interpreter/
 
+# work-around broken pre-linking (bug 524493)
+install -d %{buildroot}%{_sysconfdir}/prelink.conf.d
+install %{SOURCE1} %{buildroot}%{_sysconfdir}/prelink.conf.d/
+
 %check
 make check
 
@@ -155,6 +160,7 @@ fi
 %ghost %{_datadir}/octave/octave_packages
 %{_datadir}/octave/packages/
 %{_datadir}/octave/site/
+%{_sysconfdir}/prelink.conf.d/octave.conf
 
 %files devel
 %defattr(-,root,root,-)
@@ -171,6 +177,9 @@ fi
 
 
 %changelog
+* Sun Nov 15 2009 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.2.3-2
+- Workaround broken pre-linking (#524493)
+
 * Tue Sep 29 2009 Orion Poplawski <orion@cora.nwra.com> - 6:3.2.3-1
 - Update to 3.2.3
 - Re-add make check
