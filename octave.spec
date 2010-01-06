@@ -3,7 +3,7 @@
 
 Name:           octave
 Version:        3.2.3
-Release:        2%{?dist}.1
+Release:        3%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -15,7 +15,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Provides:       octave(api) = %{octave_api}
 
-BuildRequires:  bison flex less tetex gcc-gfortran lapack-devel blas-devel
+BuildRequires:  bison flex less tetex gcc-gfortran atlas-devel 
 BuildRequires:  ncurses-devel zlib-devel hdf5-devel texinfo qhull-devel
 BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
 BuildRequires:  curl-devel pcre-devel texinfo-tex arpack-devel libX11-devel
@@ -47,7 +47,7 @@ Summary:        Development headers and files for Octave
 Group:          Development/Libraries
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       readline-devel fftw-devel hdf5-devel zlib-devel
-Requires:       lapack-devel blas-devel gcc-c++ gcc-gfortran
+Requires:       atlas-devel gcc-c++ gcc-gfortran
 
 %description devel
 The octave-devel package contains files needed for developing
@@ -76,7 +76,7 @@ fi
 %build
 %global enable64 no
 export CPPFLAGS="-DH5_USE_16_API"
-%configure --enable-shared --disable-static --enable-64=%enable64 F77=gfortran
+%configure --enable-shared --disable-static --enable-64=%enable64 --with-blas="-L%{_libdir}/atlas -lf77blas -latlas" F77=gfortran
 # SMP make doesn't work in Octave 3.2.2
 #make %{?_smp_mflags} OCTAVE_RELEASE="Fedora %{version}-%{release}"
 make OCTAVE_RELEASE="Fedora %{version}-%{release}"
@@ -177,6 +177,9 @@ fi
 
 
 %changelog
+* Wed Jan 6 2010 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6.3.2.3-3
+- Really build against ATLAS instead of reference BLAS (#513381).
+
 * Sun Nov 15 2009 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.2.3-2
 - Workaround broken pre-linking (#524493)
 
