@@ -1,14 +1,14 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%define octave_api api-v37
+%global octave_api api-v37
 
 Name:           octave
 Version:        3.2.3
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
 License:        GPLv3+
-Source:         ftp://ftp.octave.org/pub/octave/octave-%{version}.tar.bz2
+Source0:         ftp://ftp.octave.org/pub/octave/octave-%{version}.tar.bz2
 Source1:        octave.conf
 URL:            http://www.octave.org
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -76,7 +76,12 @@ fi
 %build
 %global enable64 no
 export CPPFLAGS="-DH5_USE_16_API"
-%configure --enable-shared --disable-static --enable-64=%enable64 --with-blas="-L%{_libdir}/atlas -lf77blas -latlas" F77=gfortran
+export F77=gfortran
+%configure --enable-shared --disable-static --enable-64=%enable64 \
+ --with-blas="-L%{_libdir}/atlas -lf77blas -latlas" --with-qrupdate \
+ --with-lapack="-L%{_libdir}/atlas -llapack" \
+ --with-amd --with-umfpack --with-colamd --with-ccolamd --with-cholmod \
+ --with-cxsparse --with-arpack
 # SMP make doesn't work in Octave 3.2.2
 #make %{?_smp_mflags} OCTAVE_RELEASE="Fedora %{version}-%{release}"
 make OCTAVE_RELEASE="Fedora %{version}-%{release}"
@@ -177,7 +182,10 @@ fi
 
 
 %changelog
-* Wed Jan 6 2010 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6.3.2.3-3
+* Sun Jan 17 2010 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.2.3-4
+- Fix compilation against ARPACK.
+
+* Wed Jan 6 2010 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.2.3-3
 - Really build against ATLAS instead of reference BLAS (#513381).
 
 * Sun Nov 15 2009 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.2.3-2
