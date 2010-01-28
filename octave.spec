@@ -2,13 +2,13 @@
 %global octave_api api-v37
 
 Name:           octave
-Version:        3.2.3
-Release:        4%{?dist}
+Version:        3.2.4
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
 License:        GPLv3+
-Source0:         ftp://ftp.octave.org/pub/octave/octave-%{version}.tar.bz2
+Source0:        ftp://ftp.octave.org/pub/octave/octave-%{version}.tar.bz2
 Source1:        octave.conf
 URL:            http://www.octave.org
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -73,6 +73,9 @@ then
   exit 1
 fi
 
+# Check permissions
+find -name *.cc -exec chmod 644 {} \;
+
 %build
 %global enable64 no
 export CPPFLAGS="-DH5_USE_16_API"
@@ -126,7 +129,7 @@ cp -a doc/interpreter/*.pdf doc/interpreter/HTML/ interpreter/
 
 # work-around broken pre-linking (bug 524493)
 install -d %{buildroot}%{_sysconfdir}/prelink.conf.d
-install %{SOURCE1} %{buildroot}%{_sysconfdir}/prelink.conf.d/
+install -p -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/prelink.conf.d/
 
 %check
 make check
@@ -182,6 +185,9 @@ fi
 
 
 %changelog
+* Thu Jan 28 2010 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.2.4-1
+- Update to 3.2.4 with a few rpmlint fixes.
+
 * Sun Jan 17 2010 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.2.3-4
 - Fix compilation against ARPACK.
 
@@ -387,7 +393,7 @@ fi
 * Fri Nov 11 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.4-1
 - New upstream release.
 - Patch to make sure all headers are included in -devel.
-- PKG_ADD file now needs %{buildroot} stripped from it.
+- PKG_ADD file now needs %%{buildroot} stripped from it.
 - Cleanup errors in dependencies.
 
 * Tue Oct 25 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.3-6
