@@ -1,14 +1,16 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%global octave_api api-v37
+%global octave_api api-v42+
 
 Name:           octave
-Version:        3.2.4
-Release:        3%{?dist}
+Version:        3.3.54
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
 License:        GPLv3+
-Source0:        ftp://ftp.octave.org/pub/octave/octave-%{version}.tar.bz2
+Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}.tar.bz2
+#Source0:        ftp://ftp.octave.org/pub/octave/octave-%{version}.tar.bz2
+Patch0:         octave-3.3.54-run-octave.patch
 URL:            http://www.octave.org
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -65,6 +67,7 @@ This package contains documentation for Octave.
 
 %prep
 %setup -q
+%patch0 -p1 -b .run-octave
 # Check that octave_api is set correctly
 if ! grep -q '^#define OCTAVE_API_VERSION "%{octave_api}"' src/version.h
 then
@@ -77,16 +80,13 @@ find -name *.cc -exec chmod 644 {} \;
 
 %build
 %global enable64 no
-export CPPFLAGS="-DH5_USE_16_API"
 export F77=gfortran
 %configure --enable-shared --disable-static --enable-64=%enable64 \
  --with-blas="-L%{_libdir}/atlas -lf77blas -latlas" --with-qrupdate \
  --with-lapack="-L%{_libdir}/atlas -llapack" \
  --with-amd --with-umfpack --with-colamd --with-ccolamd --with-cholmod \
  --with-cxsparse --with-arpack
-# SMP make doesn't work in Octave 3.2.2
-#make %{?_smp_mflags} OCTAVE_RELEASE="Fedora %{version}-%{release}"
-make OCTAVE_RELEASE="Fedora %{version}-%{release}"
+make %{?_smp_mflags} OCTAVE_RELEASE="Fedora %{version}-%{release}"
 
 %install
 rm -rf %{buildroot}
@@ -103,12 +103,6 @@ perl -pi -e "s,%{buildroot},," %{buildroot}%{_datadir}/%{name}/ls-R
 # Make sure ls-R exists
 touch %{buildroot}%{_datadir}/%{name}/ls-R
 
-# Clean doc directory
-pushd doc
-  make distclean
-  rm -f *.in */*.in */*.cc refcard/*.tex
-popd
-
 # Create desktop file
 rm %{buildroot}%{_datadir}/applications/www.octave.org-octave.desktop
 desktop-file-install --vendor fedora --remove-category Development --add-category "Education" \
@@ -122,16 +116,16 @@ mkdir -p %{buildroot}%{_libexecdir}/%{name}/site/oct/$HOST_TYPE
 mkdir -p %{buildroot}%{_datadir}/%{name}/packages
 touch %{buildroot}%{_datadir}/%{name}/octave_packages
 
-# Create interpreter documentation directory
-mkdir interpreter
-cp -a doc/interpreter/*.pdf doc/interpreter/HTML/ interpreter/
-
 # work-around broken pre-linking (bug 524493)
 install -d %{buildroot}%{_sysconfdir}/prelink.conf.d
 echo "-b %{_bindir}/octave-%{version}" > %{buildroot}%{_sysconfdir}/prelink.conf.d/octave.conf
 
-#%%check
+
+# TODO - Fix this:
+#  src/DLD-FUNCTIONS/md5sum.cc ............................*** stack smashing detected ***: /builddir/build/BUILD/octave-3.3.54/src/.libs/lt-octave terminated
+#%check
 #make check
+
 
 %clean
 rm -rf %{buildroot}
@@ -151,14 +145,16 @@ fi
 %files
 %defattr(-,root,root,-)
 %doc COPYING NEWS* PROJECTS README README.Linux README.kpathsea ROADMAP
-%doc SENDING-PATCHES emacs/
+%doc SENDING-PATCHES
 # FIXME: Create an -emacs package that has the emacs addon
 %config %{_sysconfdir}/ld.so.conf.d/octave-*.conf
 %{_bindir}/octave*
 %{_libdir}/octave-%{version}/
 %{_libexecdir}/octave/
 %{_mandir}/man1/octave*.1.*
+%{_infodir}/liboctave.info*
 %{_infodir}/octave.info*
+%{_infodir}/OctaveFAQ.info*
 %{_datadir}/applications/fedora-octave.desktop
 # octave_packages is %ghost, so need to list everything else separately
 %dir %{_datadir}/octave
@@ -178,12 +174,19 @@ fi
 
 %files doc
 %defattr(-,root,root,-)
-%doc doc/liboctave/HTML/ doc/liboctave/liboctave.pdf
-%doc doc/faq/Octave-FAQ.pdf doc/refcard/*.pdf
-%doc examples/ interpreter 
+%doc doc/liboctave/liboctave.html doc/liboctave/liboctave.pdf
+%doc doc/faq/OctaveFAQ.pdf doc/refcard/*.pdf
+%doc examples/
 
 
 %changelog
+* Thu Dec 16 2010 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.3.54-1
+- Update to 3.3.54
+- Add patch to prevent run-octave from getting installed
+- Drop -DH5_USE_16_API
+- Enable parallel builds
+- Cleanup doc instal
+
 * Sun Feb 28 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.2.4-3
 - Temporarily disable %%check to enable build to complete and ensure
   upgrade path works.  This works around a crash in the imread.m image test 
