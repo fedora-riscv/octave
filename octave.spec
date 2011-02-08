@@ -1,16 +1,16 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%global octave_api api-v42+
+%global octave_api api-v47+
 
 Name:           octave
-Version:        3.3.54
+Version:        3.4.0
 Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
 License:        GPLv3+
-Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}.tar.bz2
-#Source0:        ftp://ftp.octave.org/pub/octave/octave-%{version}.tar.bz2
-Patch0:         octave-3.3.54-run-octave.patch
+Source0:        ftp://ftp.gnu.org/gnu/octave/octave-%{version}.tar.bz2
+# Add missing cstddef for gcc 4.6
+Patch0:         octave-3.4.0-gcc46.patch
 URL:            http://www.octave.org
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -67,7 +67,7 @@ This package contains documentation for Octave.
 
 %prep
 %setup -q
-%patch0 -p1 -b .run-octave
+%patch0 -p1 -b .gcc46
 # Check that octave_api is set correctly
 if ! grep -q '^#define OCTAVE_API_VERSION "%{octave_api}"' src/version.h
 then
@@ -107,7 +107,7 @@ touch %{buildroot}%{_datadir}/%{name}/ls-R
 rm %{buildroot}%{_datadir}/applications/www.octave.org-octave.desktop
 desktop-file-install --vendor fedora --remove-category Development --add-category "Education" \
   --add-category "DataVisualization" --add-category "NumericalAnalysis" --add-category "Engineering" --add-category "Physics" \
-  --dir %{buildroot}%{_datadir}/applications examples/octave.desktop
+  --dir %{buildroot}%{_datadir}/applications doc/icons/octave.desktop
 
 # Create directories for add-on packages
 HOST_TYPE=`%{buildroot}%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
@@ -144,8 +144,8 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING NEWS* PROJECTS README README.Linux README.kpathsea ROADMAP
-%doc SENDING-PATCHES
+%doc AUTHORS BUGS ChangeLog* COPYING NEWS* PROJECTS README README.Linux
+%doc README.kpathsea
 # FIXME: Create an -emacs package that has the emacs addon
 %config %{_sysconfdir}/ld.so.conf.d/octave-*.conf
 %{_bindir}/octave*
@@ -180,6 +180,11 @@ fi
 
 
 %changelog
+* Tue Feb 8 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.0-1
+- Update to 3.4.0
+- Drop run-octave patch fixed upstream
+- Add patch to support gcc 4.6
+
 * Thu Dec 16 2010 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.3.54-1
 - Update to 3.3.54
 - Add patch to prevent run-octave from getting installed
