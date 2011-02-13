@@ -3,7 +3,7 @@
 
 Name:           octave
 Version:        3.2.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -184,6 +184,9 @@ fi
 
 
 %changelog
+* Sun Feb 13 2011 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.2.4-4
+- Rebuild against newer hdf5 (BZ #676707 and #677152).
+
 * Sun Feb 28 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.2.4-3
 - Temporarily disable %%check to enable build to complete and ensure
   upgrade path works.  This works around a crash in the imread.m image test 
