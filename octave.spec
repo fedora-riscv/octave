@@ -81,11 +81,14 @@ find -name *.cc -exec chmod 644 {} \;
 %build
 %global enable64 no
 export F77=gfortran
+# TODO: arpack (and others?) appear to be bundled in libcruft.. 
+#   --with-arpack is not an option anymore
+#   gl2ps.c is bundled.  Anything else?
 %configure --enable-shared --disable-static --enable-64=%enable64 \
  --with-blas="-L%{_libdir}/atlas -lf77blas -latlas" --with-qrupdate \
  --with-lapack="-L%{_libdir}/atlas -llapack" \
  --with-amd --with-umfpack --with-colamd --with-ccolamd --with-cholmod \
- --with-cxsparse --with-arpack
+ --with-cxsparse
 make %{?_smp_mflags} OCTAVE_RELEASE="Fedora %{version}-%{release}"
 
 %install
