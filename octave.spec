@@ -90,7 +90,7 @@ export F77=gfortran
  --with-lapack="-L%{_libdir}/atlas -llapack" \
  --with-amd --with-umfpack --with-colamd --with-ccolamd --with-cholmod \
  --with-cxsparse
-make %{?_smp_mflags} OCTAVE_RELEASE="Fedora %{version}-%{release}"
+make OCTAVE_RELEASE="Fedora %{version}-%{release}"
 
 %install
 rm -rf %{buildroot}
@@ -192,6 +192,7 @@ fi
 * Mon Feb 14 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.0-3
 - Add rpm macros
 - Rebuild should pick up fixed suitesparse
+- Disable parallel builds
 
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6:3.4.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
