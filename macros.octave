@@ -1,0 +1,28 @@
+%octave_api %(octave-config -p API_VERSION || echo 0)}
+%_octshareprefix %{buildroot}%{_datadir}/octave
+%_octprefix %{_octshareprefix}/packages
+%_octarchprefix %{buildroot}%{_libexecdir}/octave/packages
+%octave_cmd() octave -H -q --no-site-file --eval "%*";
+%octave_pkg_build %octave_cmd pkg build '-verbose' %{_tmppath}/%{name}-%{version}-%{release}.%{_arch} %SOURCE0
+%octave_pkg_install \
+mkdir -p %{_octprefix} \
+mkdir -p %{_octarchprefix} \
+%octave_cmd warning('off','all');pkg('prefix','%{_octprefix}','%{_octarchprefix}');pkg('global_list',fullfile('%{_octshareprefix}','octave_packages'));pkg('local_list',fullfile('%{_octshareprefix}','octave_packages'));pkg('install','-nodeps','-verbose','%{_tmppath}/%{name}-%{version}-%{release}.%{_arch}/%{octpkg}-%{version}.tar.gz');unlink(pkg('local_list'));unlink(pkg('global_list')); \
+if [ -e %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m ] \
+then \
+    mv %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m.orig \
+fi \
+echo "function on_uninstall (desc)" > %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m \
+echo "  error ('Can not uninstall %s installed by the redhat package manager', desc.name);" >> %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m \
+echo "endfunction" >> %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m \
+%{nil}
+%_octave_pkg_preun \
+rm %{octpkgdir}/packinfo/on_uninstall.m \
+if [ -e %{octpkgdir}/packinfo/on_uninstall.m.orig ]; then \
+  mv %{octpkgdir}/packinfo/on_uninstall.m.orig %{octpkgdir}/packinfo/on_uninstall.m \
+  cd %{octpkgdir}/packinfo \
+  %octave_cmd l=pkg('list');on_uninstall(l{cellfun(@(x)strcmp(x.name,'%{octpkg}'),l)}); \
+fi \
+%{nil}
+%octpkgdir %{_datadir}/octave/packages/%{octpkg}-%{version}
+%octpkglibdir %{_libexecdir}/octave/packages/%{octpkg}-%{version}
