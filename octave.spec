@@ -3,7 +3,7 @@
 
 Name:           octave
 Version:        3.4.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -189,6 +189,9 @@ fi
 
 
 %changelog
+* Wed Feb 23 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.0-4
+- Update rpm macros per FPC comments
+
 * Mon Feb 14 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.0-3
 - Add rpm macros
 - Rebuild should pick up fixed suitesparse
