@@ -7,7 +7,7 @@
 %octshareprefix %{_datadir}/octave
 %octprefix %{octshareprefix}/packages
 %octarchprefix %{_libexecdir}/octave/packages
-%octpkgdir %{octshareprefix}/%{octpkg}-%{version}
+%octpkgdir %{octprefix}/%{octpkg}-%{version}
 %octpkglibdir %{octarchprefix}/%{octpkg}-%{version}
 
 # Run an octave command - quietly with no startup files
