@@ -3,12 +3,13 @@
 
 Name:           octave
 Version:        3.4.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
 License:        GPLv3+
 Source0:        ftp://ftp.gnu.org/gnu/octave/octave-%{version}.tar.bz2
+Source1:        macros.octave
 # Add missing cstddef for gcc 4.6
 Patch0:         octave-3.4.0-gcc46.patch
 URL:            http://www.octave.org
@@ -89,7 +90,7 @@ export F77=gfortran
  --with-lapack="-L%{_libdir}/atlas -llapack" \
  --with-amd --with-umfpack --with-colamd --with-ccolamd --with-cholmod \
  --with-cxsparse
-make %{?_smp_mflags} OCTAVE_RELEASE="Fedora %{version}-%{release}"
+make OCTAVE_RELEASE="Fedora %{version}-%{release}"
 
 %install
 rm -rf %{buildroot}
@@ -123,6 +124,10 @@ touch %{buildroot}%{_datadir}/%{name}/octave_packages
 install -d %{buildroot}%{_sysconfdir}/prelink.conf.d
 echo "-b %{_bindir}/octave-%{version}" > %{buildroot}%{_sysconfdir}/prelink.conf.d/octave.conf
 
+# rpm macros
+mkdir -p %{buildroot}%{_sysconfdir}/rpm
+cp -p %SOURCE1 %{buildroot}%{_sysconfdir}/rpm/
+
 
 # TODO - Fix this:
 #  src/DLD-FUNCTIONS/md5sum.cc ............................*** stack smashing detected ***: /builddir/build/BUILD/octave-3.3.54/src/.libs/lt-octave terminated
@@ -150,7 +155,8 @@ fi
 %doc AUTHORS BUGS ChangeLog* COPYING NEWS* PROJECTS README README.Linux
 %doc README.kpathsea
 # FIXME: Create an -emacs package that has the emacs addon
-%config %{_sysconfdir}/ld.so.conf.d/octave-*.conf
+%config(noreplace) %{_sysconfdir}/ld.so.conf.d/octave-*.conf
+%config(noreplace) %{_sysconfdir}/rpm/macros.octave
 %{_bindir}/octave*
 %{_libdir}/octave-%{version}/
 %{_libexecdir}/octave/
@@ -183,6 +189,11 @@ fi
 
 
 %changelog
+* Mon Feb 14 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.0-3
+- Add rpm macros
+- Rebuild should pick up fixed suitesparse
+- Disable parallel builds
+
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6:3.4.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
