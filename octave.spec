@@ -3,7 +3,7 @@
 
 Name:           octave
 Version:        3.4.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -12,6 +12,11 @@ Source0:        ftp://ftp.gnu.org/gnu/octave/octave-%{version}.tar.bz2
 Source1:        macros.octave
 # Add missing cstddef for gcc 4.6
 Patch0:         octave-3.4.0-gcc46.patch
+# Use libdir instead of libexecdir
+Patch1:         octave-3.4.0-libdir.patch
+# https://savannah.gnu.org/bugs/index.php?32839
+# Fix building packages from directories
+Patch2:         octave-3.4.0-pkgbuilddir.patch
 URL:            http://www.octave.org
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -69,6 +74,8 @@ This package contains documentation for Octave.
 %prep
 %setup -q
 %patch0 -p1 -b .gcc46
+%patch1 -p1 -b .libdir
+%patch2 -p1 -b .pkgbuilddir
 # Check that octave_api is set correctly
 if ! grep -q '^#define OCTAVE_API_VERSION "%{octave_api}"' src/version.h
 then
@@ -99,10 +106,10 @@ rm -f %{buildroot}%{_infodir}/dir
 
 # Make library links
 mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d
-echo "%{_libdir}/octave-%{version}" > %{buildroot}%{_sysconfdir}/ld.so.conf.d/octave-%{_arch}.conf
+echo "%{_libdir}/octave/%{version}" > %{buildroot}%{_sysconfdir}/ld.so.conf.d/octave-%{_arch}.conf
 
 # Remove RPM_BUILD_ROOT from ls-R files
-perl -pi -e "s,%{buildroot},," %{buildroot}%{_libexecdir}/%{name}/ls-R
+perl -pi -e "s,%{buildroot},," %{buildroot}%{_libdir}/%{name}/ls-R
 perl -pi -e "s,%{buildroot},," %{buildroot}%{_datadir}/%{name}/ls-R
 # Make sure ls-R exists
 touch %{buildroot}%{_datadir}/%{name}/ls-R
@@ -115,14 +122,66 @@ desktop-file-install --vendor fedora --remove-category Development --add-categor
 
 # Create directories for add-on packages
 HOST_TYPE=`%{buildroot}%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
-mkdir -p %{buildroot}%{_libexecdir}/%{name}/site/oct/%{octave_api}/$HOST_TYPE
-mkdir -p %{buildroot}%{_libexecdir}/%{name}/site/oct/$HOST_TYPE
+mkdir -p %{buildroot}%{_libdir}/%{name}/site/oct/%{octave_api}/$HOST_TYPE
+mkdir -p %{buildroot}%{_libdir}/%{name}/site/oct/$HOST_TYPE
 mkdir -p %{buildroot}%{_datadir}/%{name}/packages
+mkdir -p %{buildroot}%{_libdir}/%{name}/packages
 touch %{buildroot}%{_datadir}/%{name}/octave_packages
 
 # work-around broken pre-linking (bug 524493)
-install -d %{buildroot}%{_sysconfdir}/prelink.conf.d
-echo "-b %{_bindir}/octave-%{version}" > %{buildroot}%{_sysconfdir}/prelink.conf.d/octave.conf
+#install -d %{buildroot}%{_sysconfdir}/prelink.conf.d
+#echo "-b %{_bindir}/octave-%{version}" > %{buildroot}%{_sysconfdir}/prelink.conf.d/octave.conf
+
+# Fix multilib installs
+for include in config defaults oct-conf
+do
+   mv %{buildroot}%{_includedir}/%{name}-%{version}/%{name}/${include}.h \
+      %{buildroot}%{_includedir}/%{name}-%{version}/%{name}/${include}-%{__isa_bits}.h
+   cat > %{buildroot}%{_includedir}/%{name}-%{version}/%{name}/${include}.h <<EOF
+#include <bits/wordsize.h>
+
+#if __WORDSIZE == 32
+#include "${include}-32.h"
+#elif __WORDSIZE == 64
+#include "${include}-64.h"
+#else
+#error "Unknown word size"
+#endif
+EOF
+done
+for script in octave-config-%{version} mkoctfile-%{version}
+do
+   mv %{buildroot}%{_bindir}/${script} %{buildroot}%{_libdir}/%{name}/%{version}/${script}
+   cat > %{buildroot}%{_bindir}/${script} <<EOF
+#!/bin/bash
+ARCH=\$(uname -m)
+
+case \$ARCH in
+x86_64 | ia64 | s390x) LIB_DIR=/usr/lib64
+                       SECONDARY_LIB_DIR=/usr/lib
+                       ;;
+* )
+                       LIB_DIR=/usr/lib
+                       SECONDARY_LIB_DIR=/usr/lib64
+                       ;;
+esac
+
+if [ ! -x \$LIB_DIR/%{name}/%{version}/${script} ] ; then
+  if [ ! -x \$SECONDARY_LIB_DIR/%{name}/%{version}/${script} ] ; then
+    echo "Error: \$LIB_DIR/%{name}/%{version}/${script} not found"
+    if [ -d \$SECONDARY_LIB_DIR ] ; then
+      echo "   and \$SECONDARY_LIB_DIR/%{name}/%{version}/${script} not found"
+    fi
+    exit 1
+  fi
+  LIB_DIR=\$SECONDARY_LIB_DIR
+fi
+exec \$LIB_DIR/%{name}/%{version}/${script} "\$@"
+EOF
+   chmod +x %{buildroot}%{_bindir}/${script}
+done
+# remove timestamp from doc-cache
+sed -i -e '/^# Created by Octave/d' %{buildroot}%{_datadir}/%{name}/%{version}/etc/doc-cache
 
 # rpm macros
 mkdir -p %{buildroot}%{_sysconfdir}/rpm
@@ -158,7 +217,7 @@ fi
 %config(noreplace) %{_sysconfdir}/ld.so.conf.d/octave-*.conf
 %config(noreplace) %{_sysconfdir}/rpm/macros.octave
 %{_bindir}/octave*
-%{_libdir}/octave-%{version}/
+%{_libdir}/octave/
 %{_libexecdir}/octave/
 %{_mandir}/man1/octave*.1.*
 %{_infodir}/liboctave.info*
@@ -172,7 +231,7 @@ fi
 %ghost %{_datadir}/octave/octave_packages
 %{_datadir}/octave/packages/
 %{_datadir}/octave/site/
-%{_sysconfdir}/prelink.conf.d/octave.conf
+#%{_sysconfdir}/prelink.conf.d/octave.conf
 
 %files devel
 %defattr(-,root,root,-)
@@ -189,6 +248,13 @@ fi
 
 
 %changelog
+* Fri Mar 18 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.0-5
+- Use libdir instead of libexecdir
+- Rename octave_pkg_preun macro
+- Fix multilib installs
+- Re-enable prelinking, seems to work
+- Add patch to enable building packages from directories
+
 * Wed Feb 23 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.0-4
 - Update rpm macros per FPC comments
 
