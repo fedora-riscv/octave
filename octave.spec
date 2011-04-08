@@ -3,7 +3,7 @@
 
 Name:           octave
 Version:        3.4.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -248,6 +248,10 @@ fi
 
 
 %changelog
+* Fri Apr 8 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.0-6
+- Fix typo on octave_api macro
+- Remove rm from octave_pkg_preun macro
+
 * Fri Mar 18 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.0-5
 - Use libdir instead of libexecdir
 - Rename octave_pkg_preun macro

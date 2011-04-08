@@ -1,7 +1,7 @@
 # Octave packaging macros
 
 # Octave binary API provided
-%octave_api %(octave-config -p API_VERSION || echo 0)}
+%octave_api %(octave-config -p API_VERSION || echo 0)
 
 # Octave Package Directories
 %octshareprefix %{_datadir}/octave
@@ -35,9 +35,8 @@ echo "endfunction" >> %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m \
 # preun script - we need to remove our uninstall protection and perhaps
 # run the package's own uninstall script.
 %octave_pkg_preun \
-rm %{octpkgdir}/packinfo/on_uninstall.m \
 if [ -e %{octpkgdir}/packinfo/on_uninstall.m.orig ]; then \
-  mv %{octpkgdir}/packinfo/on_uninstall.m.orig %{octpkgdir}/packinfo/on_uninstall.m \
+  cp -f %{octpkgdir}/packinfo/on_uninstall.m.orig %{octpkgdir}/packinfo/on_uninstall.m \
   cd %{octpkgdir}/packinfo \
   %octave_cmd l=pkg('list');on_uninstall(l{cellfun(@(x)strcmp(x.name,'%{octpkg}'),l)}); \
 fi \
