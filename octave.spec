@@ -1,14 +1,22 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%global octave_api api-v37
+%global octave_api api-v47+
 
 Name:           octave
-Version:        3.2.4
-Release:        3%{?dist}
+Version:        3.4.0
+Release:        6%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
 License:        GPLv3+
-Source0:        ftp://ftp.octave.org/pub/octave/octave-%{version}.tar.bz2
+Source0:        ftp://ftp.gnu.org/gnu/octave/octave-%{version}.tar.bz2
+Source1:        macros.octave
+# Add missing cstddef for gcc 4.6
+Patch0:         octave-3.4.0-gcc46.patch
+# Use libdir instead of libexecdir
+Patch1:         octave-3.4.0-libdir.patch
+# https://savannah.gnu.org/bugs/index.php?32839
+# Fix building packages from directories
+Patch2:         octave-3.4.0-pkgbuilddir.patch
 URL:            http://www.octave.org
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -65,6 +73,9 @@ This package contains documentation for Octave.
 
 %prep
 %setup -q
+%patch0 -p1 -b .gcc46
+%patch1 -p1 -b .libdir
+%patch2 -p1 -b .pkgbuilddir
 # Check that octave_api is set correctly
 if ! grep -q '^#define OCTAVE_API_VERSION "%{octave_api}"' src/version.h
 then
@@ -77,15 +88,26 @@ find -name *.cc -exec chmod 644 {} \;
 
 %build
 %global enable64 no
+<<<<<<< HEAD
 export CPPFLAGS="-DH5_USE_16_API"
 export F77=gfortran
+=======
+export F77=gfortran
+# TODO: arpack (and others?) appear to be bundled in libcruft.. 
+#   --with-arpack is not an option anymore
+#   gl2ps.c is bundled.  Anything else?
+>>>>>>> master
 %configure --enable-shared --disable-static --enable-64=%enable64 \
  --with-blas="-L%{_libdir}/atlas -lf77blas -latlas" --with-qrupdate \
  --with-lapack="-L%{_libdir}/atlas -llapack" \
  --with-amd --with-umfpack --with-colamd --with-ccolamd --with-cholmod \
+<<<<<<< HEAD
  --with-cxsparse --with-arpack
 # SMP make doesn't work in Octave 3.2.2
 #make %{?_smp_mflags} OCTAVE_RELEASE="Fedora %{version}-%{release}"
+=======
+ --with-cxsparse
+>>>>>>> master
 make OCTAVE_RELEASE="Fedora %{version}-%{release}"
 
 %install
@@ -95,43 +117,105 @@ rm -f %{buildroot}%{_infodir}/dir
 
 # Make library links
 mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d
+<<<<<<< HEAD
 echo "%{_libdir}/octave-%{version}" > %{buildroot}%{_sysconfdir}/ld.so.conf.d/octave-%{_arch}.conf
+=======
+echo "%{_libdir}/octave/%{version}" > %{buildroot}%{_sysconfdir}/ld.so.conf.d/octave-%{_arch}.conf
+>>>>>>> master
 
 # Remove RPM_BUILD_ROOT from ls-R files
-perl -pi -e "s,%{buildroot},," %{buildroot}%{_libexecdir}/%{name}/ls-R
+perl -pi -e "s,%{buildroot},," %{buildroot}%{_libdir}/%{name}/ls-R
 perl -pi -e "s,%{buildroot},," %{buildroot}%{_datadir}/%{name}/ls-R
 # Make sure ls-R exists
 touch %{buildroot}%{_datadir}/%{name}/ls-R
-
-# Clean doc directory
-pushd doc
-  make distclean
-  rm -f *.in */*.in */*.cc refcard/*.tex
-popd
 
 # Create desktop file
 rm %{buildroot}%{_datadir}/applications/www.octave.org-octave.desktop
 desktop-file-install --vendor fedora --remove-category Development --add-category "Education" \
   --add-category "DataVisualization" --add-category "NumericalAnalysis" --add-category "Engineering" --add-category "Physics" \
-  --dir %{buildroot}%{_datadir}/applications examples/octave.desktop
+  --dir %{buildroot}%{_datadir}/applications doc/icons/octave.desktop
 
 # Create directories for add-on packages
 HOST_TYPE=`%{buildroot}%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
-mkdir -p %{buildroot}%{_libexecdir}/%{name}/site/oct/%{octave_api}/$HOST_TYPE
-mkdir -p %{buildroot}%{_libexecdir}/%{name}/site/oct/$HOST_TYPE
+mkdir -p %{buildroot}%{_libdir}/%{name}/site/oct/%{octave_api}/$HOST_TYPE
+mkdir -p %{buildroot}%{_libdir}/%{name}/site/oct/$HOST_TYPE
 mkdir -p %{buildroot}%{_datadir}/%{name}/packages
+mkdir -p %{buildroot}%{_libdir}/%{name}/packages
 touch %{buildroot}%{_datadir}/%{name}/octave_packages
 
-# Create interpreter documentation directory
-mkdir interpreter
-cp -a doc/interpreter/*.pdf doc/interpreter/HTML/ interpreter/
+# work-around broken pre-linking (bug 524493)
+#install -d %{buildroot}%{_sysconfdir}/prelink.conf.d
+#echo "-b %{_bindir}/octave-%{version}" > %{buildroot}%{_sysconfdir}/prelink.conf.d/octave.conf
 
+# Fix multilib installs
+for include in config defaults oct-conf
+do
+   mv %{buildroot}%{_includedir}/%{name}-%{version}/%{name}/${include}.h \
+      %{buildroot}%{_includedir}/%{name}-%{version}/%{name}/${include}-%{__isa_bits}.h
+   cat > %{buildroot}%{_includedir}/%{name}-%{version}/%{name}/${include}.h <<EOF
+#include <bits/wordsize.h>
+
+#if __WORDSIZE == 32
+#include "${include}-32.h"
+#elif __WORDSIZE == 64
+#include "${include}-64.h"
+#else
+#error "Unknown word size"
+#endif
+EOF
+done
+for script in octave-config-%{version} mkoctfile-%{version}
+do
+   mv %{buildroot}%{_bindir}/${script} %{buildroot}%{_libdir}/%{name}/%{version}/${script}
+   cat > %{buildroot}%{_bindir}/${script} <<EOF
+#!/bin/bash
+ARCH=\$(uname -m)
+
+case \$ARCH in
+x86_64 | ia64 | s390x) LIB_DIR=/usr/lib64
+                       SECONDARY_LIB_DIR=/usr/lib
+                       ;;
+* )
+                       LIB_DIR=/usr/lib
+                       SECONDARY_LIB_DIR=/usr/lib64
+                       ;;
+esac
+
+if [ ! -x \$LIB_DIR/%{name}/%{version}/${script} ] ; then
+  if [ ! -x \$SECONDARY_LIB_DIR/%{name}/%{version}/${script} ] ; then
+    echo "Error: \$LIB_DIR/%{name}/%{version}/${script} not found"
+    if [ -d \$SECONDARY_LIB_DIR ] ; then
+      echo "   and \$SECONDARY_LIB_DIR/%{name}/%{version}/${script} not found"
+    fi
+    exit 1
+  fi
+  LIB_DIR=\$SECONDARY_LIB_DIR
+fi
+exec \$LIB_DIR/%{name}/%{version}/${script} "\$@"
+EOF
+   chmod +x %{buildroot}%{_bindir}/${script}
+done
+# remove timestamp from doc-cache
+sed -i -e '/^# Created by Octave/d' %{buildroot}%{_datadir}/%{name}/%{version}/etc/doc-cache
+
+# rpm macros
+mkdir -p %{buildroot}%{_sysconfdir}/rpm
+cp -p %SOURCE1 %{buildroot}%{_sysconfdir}/rpm/
+
+
+<<<<<<< HEAD
 # work-around broken pre-linking (bug 524493)
 install -d %{buildroot}%{_sysconfdir}/prelink.conf.d
 echo "-b %{_bindir}/octave-%{version}" > %{buildroot}%{_sysconfdir}/prelink.conf.d/octave.conf
 
 #%%check
+=======
+# TODO - Fix this:
+#  src/DLD-FUNCTIONS/md5sum.cc ............................*** stack smashing detected ***: /builddir/build/BUILD/octave-3.3.54/src/.libs/lt-octave terminated
+#%check
+>>>>>>> master
 #make check
+
 
 %clean
 rm -rf %{buildroot}
@@ -150,15 +234,22 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING NEWS* PROJECTS README README.Linux README.kpathsea ROADMAP
-%doc SENDING-PATCHES emacs/
+%doc AUTHORS BUGS ChangeLog* COPYING NEWS* PROJECTS README README.Linux
+%doc README.kpathsea
 # FIXME: Create an -emacs package that has the emacs addon
+<<<<<<< HEAD
 %config %{_sysconfdir}/ld.so.conf.d/octave-*.conf
+=======
+%config(noreplace) %{_sysconfdir}/ld.so.conf.d/octave-*.conf
+%config(noreplace) %{_sysconfdir}/rpm/macros.octave
+>>>>>>> master
 %{_bindir}/octave*
-%{_libdir}/octave-%{version}/
+%{_libdir}/octave/
 %{_libexecdir}/octave/
 %{_mandir}/man1/octave*.1.*
+%{_infodir}/liboctave.info*
 %{_infodir}/octave.info*
+%{_infodir}/OctaveFAQ.info*
 %{_datadir}/applications/fedora-octave.desktop
 # octave_packages is %ghost, so need to list everything else separately
 %dir %{_datadir}/octave
@@ -167,7 +258,11 @@ fi
 %ghost %{_datadir}/octave/octave_packages
 %{_datadir}/octave/packages/
 %{_datadir}/octave/site/
+<<<<<<< HEAD
 %{_sysconfdir}/prelink.conf.d/octave.conf
+=======
+#%{_sysconfdir}/prelink.conf.d/octave.conf
+>>>>>>> master
 
 %files devel
 %defattr(-,root,root,-)
@@ -178,12 +273,45 @@ fi
 
 %files doc
 %defattr(-,root,root,-)
-%doc doc/liboctave/HTML/ doc/liboctave/liboctave.pdf
-%doc doc/faq/Octave-FAQ.pdf doc/refcard/*.pdf
-%doc examples/ interpreter 
+%doc doc/liboctave/liboctave.html doc/liboctave/liboctave.pdf
+%doc doc/faq/OctaveFAQ.pdf doc/refcard/*.pdf
+%doc examples/
 
 
 %changelog
+* Tue May 17 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.0-6
+- Rebuild for hdf5 1.8.7
+
+* Fri Mar 18 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.0-5
+- Use libdir instead of libexecdir
+- Rename octave_pkg_preun macro
+- Fix multilib installs
+- Re-enable prelinking, seems to work
+- Add patch to enable building packages from directories
+
+* Wed Feb 23 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.0-4
+- Update rpm macros per FPC comments
+
+* Mon Feb 14 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.0-3
+- Add rpm macros
+- Rebuild should pick up fixed suitesparse
+- Disable parallel builds
+
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6:3.4.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Tue Feb 8 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.0-1
+- Update to 3.4.0
+- Drop run-octave patch fixed upstream
+- Add patch to support gcc 4.6
+
+* Thu Dec 16 2010 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.3.54-1
+- Update to 3.3.54
+- Add patch to prevent run-octave from getting installed
+- Drop -DH5_USE_16_API
+- Enable parallel builds
+- Cleanup doc instal
+
 * Sun Feb 28 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.2.4-3
 - Temporarily disable %%check to enable build to complete and ensure
   upgrade path works.  This works around a crash in the imread.m image test 
