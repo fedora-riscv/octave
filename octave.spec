@@ -88,26 +88,15 @@ find -name *.cc -exec chmod 644 {} \;
 
 %build
 %global enable64 no
-<<<<<<< HEAD
-export CPPFLAGS="-DH5_USE_16_API"
-export F77=gfortran
-=======
 export F77=gfortran
 # TODO: arpack (and others?) appear to be bundled in libcruft.. 
 #   --with-arpack is not an option anymore
 #   gl2ps.c is bundled.  Anything else?
->>>>>>> master
 %configure --enable-shared --disable-static --enable-64=%enable64 \
  --with-blas="-L%{_libdir}/atlas -lf77blas -latlas" --with-qrupdate \
  --with-lapack="-L%{_libdir}/atlas -llapack" \
  --with-amd --with-umfpack --with-colamd --with-ccolamd --with-cholmod \
-<<<<<<< HEAD
- --with-cxsparse --with-arpack
-# SMP make doesn't work in Octave 3.2.2
-#make %{?_smp_mflags} OCTAVE_RELEASE="Fedora %{version}-%{release}"
-=======
  --with-cxsparse
->>>>>>> master
 make OCTAVE_RELEASE="Fedora %{version}-%{release}"
 
 %install
@@ -117,11 +106,7 @@ rm -f %{buildroot}%{_infodir}/dir
 
 # Make library links
 mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d
-<<<<<<< HEAD
-echo "%{_libdir}/octave-%{version}" > %{buildroot}%{_sysconfdir}/ld.so.conf.d/octave-%{_arch}.conf
-=======
 echo "%{_libdir}/octave/%{version}" > %{buildroot}%{_sysconfdir}/ld.so.conf.d/octave-%{_arch}.conf
->>>>>>> master
 
 # Remove RPM_BUILD_ROOT from ls-R files
 perl -pi -e "s,%{buildroot},," %{buildroot}%{_libdir}/%{name}/ls-R
@@ -203,17 +188,9 @@ mkdir -p %{buildroot}%{_sysconfdir}/rpm
 cp -p %SOURCE1 %{buildroot}%{_sysconfdir}/rpm/
 
 
-<<<<<<< HEAD
-# work-around broken pre-linking (bug 524493)
-install -d %{buildroot}%{_sysconfdir}/prelink.conf.d
-echo "-b %{_bindir}/octave-%{version}" > %{buildroot}%{_sysconfdir}/prelink.conf.d/octave.conf
-
-#%%check
-=======
 # TODO - Fix this:
 #  src/DLD-FUNCTIONS/md5sum.cc ............................*** stack smashing detected ***: /builddir/build/BUILD/octave-3.3.54/src/.libs/lt-octave terminated
 #%check
->>>>>>> master
 #make check
 
 
@@ -237,12 +214,8 @@ fi
 %doc AUTHORS BUGS ChangeLog* COPYING NEWS* PROJECTS README README.Linux
 %doc README.kpathsea
 # FIXME: Create an -emacs package that has the emacs addon
-<<<<<<< HEAD
-%config %{_sysconfdir}/ld.so.conf.d/octave-*.conf
-=======
 %config(noreplace) %{_sysconfdir}/ld.so.conf.d/octave-*.conf
 %config(noreplace) %{_sysconfdir}/rpm/macros.octave
->>>>>>> master
 %{_bindir}/octave*
 %{_libdir}/octave/
 %{_libexecdir}/octave/
@@ -258,11 +231,7 @@ fi
 %ghost %{_datadir}/octave/octave_packages
 %{_datadir}/octave/packages/
 %{_datadir}/octave/site/
-<<<<<<< HEAD
-%{_sysconfdir}/prelink.conf.d/octave.conf
-=======
 #%{_sysconfdir}/prelink.conf.d/octave.conf
->>>>>>> master
 
 %files devel
 %defattr(-,root,root,-)
