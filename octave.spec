@@ -3,7 +3,7 @@
 
 Name:           octave
 Version:        3.4.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -248,6 +248,9 @@ fi
 
 
 %changelog
+* Thu May 26 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.0-7
+- Rebuild for fltk 1.3.0
+
 * Tue May 17 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.0-6
 - Rebuild for hdf5 1.8.7
 
