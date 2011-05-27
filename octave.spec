@@ -3,7 +3,7 @@
 
 Name:           octave
 Version:        3.4.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -17,6 +17,9 @@ Patch1:         octave-3.4.0-libdir.patch
 # https://savannah.gnu.org/bugs/index.php?32839
 # Fix building packages from directories
 Patch2:         octave-3.4.0-pkgbuilddir.patch
+# Fix Fl_File_Chooser.H file location
+# Fixed upstream https://savannah.gnu.org/bugs/?func=detailitem&item_id=32972
+Patch3:         octave-3.4.0-fltk.patch
 URL:            http://www.octave.org
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -28,6 +31,7 @@ BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
 BuildRequires:  curl-devel pcre-devel texinfo-tex arpack-devel libX11-devel
 BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
 BuildRequires:  GraphicsMagick-c++-devel fltk-devel ftgl-devel qrupdate-devel
+BuildRequires:  dvips
 
 Requires:        gnuplot gnuplot-common less info texinfo 
 Requires(post):  info
@@ -76,6 +80,7 @@ This package contains documentation for Octave.
 %patch0 -p1 -b .gcc46
 %patch1 -p1 -b .libdir
 %patch2 -p1 -b .pkgbuilddir
+%patch3 -p1 -b .fltk
 # Check that octave_api is set correctly
 if ! grep -q '^#define OCTAVE_API_VERSION "%{octave_api}"' src/version.h
 then
@@ -248,6 +253,10 @@ fi
 
 
 %changelog
+* Fri May 27 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.0-8
+- Add patch to fix Fl_File_Chooser.H location
+- Add BR dvips
+
 * Thu May 26 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.0-7
 - Rebuild for fltk 1.3.0
 
