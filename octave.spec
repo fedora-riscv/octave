@@ -31,7 +31,7 @@ BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
 BuildRequires:  curl-devel pcre-devel texinfo-tex arpack-devel libX11-devel
 BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
 BuildRequires:  GraphicsMagick-c++-devel fltk-devel ftgl-devel qrupdate-devel
-BuildRequires:  dvips
+BuildRequires:  tex(dvips)
 
 Requires:        gnuplot gnuplot-common less info texinfo 
 Requires(post):  info
@@ -255,7 +255,7 @@ fi
 %changelog
 * Fri May 27 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.0-8
 - Add patch to fix Fl_File_Chooser.H location
-- Add BR dvips
+- Add BR tex(dvips)
 
 * Thu May 26 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.0-7
 - Rebuild for fltk 1.3.0
