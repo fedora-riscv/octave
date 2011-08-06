@@ -242,7 +242,7 @@ fi
 
 %changelog
 * Sat Aug 06 2011 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.4.2-1
-- Update to 6.4.2.
+- Update to 3.4.2.
 
 * Fri May 27 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.0-8
 - Add patch to fix Fl_File_Chooser.H location
