@@ -98,7 +98,7 @@ then
   exit 1
 fi
 
-make OCTAVE_RELEASE="Fedora %{version}-%{release}" %{?_smp_mflags}
+make OCTAVE_RELEASE="Fedora %{version}-%{release}"
 
 %install
 rm -rf %{buildroot}
