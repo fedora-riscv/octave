@@ -10,6 +10,8 @@ Group:          Applications/Engineering
 License:        GPLv3+
 Source0:        ftp://ftp.gnu.org/gnu/octave/octave-%{version}.tar.bz2
 Source1:        macros.octave
+# Don't include <curl/types.h> which isn't used and is missing on newer versions of libcurl
+Patch0:		octave-3.4.2-curl.patch
 # https://savannah.gnu.org/bugs/index.php?32839
 # Fix building packages from directories
 Patch2:         octave-3.4.0-pkgbuilddir.patch
@@ -70,6 +72,7 @@ This package contains documentation for Octave.
 
 %prep
 %setup -q
+%patch0 -p1 -b .curl
 %patch2 -p1 -b .pkgbuilddir
 
 # Check permissions
