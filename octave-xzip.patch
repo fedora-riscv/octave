@@ -1,0 +1,25 @@
+diff -r d1db86336a49 scripts/miscellaneous/private/__xzip__.m
+--- a/scripts/miscellaneous/private/__xzip__.m	Thu Aug 11 02:41:36 2011 -0500
++++ b/scripts/miscellaneous/private/__xzip__.m	Thu Aug 11 14:28:45 2011 -0600
+@@ -80,14 +80,16 @@
+              commandname, status);
+     endif
+ 
+-    if (nargout > 0)
+-      if (nargin == 5)
++    if (nargin == 5)
++      if (nargout > 0)
+         entries = cellfun(
+             @(x) fullfile (outdir, sprintf ("%s.%s", x, extension)),
+             f, "uniformoutput", false);
+-      else
+-        movefile (cellfun(@(x) sprintf ("%s.%s", x, extension), f,
+-                          "uniformoutput", false), cwd);
++      endif
++    else
++      movefile (cellfun(@(x) sprintf ("%s.%s", x, extension), f,
++                        "uniformoutput", false), cwd);
++      if (nargout > 0)
+         ## FIXME this does not work when you try to compress directories
+         entries  = cellfun(@(x) sprintf ("%s.%s", x, extension),
+                            files, "uniformoutput", false);
