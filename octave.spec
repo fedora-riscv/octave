@@ -3,7 +3,7 @@
 
 Name:           octave
 Version:        3.4.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -12,9 +12,15 @@ Source0:        ftp://ftp.gnu.org/gnu/octave/octave-%{version}.tar.bz2
 Source1:        macros.octave
 # Don't include <curl/types.h> which isn't used and is missing on newer versions of libcurl
 Patch0:		octave-3.4.2-curl.patch
+# https://savannah.gnu.org/bugs/index.php?33988
+# Fix tar argument handling
+Patch1:         octave-tar.patch
 # https://savannah.gnu.org/bugs/index.php?32839
 # Fix building packages from directories
 Patch2:         octave-3.4.0-pkgbuilddir.patch
+# https://savannah.gnu.org/bugs/index.php?33993
+# Fix xzip
+Patch3:         octave-xzip.patch
 URL:            http://www.octave.org
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -73,7 +79,9 @@ This package contains documentation for Octave.
 %prep
 %setup -q
 %patch0 -p1 -b .curl
+%patch1 -p1 -b .tar
 %patch2 -p1 -b .pkgbuilddir
+%patch3 -p1 -b .xzip
 
 # Check permissions
 find -name *.cc -exec chmod 644 {} \;
@@ -98,6 +106,7 @@ then
   exit 1
 fi
 
+# smp builds failing as of 3.4.2
 make OCTAVE_RELEASE="Fedora %{version}-%{release}"
 
 %install
@@ -244,6 +253,11 @@ fi
 
 
 %changelog
+* Thu Aug 11 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.2-2
+- Drop smp build - seems to be failing
+- Add patch to fix tar argument handling
+- Add patch to fix xzip
+
 * Sat Aug 06 2011 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.4.2-1
 - Update to 3.4.2.
 
@@ -263,7 +277,6 @@ fi
 - Fix multilib installs
 - Re-enable prelinking, seems to work
 - Add patch to enable building packages from directories
->>>>>>> c9d48722b5642ad74c3504a69163771eb4b11d9d
 
 * Wed Feb 23 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.0-4
 - Update rpm macros per FPC comments
