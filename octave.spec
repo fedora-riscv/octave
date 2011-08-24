@@ -3,7 +3,7 @@
 
 Name:           octave
 Version:        3.4.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -220,7 +220,6 @@ fi
 %doc AUTHORS BUGS ChangeLog COPYING NEWS README
 # FIXME: Create an -emacs package that has the emacs addon
 %config(noreplace) %{_sysconfdir}/ld.so.conf.d/octave-*.conf
-%config(noreplace) %{_sysconfdir}/rpm/macros.octave
 %{_bindir}/octave*
 %{_libdir}/octave/
 %{_libexecdir}/octave/
@@ -240,6 +239,7 @@ fi
 
 %files devel
 %defattr(-,root,root,-)
+%config(noreplace) %{_sysconfdir}/rpm/macros.octave
 %{_bindir}/mkoctfile
 %{_bindir}/mkoctfile-%{version}
 %{_includedir}/octave-%{version}/
@@ -253,6 +253,9 @@ fi
 
 
 %changelog
+* Wed Aug 24 2011 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.4.2-3
+- Place rpm macros in -devel.
+
 * Thu Aug 11 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.2-2
 - Drop smp build - seems to be failing
 - Add patch to fix tar argument handling
