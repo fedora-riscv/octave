@@ -2,25 +2,17 @@
 %global octave_api api-v45+
 
 Name:           octave
-Version:        3.4.2
-Release:        2%{?dist}
+Version:        3.4.3
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
 License:        GPLv3+
 Source0:        ftp://ftp.gnu.org/gnu/octave/octave-%{version}.tar.bz2
 Source1:        macros.octave
-# Don't include <curl/types.h> which isn't used and is missing on newer versions of libcurl
-Patch0:		octave-3.4.2-curl.patch
-# https://savannah.gnu.org/bugs/index.php?33988
-# Fix tar argument handling
-Patch1:         octave-tar.patch
 # https://savannah.gnu.org/bugs/index.php?32839
 # Fix building packages from directories
 Patch2:         octave-3.4.0-pkgbuilddir.patch
-# https://savannah.gnu.org/bugs/index.php?33993
-# Fix xzip
-Patch3:         octave-xzip.patch
 URL:            http://www.octave.org
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -78,10 +70,7 @@ This package contains documentation for Octave.
 
 %prep
 %setup -q
-%patch0 -p1 -b .curl
-%patch1 -p1 -b .tar
 %patch2 -p1 -b .pkgbuilddir
-%patch3 -p1 -b .xzip
 
 # Check permissions
 find -name *.cc -exec chmod 644 {} \;
@@ -220,7 +209,6 @@ fi
 %doc AUTHORS BUGS ChangeLog COPYING NEWS README
 # FIXME: Create an -emacs package that has the emacs addon
 %config(noreplace) %{_sysconfdir}/ld.so.conf.d/octave-*.conf
-%config(noreplace) %{_sysconfdir}/rpm/macros.octave
 %{_bindir}/octave*
 %{_libdir}/octave/
 %{_libexecdir}/octave/
@@ -240,6 +228,7 @@ fi
 
 %files devel
 %defattr(-,root,root,-)
+%config(noreplace) %{_sysconfdir}/rpm/macros.octave
 %{_bindir}/mkoctfile
 %{_bindir}/mkoctfile-%{version}
 %{_includedir}/octave-%{version}/
@@ -253,6 +242,13 @@ fi
 
 
 %changelog
+* Mon Oct 24 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.3-1
+- Update to 3.4.3
+- Drop upstreamed patches
+
+* Wed Aug 24 2011 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.4.2-3
+- Place rpm macros in -devel.
+
 * Thu Aug 11 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.2-2
 - Drop smp build - seems to be failing
 - Add patch to fix tar argument handling
