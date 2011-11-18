@@ -3,7 +3,7 @@
 
 Name:           octave
 Version:        3.4.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -27,6 +27,7 @@ BuildRequires:  GraphicsMagick-c++-devel fltk-devel ftgl-devel qrupdate-devel
 BuildRequires:  tex(dvips)
 
 Requires:        gnuplot gnuplot-common less info texinfo 
+Requires:        hdf5 = %{_hdf5_version}
 Requires(post):  info
 Requires(preun): info
 
@@ -242,6 +243,9 @@ fi
 
 
 %changelog
+* Fri Nov 18 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.3-2
+- Rebuild for hdf5 1.8.8
+
 * Mon Oct 24 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.3-1
 - Update to 3.4.3
 - Drop upstreamed patches
