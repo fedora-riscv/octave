@@ -1,7 +1,7 @@
 # Octave packaging macros
 
 # Octave binary API provided
-%octave_api %(octave-config -p API_VERSION || echo 0)}
+%octave_api %(octave-config -p API_VERSION || echo 0)
 
 # Octave Package Directories
 %octshareprefix %{_datadir}/octave
