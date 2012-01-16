@@ -1,0 +1,24 @@
+diff --git a/src/load-save.cc b/src/load-save.cc
+--- a/src/load-save.cc
++++ b/src/load-save.cc
+@@ -649,7 +649,7 @@
+   std::string orig_fname = "";
+ 
+   // Function called with Matlab-style ["filename", options] syntax
+-  if (argc > 1 && argv[1].at(0) != '-')
++  if (argc > 1 && ! argv[1].empty () && argv[1].at(0) != '-')
+     {
+       orig_fname = argv[1];
+       i++;
+diff --git a/test/test_io.m b/test/test_io.m
+--- a/test/test_io.m
++++ b/test/test_io.m
+@@ -227,6 +227,8 @@
+ %!
+ %! delete matrix.ascii;
+ 
++%!error <unable to find file> load ("")
++
+ %% FIXME: This test is disabled as it writes to stdout and there is no easy
+ %% way to recover output.  Need to spawn new octave process and pipe stdout
+ %% somewhere to treat this case.

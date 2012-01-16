@@ -11,7 +11,7 @@
 %octpkglibdir %{octarchprefix}/%{octpkg}-%{version}
 
 # Run an octave command - quietly with no startup files
-%octave_cmd() octave -H -q --no-site-file --eval "%*";
+%octave_cmd() octave -H -q --no-window-system --no-site-file --eval "%*";
 
 # Build Source0 into a package tar file in a temporary location
 %octave_pkg_build %octave_cmd pkg build '-verbose' %{_tmppath}/%{name}-%{version}-%{release}.%{_arch} %{_builddir}/%{buildsubdir}

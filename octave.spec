@@ -1,18 +1,21 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%global octave_api api-v45+
+%global octave_api api-v48+
 
 Name:           octave
-Version:        3.4.3
-Release:        3%{?dist}
+Version:        3.6.0
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
 License:        GPLv3+
 Source0:        ftp://ftp.gnu.org/gnu/octave/octave-%{version}.tar.bz2
+# RPM macros for helping to build Octave packages
 Source1:        macros.octave
 # https://savannah.gnu.org/bugs/index.php?32839
 # Fix building packages from directories
 Patch2:         octave-3.4.0-pkgbuilddir.patch
+# Fix load-save
+Patch3:         octave-3.6.0-loadsave.patch
 URL:            http://www.octave.org
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -26,7 +29,7 @@ BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
 BuildRequires:  GraphicsMagick-c++-devel fltk-devel ftgl-devel qrupdate-devel
 BuildRequires:  tex(dvips)
 
-Requires:        gnuplot gnuplot-common less info texinfo 
+Requires:        epstool gnuplot gnuplot-common less info texinfo 
 Requires:        hdf5 = %{_hdf5_version}
 Requires(post):  info
 Requires(preun): info
@@ -72,6 +75,7 @@ This package contains documentation for Octave.
 %prep
 %setup -q
 %patch2 -p1 -b .pkgbuilddir
+%patch3 -p1 -b .loadsave
 
 # Check permissions
 find -name *.cc -exec chmod 644 {} \;
@@ -96,8 +100,7 @@ then
   exit 1
 fi
 
-# smp builds failing as of 3.4.2
-make OCTAVE_RELEASE="Fedora %{version}-%{release}"
+make OCTAVE_RELEASE="Fedora %{version}-%{release}" %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
@@ -243,6 +246,9 @@ fi
 
 
 %changelog
+* Sun Jan 15 2012 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.6.0-1
+- Update to 3.6.0.
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6:3.4.3-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
