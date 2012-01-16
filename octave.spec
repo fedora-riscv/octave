@@ -100,7 +100,9 @@ then
   exit 1
 fi
 
-make OCTAVE_RELEASE="Fedora %{version}-%{release}" %{?_smp_mflags}
+# SMP make still not working in Octave 3.6.0
+#make OCTAVE_RELEASE="Fedora %{version}-%{release}" %{?_smp_mflags}
+make OCTAVE_RELEASE="Fedora %{version}-%{release}"
 
 %install
 rm -rf %{buildroot}
