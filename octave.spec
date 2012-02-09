@@ -3,7 +3,7 @@
 
 Name:           octave
 Version:        3.6.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -248,6 +248,9 @@ fi
 
 
 %changelog
+* Thu Feb 9 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.0-2
+- Rebuild with pcre 8.30
+
 * Sun Jan 15 2012 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.6.0-1
 - Update to 3.6.0.
 
