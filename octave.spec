@@ -2,8 +2,8 @@
 %global octave_api api-v48+
 
 Name:           octave
-Version:        3.6.0
-Release:        2%{?dist}
+Version:        3.6.1
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -14,8 +14,6 @@ Source1:        macros.octave
 # https://savannah.gnu.org/bugs/index.php?32839
 # Fix building packages from directories
 Patch2:         octave-3.4.0-pkgbuilddir.patch
-# Fix load-save
-Patch3:         octave-3.6.0-loadsave.patch
 URL:            http://www.octave.org
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -75,7 +73,6 @@ This package contains documentation for Octave.
 %prep
 %setup -q
 %patch2 -p1 -b .pkgbuilddir
-%patch3 -p1 -b .loadsave
 
 # Check permissions
 find -name *.cc -exec chmod 644 {} \;
@@ -248,6 +245,9 @@ fi
 
 
 %changelog
+* Wed Feb 22 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.1-1
+- Update to 3.6.1.
+
 * Thu Feb 9 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.0-2
 - Rebuild with pcre 8.30
 
