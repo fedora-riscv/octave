@@ -2,13 +2,14 @@
 %global octave_api api-v48+
 
 Name:           octave
-Version:        3.6.1
-Release:        2%{?dist}
+Version:        3.6.2
+Release:        0.1.rc0%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
 License:        GPLv3+
-Source0:        ftp://ftp.gnu.org/gnu/octave/octave-%{version}.tar.bz2
+#Source0:        ftp://ftp.gnu.org/gnu/octave/octave-%{version}.tar.bz2
+Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}-rc0.tar.bz2
 # RPM macros for helping to build Octave packages
 Source1:        macros.octave
 # https://savannah.gnu.org/bugs/index.php?32839
@@ -71,7 +72,7 @@ BuildArch:      noarch
 This package contains documentation for Octave.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}-rc0
 %patch2 -p1 -b .pkgbuilddir
 
 # Check permissions
@@ -245,6 +246,9 @@ fi
 
 
 %changelog
+* Sat May 12 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.2-0.1.rc0
+- Update to 3.6.2-rc0.
+
 * Tue Feb 28 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6:3.6.1-2
 - Rebuilt for c++ ABI breakage
 
