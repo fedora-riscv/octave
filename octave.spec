@@ -1,15 +1,24 @@
 # From src/version.h:#define OCTAVE_API_VERSION
 %global octave_api api-v48+
 
+# For rc versions, change release manually
+%global rcver 0
+%if 0%{?rcver:1}
+%global rctag -rc%{?rcver}
+%endif
+
 Name:           octave
 Version:        3.6.2
-Release:        0.1.rc0%{?dist}
+Release:        0.1.rc%{rcver}%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
 License:        GPLv3+
-#Source0:        ftp://ftp.gnu.org/gnu/octave/octave-%{version}.tar.bz2
-Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}-rc0.tar.bz2
+%if 0%{!?rcver:1}
+Source0:        ftp://ftp.gnu.org/gnu/octave/octave-%{version}.tar.bz2
+%else
+Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}%{rctag}.tar.bz2
+%endif
 # RPM macros for helping to build Octave packages
 Source1:        macros.octave
 # https://savannah.gnu.org/bugs/index.php?32839
@@ -72,7 +81,7 @@ BuildArch:      noarch
 This package contains documentation for Octave.
 
 %prep
-%setup -q -n %{name}-%{version}-rc0
+%setup -q -n %{name}-%{version}%{?rctag}
 %patch2 -p1 -b .pkgbuilddir
 
 # Check permissions
@@ -100,7 +109,7 @@ fi
 
 # SMP make still not working in Octave 3.6.0
 #make OCTAVE_RELEASE="Fedora %{version}-%{release}" %{?_smp_mflags}
-make OCTAVE_RELEASE="Fedora %{version}-%{release}"
+make OCTAVE_RELEASE="Fedora %{version}%{?rctag}-%{release}"
 
 %install
 rm -rf %{buildroot}
@@ -109,7 +118,7 @@ rm -f %{buildroot}%{_infodir}/dir
 
 # Make library links
 mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d
-echo "%{_libdir}/octave/%{version}" > %{buildroot}%{_sysconfdir}/ld.so.conf.d/octave-%{_arch}.conf
+echo "%{_libdir}/octave/%{version}%{?rctag}" > %{buildroot}%{_sysconfdir}/ld.so.conf.d/octave-%{_arch}.conf
 
 # Remove RPM_BUILD_ROOT from ls-R files
 perl -pi -e "s,%{buildroot},," %{buildroot}%{_libdir}/%{name}/ls-R
@@ -138,9 +147,9 @@ touch %{buildroot}%{_datadir}/%{name}/octave_packages
 # Fix multilib installs
 for include in config defaults oct-conf
 do
-   mv %{buildroot}%{_includedir}/%{name}-%{version}/%{name}/${include}.h \
-      %{buildroot}%{_includedir}/%{name}-%{version}/%{name}/${include}-%{__isa_bits}.h
-   cat > %{buildroot}%{_includedir}/%{name}-%{version}/%{name}/${include}.h <<EOF
+   mv %{buildroot}%{_includedir}/%{name}-%{version}%{?rctag}/%{name}/${include}.h \
+      %{buildroot}%{_includedir}/%{name}-%{version}%{?rctag}/%{name}/${include}-%{__isa_bits}.h
+   cat > %{buildroot}%{_includedir}/%{name}-%{version}%{?rctag}/%{name}/${include}.h <<EOF
 #include <bits/wordsize.h>
 
 #if __WORDSIZE == 32
@@ -152,9 +161,9 @@ do
 #endif
 EOF
 done
-for script in octave-config-%{version} mkoctfile-%{version}
+for script in octave-config-%{version}%{?rctag} mkoctfile-%{version}%{?rctag}
 do
-   mv %{buildroot}%{_bindir}/${script} %{buildroot}%{_libdir}/%{name}/%{version}/${script}
+   mv %{buildroot}%{_bindir}/${script} %{buildroot}%{_libdir}/%{name}/%{version}%{?rctag}/${script}
    cat > %{buildroot}%{_bindir}/${script} <<EOF
 #!/bin/bash
 ARCH=\$(uname -m)
@@ -169,22 +178,22 @@ x86_64 | ia64 | s390x) LIB_DIR=/usr/lib64
                        ;;
 esac
 
-if [ ! -x \$LIB_DIR/%{name}/%{version}/${script} ] ; then
-  if [ ! -x \$SECONDARY_LIB_DIR/%{name}/%{version}/${script} ] ; then
-    echo "Error: \$LIB_DIR/%{name}/%{version}/${script} not found"
+if [ ! -x \$LIB_DIR/%{name}/%{version}%{?rctag}/${script} ] ; then
+  if [ ! -x \$SECONDARY_LIB_DIR/%{name}/%{version}%{?rctag}/${script} ] ; then
+    echo "Error: \$LIB_DIR/%{name}/%{version}%{?rctag}/${script} not found"
     if [ -d \$SECONDARY_LIB_DIR ] ; then
-      echo "   and \$SECONDARY_LIB_DIR/%{name}/%{version}/${script} not found"
+      echo "   and \$SECONDARY_LIB_DIR/%{name}/%{version}%{?rctag}/${script} not found"
     fi
     exit 1
   fi
   LIB_DIR=\$SECONDARY_LIB_DIR
 fi
-exec \$LIB_DIR/%{name}/%{version}/${script} "\$@"
+exec \$LIB_DIR/%{name}/%{version}%{?rctag}/${script} "\$@"
 EOF
    chmod +x %{buildroot}%{_bindir}/${script}
 done
 # remove timestamp from doc-cache
-sed -i -e '/^# Created by Octave/d' %{buildroot}%{_datadir}/%{name}/%{version}/etc/doc-cache
+sed -i -e '/^# Created by Octave/d' %{buildroot}%{_datadir}/%{name}/%{version}%{?rctag}/etc/doc-cache
 
 # rpm macros
 mkdir -p %{buildroot}%{_sysconfdir}/rpm
@@ -223,7 +232,7 @@ fi
 %{_datadir}/applications/fedora-octave.desktop
 # octave_packages is %ghost, so need to list everything else separately
 %dir %{_datadir}/octave
-%{_datadir}/octave/%{version}/
+%{_datadir}/octave/%{version}%{?rctag}/
 %{_datadir}/octave/ls-R
 %ghost %{_datadir}/octave/octave_packages
 %{_datadir}/octave/packages/
@@ -234,8 +243,8 @@ fi
 %defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/rpm/macros.octave
 %{_bindir}/mkoctfile
-%{_bindir}/mkoctfile-%{version}
-%{_includedir}/octave-%{version}/
+%{_bindir}/mkoctfile-%{version}%{?rctag}
+%{_includedir}/octave-%{version}%{?rctag}/
 %{_mandir}/man1/mkoctfile.1.*
 
 %files doc
