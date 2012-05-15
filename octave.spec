@@ -9,7 +9,7 @@
 
 Name:           octave
 Version:        3.6.2
-Release:        0.2.rc%{rcver}%{?dist}
+Release:        0.3.rc%{rcver}%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -256,6 +256,9 @@ fi
 
 
 %changelog
+* Tue May 15 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.2-0.3.rc0
+- Rebuild with hdf5 1.8.9
+
 * Tue May 15 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.2-0.2.rc0
 - Add Provides bundled(gnulib) (bug 821781)
 
