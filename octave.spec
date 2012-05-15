@@ -9,7 +9,7 @@
 
 Name:           octave
 Version:        3.6.2
-Release:        0.1.rc%{rcver}%{?dist}
+Release:        0.2.rc%{rcver}%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -28,6 +28,7 @@ URL:            http://www.octave.org
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Provides:       octave(api) = %{octave_api}
+Provides:       bundled(gnulib)
 
 BuildRequires:  bison flex less tetex gcc-gfortran atlas-devel 
 BuildRequires:  ncurses-devel zlib-devel hdf5-devel texinfo qhull-devel
@@ -255,6 +256,9 @@ fi
 
 
 %changelog
+* Tue May 15 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.2-0.2.rc0
+- Add Provides bundled(gnulib) (bug 821781)
+
 * Sat May 12 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.2-0.1.rc0
 - Update to 3.6.2-rc0.
 
