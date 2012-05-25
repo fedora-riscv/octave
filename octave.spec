@@ -2,14 +2,14 @@
 %global octave_api api-v48+
 
 # For rc versions, change release manually
-%global rcver 0
+%global rcver 2
 %if 0%{?rcver:1}
 %global rctag -rc%{?rcver}
 %endif
 
 Name:           octave
 Version:        3.6.2
-Release:        0.3.rc%{rcver}%{?dist}
+Release:        0.4.rc%{rcver}%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -24,6 +24,8 @@ Source1:        macros.octave
 # https://savannah.gnu.org/bugs/index.php?32839
 # Fix building packages from directories
 Patch2:         octave-3.4.0-pkgbuilddir.patch
+# Update gnulib to handle gets deprecation
+Patch3:         octave-gets.patch
 URL:            http://www.octave.org
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -84,6 +86,7 @@ This package contains documentation for Octave.
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
 %patch2 -p1 -b .pkgbuilddir
+%patch3 -p1 -b .gets
 
 # Check permissions
 find -name *.cc -exec chmod 644 {} \;
@@ -256,6 +259,10 @@ fi
 
 
 %changelog
+* Thu May 24 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.2-0.4.rc2
+- Update to 3.6.2-rc2
+- Add patch to update gnulib to handle gets removal
+
 * Tue May 15 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.2-0.3.rc0
 - Rebuild with hdf5 1.8.9
 
