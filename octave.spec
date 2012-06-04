@@ -2,14 +2,14 @@
 %global octave_api api-v48+
 
 # For rc versions, change release manually
-%global rcver 2
+#global rcver 2
 %if 0%{?rcver:1}
 %global rctag -rc%{?rcver}
 %endif
 
 Name:           octave
 Version:        3.6.2
-Release:        0.4.rc%{rcver}%{?dist}
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -259,6 +259,9 @@ fi
 
 
 %changelog
+* Mon Jun 4 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.2-1
+- Update to 3.6.2 final
+
 * Thu May 24 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.2-0.4.rc2
 - Update to 3.6.2-rc2
 - Add patch to update gnulib to handle gets removal
