@@ -260,20 +260,9 @@ fi
 
 %changelog
 * Mon Jun 4 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.2-1
-- Update to 3.6.2 final
-
-* Thu May 24 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.2-0.4.rc2
-- Update to 3.6.2-rc2
+- Update to 3.6.2
 - Add patch to update gnulib to handle gets removal
-
-* Tue May 15 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.2-0.3.rc0
-- Rebuild with hdf5 1.8.9
-
-* Tue May 15 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.2-0.2.rc0
 - Add Provides bundled(gnulib) (bug 821781)
-
-* Sat May 12 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.2-0.1.rc0
-- Update to 3.6.2-rc0.
 
 * Tue Feb 28 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6:3.6.1-2
 - Rebuilt for c++ ABI breakage
