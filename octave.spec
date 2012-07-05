@@ -9,7 +9,7 @@
 
 Name:           octave
 Version:        3.6.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -38,7 +38,7 @@ BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
 BuildRequires:  curl-devel pcre-devel texinfo-tex arpack-devel libX11-devel
 BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
 BuildRequires:  GraphicsMagick-c++-devel fltk-devel ftgl-devel qrupdate-devel
-BuildRequires:  tex(dvips)
+BuildRequires:  tex(dvips) mesa-libGL-devel mesa-libGLU-devel
 
 Requires:        epstool gnuplot gnuplot-common less info texinfo 
 Requires:        hdf5 = %{_hdf5_version}
@@ -259,6 +259,9 @@ fi
 
 
 %changelog
+* Thu Jul 5 2012 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.6.2-2
+- Build against OpenGL libraries.
+
 * Mon Jun 4 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.2-1
 - Update to 3.6.2
 - Add patch to update gnulib to handle gets removal
