@@ -9,7 +9,7 @@
 
 Name:           octave
 Version:        3.6.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -259,6 +259,9 @@ fi
 
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6:3.6.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Thu Jul 5 2012 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.6.2-2
 - Build against OpenGL libraries.
 
