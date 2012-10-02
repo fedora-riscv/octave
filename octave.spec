@@ -8,7 +8,7 @@
 %endif
 
 Name:           octave
-Version:        3.6.2
+Version:        3.6.3
 Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
@@ -24,8 +24,8 @@ Source1:        macros.octave
 # https://savannah.gnu.org/bugs/index.php?32839
 # Fix building packages from directories
 Patch2:         octave-3.4.0-pkgbuilddir.patch
-# Update gnulib to handle gets deprecation
-Patch3:         octave-gets.patch
+# Upstream patches to fix spase matrix handling
+Patch3:         octave-sparse.patch
 URL:            http://www.octave.org
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -86,7 +86,7 @@ This package contains documentation for Octave.
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
 %patch2 -p1 -b .pkgbuilddir
-%patch3 -p1 -b .gets
+%patch3 -p1 -b .sparse
 
 # Check permissions
 find -name *.cc -exec chmod 644 {} \;
@@ -94,8 +94,7 @@ find -name *.cc -exec chmod 644 {} \;
 %build
 %global enable64 no
 export F77=gfortran
-# TODO: arpack (and others?) appear to be bundled in libcruft.. 
-#   --with-arpack is not an option anymore
+# TODO: some items appear to be bundled in libcruft.. 
 #   gl2ps.c is bundled.  Anything else?
 %configure --enable-shared --disable-static --enable-64=%enable64 \
  --with-blas="-L%{_libdir}/atlas -lf77blas -latlas" --with-qrupdate \
@@ -259,6 +258,16 @@ fi
 
 
 %changelog
+* Thu Sep 6 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.3-2
+- Add upstream patch to fix sparse matrix test crash
+
+* Wed Sep 5 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.3-1
+- Update to 3.6.3
+- Drop gets patch fixed upstream
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6:3.6.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Thu Jul 5 2012 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.6.2-2
 - Build against OpenGL libraries.
 
