@@ -2,14 +2,14 @@
 %global octave_api api-v48+
 
 # For rc versions, change release manually
-#global rcver 2
+%global rcver 0
 %if 0%{?rcver:1}
 %global rctag -rc%{?rcver}
 %endif
 
 Name:           octave
-Version:        3.6.3
-Release:        2%{?dist}
+Version:        3.6.4
+Release:        0.1.rc0%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -24,8 +24,6 @@ Source1:        macros.octave
 # https://savannah.gnu.org/bugs/index.php?32839
 # Fix building packages from directories
 Patch2:         octave-3.4.0-pkgbuilddir.patch
-# Upstream patches to fix spase matrix handling
-Patch3:         octave-sparse.patch
 URL:            http://www.octave.org
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -86,7 +84,6 @@ This package contains documentation for Octave.
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
 %patch2 -p1 -b .pkgbuilddir
-%patch3 -p1 -b .sparse
 
 # Check permissions
 find -name *.cc -exec chmod 644 {} \;
@@ -258,6 +255,10 @@ fi
 
 
 %changelog
+* Wed Oct 17 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.4-0.1.rc0
+- Update to 3.6.4-rc0
+- Drop sparse patch applied upstream
+
 * Thu Sep 6 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.3-2
 - Add upstream patch to fix sparse matrix test crash
 
