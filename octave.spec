@@ -9,7 +9,7 @@
 
 Name:           octave
 Version:        3.6.3
-Release:        2%{?dist}
+Release:        2%{?dist}.1
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -258,6 +258,9 @@ fi
 
 
 %changelog
+* Mon Dec 3 2012 Susi Lehtola <jussilehtola@fedoraproject.org> - 6:3.6.3-2.1
+- Rebuild against newer fltk in Fedora 18.
+
 * Thu Sep 6 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.3-2
 - Add upstream patch to fix sparse matrix test crash
 
