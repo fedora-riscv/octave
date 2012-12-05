@@ -9,7 +9,7 @@
 
 Name:           octave
 Version:        3.6.4
-Release:        0.1.rc0%{?dist}
+Release:        0.2.rc0%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -21,6 +21,7 @@ Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}%{rctag}.tar.bz2
 %endif
 # RPM macros for helping to build Octave packages
 Source1:        macros.octave
+Patch0:         octave-gets.patch
 # https://savannah.gnu.org/bugs/index.php?32839
 # Fix building packages from directories
 Patch2:         octave-3.4.0-pkgbuilddir.patch
@@ -83,6 +84,7 @@ This package contains documentation for Octave.
 
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
+%patch0 -p1 -b .gets
 %patch2 -p1 -b .pkgbuilddir
 
 # Check permissions
@@ -255,6 +257,10 @@ fi
 
 
 %changelog
+* Wed Dec 05 2012 Orion Poplawski <orion@cora.nwra.com> - 6:3.6.4-0.2.rc0
+- Restore gets patch
+- Rebuild for hdf5 1.8.10
+
 * Wed Oct 17 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.4-0.1.rc0
 - Update to 3.6.4-rc0
 - Drop sparse patch applied upstream
