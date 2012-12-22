@@ -9,7 +9,7 @@
 
 Name:           octave
 Version:        3.6.3
-Release:        2%{?dist}.1
+Release:        2%{?dist}.2
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -21,6 +21,8 @@ Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}%{rctag}.tar.bz2
 %endif
 # RPM macros for helping to build Octave packages
 Source1:        macros.octave
+# Ignore deps when doing a pkg build for now
+Patch1:         octave-pkgbuilddeps.patch
 # https://savannah.gnu.org/bugs/index.php?32839
 # Fix building packages from directories
 Patch2:         octave-3.4.0-pkgbuilddir.patch
@@ -85,6 +87,7 @@ This package contains documentation for Octave.
 
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
+%patch1 -p1 -b .pkgbuilddeps
 %patch2 -p1 -b .pkgbuilddir
 %patch3 -p1 -b .sparse
 
@@ -258,6 +261,9 @@ fi
 
 
 %changelog
+* Fri Dec 21 2012 Orion Poplawski <orion@cora.nwra.com> - 6:3.6.3-2.2
+- Add patch to ignore deps when building packages for now (bug 733615)
+
 * Mon Dec 3 2012 Susi Lehtola <jussilehtola@fedoraproject.org> - 6:3.6.3-2.1
 - Rebuild against newer fltk in Fedora 18.
 
