@@ -9,7 +9,7 @@
 
 Name:           octave
 Version:        3.6.4
-Release:        0.2.rc0%{?dist}
+Release:        0.3.rc0%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -22,6 +22,8 @@ Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}%{rctag}.tar.bz2
 # RPM macros for helping to build Octave packages
 Source1:        macros.octave
 Patch0:         octave-gets.patch
+# Ignore deps when doing a pkg build for now
+Patch1:         octave-pkgbuilddeps.patch
 # https://savannah.gnu.org/bugs/index.php?32839
 # Fix building packages from directories
 Patch2:         octave-3.4.0-pkgbuilddir.patch
@@ -85,6 +87,7 @@ This package contains documentation for Octave.
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
 %patch0 -p1 -b .gets
+%patch1 -p1 -b .pkgbuilddeps
 %patch2 -p1 -b .pkgbuilddir
 
 # Check permissions
@@ -257,6 +260,9 @@ fi
 
 
 %changelog
+* Fri Dec 21 2012 Orion Poplawski <orion@cora.nwra.com> - 6:3.6.4-0.3.rc0
+- Add patch to ignore deps when building packages for now (bug 733615)
+
 * Wed Dec 05 2012 Orion Poplawski <orion@cora.nwra.com> - 6:3.6.4-0.2.rc0
 - Restore gets patch
 - Rebuild for hdf5 1.8.10
