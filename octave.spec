@@ -2,14 +2,14 @@
 %global octave_api api-v48+
 
 # For rc versions, change release manually
-%global rcver 0
+%global rcver 1
 %if 0%{?rcver:1}
 %global rctag -rc%{?rcver}
 %endif
 
 Name:           octave
 Version:        3.6.4
-Release:        0.3.rc0%{?dist}
+Release:        0.4.rc1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -17,11 +17,10 @@ License:        GPLv3+
 %if 0%{!?rcver:1}
 Source0:        ftp://ftp.gnu.org/gnu/octave/octave-%{version}.tar.bz2
 %else
-Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}%{rctag}.tar.bz2
+Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}%{rctag}.tar.gz
 %endif
 # RPM macros for helping to build Octave packages
 Source1:        macros.octave
-Patch0:         octave-gets.patch
 # Ignore deps when doing a pkg build for now
 Patch1:         octave-pkgbuilddeps.patch
 # https://savannah.gnu.org/bugs/index.php?32839
@@ -86,7 +85,6 @@ This package contains documentation for Octave.
 
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
-%patch0 -p1 -b .gets
 %patch1 -p1 -b .pkgbuilddeps
 %patch2 -p1 -b .pkgbuilddir
 
@@ -260,6 +258,10 @@ fi
 
 
 %changelog
+* Fri Jan 4 2013 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.4-0.4.rc1
+- Update to 3.6.4-rc1
+- Drop gets patch
+
 * Fri Dec 21 2012 Orion Poplawski <orion@cora.nwra.com> - 6:3.6.4-0.3.rc0
 - Add patch to ignore deps when building packages for now (bug 733615)
 
