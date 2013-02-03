@@ -9,7 +9,7 @@
 
 Name:           octave
 Version:        3.6.4
-Release:        0.4.rc1%{?dist}
+Release:        0.5.rc1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -258,6 +258,9 @@ fi
 
 
 %changelog
+* Sun Feb 03 2013 Kevin Fenzi <kevin@scrye.com> - 6:3.6.4-0.5.rc1
+- Rebuild for broken deps in rawhide
+
 * Fri Jan 4 2013 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.4-0.4.rc1
 - Update to 3.6.4-rc1
 - Drop gets patch
