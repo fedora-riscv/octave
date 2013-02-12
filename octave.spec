@@ -2,14 +2,14 @@
 %global octave_api api-v48+
 
 # For rc versions, change release manually
-%global rcver 1
+%global rcver 2
 %if 0%{?rcver:1}
 %global rctag -rc%{?rcver}
 %endif
 
 Name:           octave
 Version:        3.6.4
-Release:        0.6.rc1%{?dist}
+Release:        0.7.rc2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -258,6 +258,9 @@ fi
 
 
 %changelog
+* Tue Feb 12 2013 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.4-0.7.rc2
+- Update to 3.6.4-rc2
+
 * Tue Feb 12 2013 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.4-0.6.rc1
 - Drop vendor from desktop file
 
