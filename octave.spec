@@ -9,7 +9,7 @@
 
 Name:           octave
 Version:        3.6.4
-Release:        0.5.rc1%{?dist}
+Release:        0.6.rc1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -131,7 +131,7 @@ touch %{buildroot}%{_datadir}/%{name}/ls-R
 
 # Create desktop file
 rm %{buildroot}%{_datadir}/applications/www.octave.org-octave.desktop
-desktop-file-install --vendor fedora --remove-category Development --add-category "Education" \
+desktop-file-install --remove-category Development --add-category "Education" \
   --add-category "DataVisualization" --add-category "NumericalAnalysis" --add-category "Engineering" --add-category "Physics" \
   --dir %{buildroot}%{_datadir}/applications doc/icons/octave.desktop
 
@@ -258,6 +258,9 @@ fi
 
 
 %changelog
+* Tue Feb 12 2013 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.4-0.6.rc1
+- Drop vendor from desktop file
+
 * Sun Feb 03 2013 Kevin Fenzi <kevin@scrye.com> - 6:3.6.4-0.5.rc1
 - Rebuild for broken deps in rawhide
 
