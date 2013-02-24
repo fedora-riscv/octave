@@ -232,7 +232,7 @@ fi
 %{_infodir}/liboctave.info*
 %{_infodir}/octave.info*
 %{_infodir}/OctaveFAQ.info*
-%{_datadir}/applications/octave.desktop
+%{_datadir}/applications/fedora-octave.desktop
 # octave_packages is %ghost, so need to list everything else separately
 %dir %{_datadir}/octave
 %{_datadir}/octave/%{version}%{?rctag}/
