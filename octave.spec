@@ -2,14 +2,14 @@
 %global octave_api api-v48+
 
 # For rc versions, change release manually
-#global rcver 2
+#global rcver %{nil}
 %if 0%{?rcver:1}
 %global rctag -rc%{?rcver}
 %endif
 
 Name:           octave
-Version:        3.6.3
-Release:        2%{?dist}.2
+Version:        3.6.4
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -17,7 +17,7 @@ License:        GPLv3+
 %if 0%{!?rcver:1}
 Source0:        ftp://ftp.gnu.org/gnu/octave/octave-%{version}.tar.bz2
 %else
-Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}%{rctag}.tar.bz2
+Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}%{rctag}.tar.gz
 %endif
 # RPM macros for helping to build Octave packages
 Source1:        macros.octave
@@ -26,8 +26,6 @@ Patch1:         octave-pkgbuilddeps.patch
 # https://savannah.gnu.org/bugs/index.php?32839
 # Fix building packages from directories
 Patch2:         octave-3.4.0-pkgbuilddir.patch
-# Upstream patches to fix spase matrix handling
-Patch3:         octave-sparse.patch
 URL:            http://www.octave.org
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -89,7 +87,6 @@ This package contains documentation for Octave.
 %setup -q -n %{name}-%{version}%{?rctag}
 %patch1 -p1 -b .pkgbuilddeps
 %patch2 -p1 -b .pkgbuilddir
-%patch3 -p1 -b .sparse
 
 # Check permissions
 find -name *.cc -exec chmod 644 {} \;
@@ -134,7 +131,7 @@ touch %{buildroot}%{_datadir}/%{name}/ls-R
 
 # Create desktop file
 rm %{buildroot}%{_datadir}/applications/www.octave.org-octave.desktop
-desktop-file-install --vendor fedora --remove-category Development --add-category "Education" \
+desktop-file-install --remove-category Development --add-category "Education" \
   --add-category "DataVisualization" --add-category "NumericalAnalysis" --add-category "Engineering" --add-category "Physics" \
   --dir %{buildroot}%{_datadir}/applications doc/icons/octave.desktop
 
@@ -235,7 +232,7 @@ fi
 %{_infodir}/liboctave.info*
 %{_infodir}/octave.info*
 %{_infodir}/OctaveFAQ.info*
-%{_datadir}/applications/fedora-octave.desktop
+%{_datadir}/applications/octave.desktop
 # octave_packages is %ghost, so need to list everything else separately
 %dir %{_datadir}/octave
 %{_datadir}/octave/%{version}%{?rctag}/
@@ -261,6 +258,10 @@ fi
 
 
 %changelog
+* Sat Feb 23 2013 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.4-1
+- Update to 3.6.4 final
+- Drop sparse patch applied upstream
+
 * Fri Dec 21 2012 Orion Poplawski <orion@cora.nwra.com> - 6:3.6.3-2.2
 - Add patch to ignore deps when building packages for now (bug 733615)
 
