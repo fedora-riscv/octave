@@ -131,7 +131,7 @@ touch %{buildroot}%{_datadir}/%{name}/ls-R
 
 # Create desktop file
 rm %{buildroot}%{_datadir}/applications/www.octave.org-octave.desktop
-desktop-file-install --remove-category Development --add-category "Education" \
+desktop-file-install --vendor fedora --remove-category Development --add-category "Education" \
   --add-category "DataVisualization" --add-category "NumericalAnalysis" --add-category "Engineering" --add-category "Physics" \
   --dir %{buildroot}%{_datadir}/applications doc/icons/octave.desktop
 
