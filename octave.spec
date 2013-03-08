@@ -9,7 +9,7 @@
 
 Name:           octave
 Version:        3.6.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -244,7 +244,7 @@ fi
 
 %files devel
 %defattr(-,root,root,-)
-%config(noreplace) %{_sysconfdir}/rpm/macros.octave
+%{_sysconfdir}/rpm/macros.octave
 %{_bindir}/mkoctfile
 %{_bindir}/mkoctfile-%{version}%{?rctag}
 %{_includedir}/octave-%{version}%{?rctag}/
@@ -258,6 +258,10 @@ fi
 
 
 %changelog
+* Fri Mar 08 2013 Ralf Corsépius <corsepiu@fedoraproject.org> - 6:3.6.4-2
+- Remove %%config from %%{_sysconfdir}/rpm/macros.*
+  (https://fedorahosted.org/fpc/ticket/259).
+
 * Sat Feb 23 2013 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.4-1
 - Update to 3.6.4 final
 
