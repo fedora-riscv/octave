@@ -8,12 +8,14 @@
 %endif
 
 Name:           octave
-Version:        3.6.4
-Release:        2%{?dist}
-Summary:        A high-level language for numerical computations
 Epoch:          6
+Version:        3.6.4
+Release:        3%{?dist}
+Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
+URL:            http://www.octave.org
+
 %if 0%{!?rcver:1}
 Source0:        ftp://ftp.gnu.org/gnu/octave/octave-%{version}.tar.bz2
 %else
@@ -26,7 +28,9 @@ Patch1:         octave-pkgbuilddeps.patch
 # https://savannah.gnu.org/bugs/index.php?32839
 # Fix building packages from directories
 Patch2:         octave-3.4.0-pkgbuilddir.patch
-URL:            http://www.octave.org
+# aarch64 support (#926264)
+Patch3:         octave-aarch64.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Provides:       octave(api) = %{octave_api}
@@ -87,6 +91,7 @@ This package contains documentation for Octave.
 %setup -q -n %{name}-%{version}%{?rctag}
 %patch1 -p1 -b .pkgbuilddeps
 %patch2 -p1 -b .pkgbuilddir
+%patch3 -p1 -b .aarch64
 
 # Check permissions
 find -name *.cc -exec chmod 644 {} \;
@@ -258,6 +263,9 @@ fi
 
 
 %changelog
+* Thu Mar 28 2013 Jaromir Capik <jcapik@redhat.com> - 6:3.6.4-3
+- aarch64 support (#926264)
+
 * Fri Mar 08 2013 Ralf Corsépius <corsepiu@fedoraproject.org> - 6:3.6.4-2
 - Remove %%config from %%{_sysconfdir}/rpm/macros.*
   (https://fedorahosted.org/fpc/ticket/259).
