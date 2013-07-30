@@ -10,7 +10,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.6.4
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -263,6 +263,9 @@ fi
 
 
 %changelog
+* Tue Jul 30 2013 Orion Poplawski <orion@cora.nwra.com> - 6:3.6.4-5
+- Rebuild for glpk 4.52.1
+
 * Thu May 16 2013 Orion Poplawski <orion@cora.nwra.com> - 6:3.6.4-4
 - Rebuild for hdf5 1.8.11
 
