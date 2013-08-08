@@ -36,7 +36,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
 
-BuildRequires:  bison flex less tetex gcc-gfortran atlas-devel 
+BuildRequires:  bison flex less gcc-gfortran atlas-devel 
 BuildRequires:  ncurses-devel zlib-devel hdf5-devel texinfo qhull-devel
 BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
 BuildRequires:  curl-devel pcre-devel texinfo-tex arpack-devel libX11-devel
