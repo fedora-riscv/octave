@@ -226,7 +226,6 @@ fi
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS BUGS ChangeLog COPYING NEWS README
 # FIXME: Create an -emacs package that has the emacs addon
 %config(noreplace) %{_sysconfdir}/ld.so.conf.d/octave-*.conf
@@ -248,7 +247,6 @@ fi
 #%{_sysconfdir}/prelink.conf.d/octave.conf
 
 %files devel
-%defattr(-,root,root,-)
 %{_sysconfdir}/rpm/macros.octave
 %{_bindir}/mkoctfile
 %{_bindir}/mkoctfile-%{version}%{?rctag}
@@ -256,7 +254,6 @@ fi
 %{_mandir}/man1/mkoctfile.1.*
 
 %files doc
-%defattr(-,root,root,-)
 %doc doc/liboctave/liboctave.html doc/liboctave/liboctave.pdf
 %doc doc/faq/OctaveFAQ.pdf doc/refcard/*.pdf
 %doc examples/
