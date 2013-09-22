@@ -101,9 +101,16 @@ find -name *.cc -exec chmod 644 {} \;
 export F77=gfortran
 # TODO: some items appear to be bundled in libcruft.. 
 #   gl2ps.c is bundled.  Anything else?
+%if 0%{?fedora} >= 21
+%global atlasblaslib -ltatlas
+%global atlaslapacklib -ltatlas
+%else
+%global atlasblaslib -lf77blas -latlas
+%global atlaslapacklib -llapack
+%endif
 %configure --enable-shared --disable-static --enable-64=%enable64 \
- --with-blas="-L%{_libdir}/atlas -lf77blas -latlas" --with-qrupdate \
- --with-lapack="-L%{_libdir}/atlas -llapack" \
+ --with-blas="-L%{_libdir}/atlas %{atlasblaslib}" --with-qrupdate \
+ --with-lapack="-L%{_libdir}/atlas %{atlaslapacklib}" \
  --with-amd --with-umfpack --with-colamd --with-ccolamd --with-cholmod \
  --with-cxsparse
 
