@@ -10,7 +10,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.6.4
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -260,6 +260,9 @@ fi
 
 
 %changelog
+* Sun Sep 22 2013 Orion Poplawski - 6:3.6.4-7
+- Rebuild for atlas 3.10
+
 * Thu Sep 12 2013 Dan Horák <dan[at]danny.cz> - 6:3.6.4-6
 - Rebuilt to resolve broken deps on s390(x)
 
