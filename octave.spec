@@ -555,7 +555,7 @@ fi
 - Add dependency on octave API so that breakages will be detected. (Bug 224050).
 - Remove libtermcap-devel as build dependency (Bug 226768).
 
-* Mon Oct  3 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.9-1
+* Tue Oct 03 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.9-1
 - New release. Remove old patch.
 
 * Fri Sep 15 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.8-2
@@ -584,7 +584,7 @@ fi
 - Move octave-bug and octave-config from devel to main package.
 - Fix categorization of info files (bug 196760).
 
-* Wed Apr 27 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.5-6
+* Thu Apr 27 2006 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.5-6
 - Add patch for bug #190481
 - Manual stripping of .oct files is no longer necessary.
 
@@ -701,7 +701,7 @@ fi
   (some options are obsolete, others appear unneeded if rpm configure
   macro is used).
 
-* Mon May  3 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.70-1
+* Tue May 03 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.70-1
 - Imported 2.1.70 from upstream, removed old patches (resolved in new version)
 - Changed g77 dependency to gfortran.
 - Added fftw3 to BuildRequires.
@@ -744,7 +744,7 @@ fi
 * Thu Jun 24 2004 Lon Hohberger <lhh@redhat.com> 2.1.57-2
 - Fix for #113852 - signbit broken
 
-* Wed Jun 15 2004 Lon Hohberger <lhh@redhat.com> 2.1.57-1
+* Tue Jun 15 2004 Lon Hohberger <lhh@redhat.com> 2.1.57-1
 - Import 2.1.57 from upstream; this fixes #126074
 
 * Tue Jun 15 2004 Elliot Lee <sopwith@redhat.com>
@@ -918,17 +918,17 @@ does not exist.
 * Mon Jul  3 2000 Matt Wilson <msw@redhat.com>
 - added missing %% before {_infodir} in the %%post 
 
-* Sat Jun 09 2000 Trond Eivind Glomsrød <teg@redhat.com>
+* Fri Jun 09 2000 Trond Eivind Glomsrød <teg@redhat.com>
 - 2.1.30 - the old version contains invalid C++ code
   accepted by older compilers.
 
-* Sat Jun 09 2000 Trond Eivind Glomsrød <teg@redhat.com>
+* Fri Jun 09 2000 Trond Eivind Glomsrød <teg@redhat.com>
 - disable optimization for C++ code
 
-* Fri Jun 08 2000 Trond Eivind Glomsrød <teg@redhat.com>
+* Thu Jun 08 2000 Trond Eivind Glomsrød <teg@redhat.com>
 - add "Excludearch: " for Alpha - it triggers compiler bugs
 
-* Fri Jun 08 2000 Trond Eivind Glomsrød <teg@redhat.com>
+* Thu Jun 08 2000 Trond Eivind Glomsrød <teg@redhat.com>
 - use %%configure, %%makeinstall, %{_infodir}. %{_mandir}
 - remove prefix
 
