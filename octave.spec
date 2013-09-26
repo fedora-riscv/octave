@@ -109,8 +109,11 @@ export F77=gfortran
 %global atlaslapacklib -llapack
 %endif
 %configure --enable-shared --disable-static --enable-64=%enable64 \
- --with-blas="-L%{_libdir}/atlas %{atlasblaslib}" --with-qrupdate \
+%ifnarch %{arm}
+ --with-blas="-L%{_libdir}/atlas %{atlasblaslib}" \
  --with-lapack="-L%{_libdir}/atlas %{atlaslapacklib}" \
+%endif
+ --with-qrupdate \
  --with-amd --with-umfpack --with-colamd --with-ccolamd --with-cholmod \
  --with-cxsparse
 
@@ -269,6 +272,7 @@ fi
 %changelog
 * Sun Sep 22 2013 Orion Poplawski - 6:3.6.4-7
 - Rebuild for atlas 3.10
+- Disable atlas on arm
 
 * Thu Sep 12 2013 Dan Horák <dan[at]danny.cz> - 6:3.6.4-6
 - Rebuilt to resolve broken deps on s390(x)
