@@ -37,12 +37,7 @@ Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
 
 BuildRequires:  bison flex less gcc-gfortran
-%ifnarch %{arm}
 BuildRequires:  atlas-devel 
-%else
-BuildRequires:  blas-devel
-BuildRequires:  lapack-devel
-%endif
 BuildRequires:  ncurses-devel zlib-devel hdf5-devel texinfo qhull-devel
 BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
 BuildRequires:  curl-devel pcre-devel texinfo-tex arpack-devel libX11-devel
@@ -115,10 +110,8 @@ export F77=gfortran
 %global atlaslapacklib -llapack
 %endif
 %configure --enable-shared --disable-static --enable-64=%enable64 \
-%ifnarch %{arm}
  --with-blas="-L%{_libdir}/atlas %{atlasblaslib}" \
  --with-lapack="-L%{_libdir}/atlas %{atlaslapacklib}" \
-%endif
  --with-qrupdate \
  --with-amd --with-umfpack --with-colamd --with-ccolamd --with-cholmod \
  --with-cxsparse
@@ -276,6 +269,9 @@ fi
 
 
 %changelog
+* Thu Oct 3 2013 Orion Poplawski - 6:3.6.4-8
+- Re-enable atlas on arm
+
 * Sun Sep 22 2013 Orion Poplawski - 6:3.6.4-7
 - Rebuild for atlas 3.10
 - Disable atlas on arm
