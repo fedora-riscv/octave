@@ -10,7 +10,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.6.4
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -269,6 +269,9 @@ fi
 
 
 %changelog
+* Fri Dec 06 2013 Nils Philippsen <nils@redhat.com> - 6:3.6.4-9
+- rebuild (suitesparse)
+
 * Thu Oct 3 2013 Orion Poplawski - 6:3.6.4-8
 - Re-enable atlas on arm
 
