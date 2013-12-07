@@ -29,37 +29,38 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
 
-BuildRequires:	arpack-devel
+BuildRequires:  arpack-devel
 BuildRequires:  atlas-devel 
 BuildRequires:  bison
 BuildRequires:  curl-devel
-BuildRequires:	desktop-file-utils
-BuildRequires:	fftw-devel
+BuildRequires:  desktop-file-utils
+BuildRequires:  fftw-devel
 BuildRequires:  flex
-BuildRequires:	fltk-devel
-BuildRequires:	ftgl-devel
-BuildRequires:	gcc-gfortran
-BuildRequires:	ghostscript
-BuildRequires:	gl2ps-devel
-BuildRequires:	glpk-devel
-BuildRequires:	gnuplot
-BuildRequires:	gperf
+BuildRequires:  fltk-devel
+BuildRequires:  ftgl-devel
+BuildRequires:  gcc-gfortran
+BuildRequires:  ghostscript
+BuildRequires:  gl2ps-devel
+BuildRequires:  glpk-devel
+BuildRequires:  gnuplot
+BuildRequires:  gperf
 BuildRequires:  GraphicsMagick-c++-devel
-BuildRequires:	hdf5-devel
-BuildRequires:	less
-BuildRequires:	libX11-devel
-BuildRequires:	mesa-libGL-devel
-BuildRequires:	mesa-libGLU-devel
+BuildRequires:  hdf5-devel
+BuildRequires:  less
+BuildRequires:  libX11-devel
+BuildRequires:  mesa-libGL-devel
+BuildRequires:  mesa-libGLU-devel
 BuildRequires:  ncurses-devel
-BuildRequires:	pcre-devel
-BuildRequires:	qhull-devel
-BuildRequires:	qrupdate-devel
+BuildRequires:  pcre-devel
+BuildRequires:  qhull-devel
+BuildRequires:  qrupdate-devel
+BuildRequires:  qscintilla-devel
 BuildRequires:  readline-devel
 BuildRequires:  suitesparse-devel
 BuildRequires:  tex(dvips)
-BuildRequires:	texinfo
-BuildRequires:	texinfo-tex
-BuildRequires:	zlib-devel
+BuildRequires:  texinfo
+BuildRequires:  texinfo-tex
+BuildRequires:  zlib-devel
 
 Requires:        epstool gnuplot gnuplot-common less info texinfo 
 Requires:        hdf5 = %{_hdf5_version}
@@ -285,7 +286,7 @@ fi
 * Fri Dec 6 2013 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.0-0.1.rc1
 - Update to 3.8.0-rc1
 - Drop patches
-- Add BR gl2ps-devel
+- Add BR gl2ps-devel, qscintilla-devel
 
 * Fri Dec 06 2013 Nils Philippsen <nils@redhat.com> - 6:3.6.4-9
 - rebuild (suitesparse)
