@@ -258,7 +258,6 @@ fi
 %{_mandir}/man1/octave*.1.*
 %{_infodir}/liboctave.info*
 %{_infodir}/octave.info*
-%{_infodir}/OctaveFAQ.info*
 %{_datadir}/applications/octave.desktop
 # octave_packages is %ghost, so need to list everything else separately
 %dir %{_datadir}/octave
@@ -278,7 +277,7 @@ fi
 
 %files doc
 %doc doc/liboctave/liboctave.html doc/liboctave/liboctave.pdf
-%doc doc/faq/OctaveFAQ.pdf doc/refcard/*.pdf
+%doc doc/refcard/*.pdf
 %doc examples/
 
 
