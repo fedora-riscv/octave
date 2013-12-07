@@ -2,15 +2,15 @@
 %global octave_api api-v48+
 
 # For rc versions, change release manually
-#global rcver %{nil}
+%global rcver 1
 %if 0%{?rcver:1}
 %global rctag -rc%{?rcver}
 %endif
 
 Name:           octave
 Epoch:          6
-Version:        3.6.4
-Release:        9%{?dist}
+Version:        3.8.0
+Release:        0.1.rc1%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -23,27 +23,43 @@ Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}%{rctag}.tar.gz
 %endif
 # RPM macros for helping to build Octave packages
 Source1:        macros.octave
-# Ignore deps when doing a pkg build for now
-Patch1:         octave-pkgbuilddeps.patch
-# https://savannah.gnu.org/bugs/index.php?32839
-# Fix building packages from directories
-Patch2:         octave-3.4.0-pkgbuilddir.patch
-# aarch64 support (#926264)
-Patch3:         octave-aarch64.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
 
-BuildRequires:  bison flex less gcc-gfortran
+BuildRequires:	arpack-devel
 BuildRequires:  atlas-devel 
-BuildRequires:  ncurses-devel zlib-devel hdf5-devel texinfo qhull-devel
-BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
-BuildRequires:  curl-devel pcre-devel texinfo-tex arpack-devel libX11-devel
-BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
-BuildRequires:  GraphicsMagick-c++-devel fltk-devel ftgl-devel qrupdate-devel
-BuildRequires:  tex(dvips) mesa-libGL-devel mesa-libGLU-devel
+BuildRequires:  bison
+BuildRequires:  curl-devel
+BuildRequires:	desktop-file-utils
+BuildRequires:	fftw-devel
+BuildRequires:  flex
+BuildRequires:	fltk-devel
+BuildRequires:	ftgl-devel
+BuildRequires:	gcc-gfortran
+BuildRequires:	ghostscript
+BuildRequires:	gl2ps-devel
+BuildRequires:	glpk-devel
+BuildRequires:	gnuplot
+BuildRequires:	gperf
+BuildRequires:  GraphicsMagick-c++-devel
+BuildRequires:	hdf5-devel
+BuildRequires:	less
+BuildRequires:	libX11-devel
+BuildRequires:	mesa-libGL-devel
+BuildRequires:	mesa-libGLU-devel
+BuildRequires:  ncurses-devel
+BuildRequires:	pcre-devel
+BuildRequires:	qhull-devel
+BuildRequires:	qrupdate-devel
+BuildRequires:  readline-devel
+BuildRequires:  suitesparse-devel
+BuildRequires:  tex(dvips)
+BuildRequires:	texinfo
+BuildRequires:	texinfo-tex
+BuildRequires:	zlib-devel
 
 Requires:        epstool gnuplot gnuplot-common less info texinfo 
 Requires:        hdf5 = %{_hdf5_version}
@@ -90,9 +106,6 @@ This package contains documentation for Octave.
 
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
-%patch1 -p1 -b .pkgbuilddeps
-%patch2 -p1 -b .pkgbuilddir
-%patch3 -p1 -b .aarch64
 
 # Check permissions
 find -name *.cc -exec chmod 644 {} \;
@@ -269,6 +282,11 @@ fi
 
 
 %changelog
+* Fri Dec 6 2013 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.0-0.1.rc1
+- Update to 3.8.0-rc1
+- Drop patches
+- Add BR gl2ps-devel
+
 * Fri Dec 06 2013 Nils Philippsen <nils@redhat.com> - 6:3.6.4-9
 - rebuild (suitesparse)
 
