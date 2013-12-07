@@ -46,8 +46,10 @@ BuildRequires:  gnuplot
 BuildRequires:  gperf
 BuildRequires:  GraphicsMagick-c++-devel
 BuildRequires:  hdf5-devel
+BuildRequires:  java-devel
 BuildRequires:  less
 BuildRequires:  libX11-devel
+BuildRequires:  llvm-devel
 BuildRequires:  mesa-libGL-devel
 BuildRequires:  mesa-libGLU-devel
 BuildRequires:  ncurses-devel
@@ -285,7 +287,7 @@ fi
 * Fri Dec 6 2013 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.0-0.1.rc1
 - Update to 3.8.0-rc1
 - Drop patches
-- Add BR gl2ps-devel, qscintilla-devel
+- Add BR gl2ps-devel, qscintilla-devel, java-devel, llvm-devel
 
 * Fri Dec 06 2013 Nils Philippsen <nils@redhat.com> - 6:3.6.4-9
 - rebuild (suitesparse)
