@@ -10,7 +10,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.0
-Release:        0.2.rc2%{?dist}
+Release:        0.3.rc2%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -286,6 +286,9 @@ fi
 
 
 %changelog
+* Fri Dec 27 2013 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.0-0.3.rc2
+- Rebuild for hdf5 1.8.12
+
 * Sat Dec 21 2013 Susi Lehtola <jussilehtola@fedoraproject.org> - 6:3.8.0-0.2.rc2
 - Update to 3.8.0-rc2.
 
