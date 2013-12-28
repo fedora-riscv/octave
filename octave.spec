@@ -10,7 +10,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.0
-Release:        0.3.rc2%{?dist}
+Release:        0.4.rc2%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -23,6 +23,9 @@ Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}%{rctag}.tar.gz
 %endif
 # RPM macros for helping to build Octave packages
 Source1:        macros.octave
+# Fix to allow pkg build to use a directory
+# https://savannah.gnu.org/bugs/?func=detailitem&item_id=32839
+Patch0:         octave-3.8.0-pkgbuilddir.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -109,6 +112,7 @@ This package contains documentation for Octave.
 
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
+%patch0 -p1 -b .pkgbuilddir
 
 # Check permissions
 find -name *.cc -exec chmod 644 {} \;
@@ -286,6 +290,9 @@ fi
 
 
 %changelog
+* Sat Dec 28 2013 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.0-0.4.rc2
+- Rebase pkgbuilddir patch
+
 * Fri Dec 27 2013 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.0-0.3.rc2
 - Rebuild for hdf5 1.8.12
 
