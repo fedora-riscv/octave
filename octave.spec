@@ -2,7 +2,7 @@
 %global octave_api api-v49+
 
 # For rc versions, change release manually
-%global rcver 2
+#global rcver %{nil}
 %if 0%{?rcver:1}
 %global rctag -rc%{?rcver}
 %endif
@@ -10,7 +10,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.0
-Release:        0.4.rc2%{?dist}
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -290,6 +290,9 @@ fi
 
 
 %changelog
+* Sat Dec 28 2013 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.0-1
+- Update to 3.8.0 final
+
 * Sat Dec 28 2013 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.0-0.4.rc2
 - Rebase pkgbuilddir patch
 
