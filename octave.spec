@@ -10,7 +10,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -26,6 +26,8 @@ Source1:        macros.octave
 # Fix to allow pkg build to use a directory
 # https://savannah.gnu.org/bugs/?func=detailitem&item_id=32839
 Patch0:         octave-3.8.0-pkgbuilddir.patch
+# Fix config.h include
+Patch1:         octave-config.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -290,6 +292,9 @@ fi
 
 
 %changelog
+* Wed Jan 8 2014 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.0-2
+- Fix config.h include
+
 * Sat Dec 28 2013 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.0-1
 - Update to 3.8.0 final
 
