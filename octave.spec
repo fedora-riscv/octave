@@ -10,7 +10,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -113,7 +113,7 @@ This package contains documentation for Octave.
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
 %patch0 -p1 -b .pkgbuilddir
-find -name \*.h -o -name \*.cc | xargs sed -i -e 's/<config.h>/"config.h"/'
+find -name \*.h -o -name \*.cc | xargs sed -i -e 's/<config.h>/"config.h"/' -e 's/<base-list.h>/"base-list.h"/'
 
 # Check permissions
 find -name *.cc -exec chmod 644 {} \;
@@ -291,6 +291,9 @@ fi
 
 
 %changelog
+* Tue Jan 14 2014 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.0-4
+- Also fix base-list.h include
+
 * Thu Jan 9 2014 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.0-3
 - Really fix config.h include
 
