@@ -10,7 +10,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -236,8 +236,8 @@ done
 sed -i -e '/^# Created by Octave/d' %{buildroot}%{_datadir}/%{name}/%{version}%{?rctag}/etc/doc-cache
 
 # rpm macros
-mkdir -p %{buildroot}%{_sysconfdir}/rpm
-cp -p %SOURCE1 %{buildroot}%{_sysconfdir}/rpm/
+mkdir -p %{buildroot}%{_rpmconfigdir}/macros.d
+cp -p %SOURCE1 %{buildroot}%{_rpmconfigdir}/macros.d/
 
 %check
 make check
@@ -278,7 +278,7 @@ fi
 #%{_sysconfdir}/prelink.conf.d/octave.conf
 
 %files devel
-%{_sysconfdir}/rpm/macros.octave
+%{_rpmconfigdir}/macros.d/macros.octave
 %{_bindir}/mkoctfile
 %{_bindir}/mkoctfile-%{version}%{?rctag}
 %{_includedir}/octave-%{version}%{?rctag}/
@@ -291,6 +291,9 @@ fi
 
 
 %changelog
+* Sat Feb 1 2014 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.0-5
+- Fix rpm macro install location
+
 * Tue Jan 14 2014 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.0-4
 - Also fix base-list.h include
 
