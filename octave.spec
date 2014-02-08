@@ -10,7 +10,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -209,7 +209,7 @@ do
 ARCH=\$(uname -m)
 
 case \$ARCH in
-x86_64 | ia64 | s390x) LIB_DIR=/usr/lib64
+x86_64 | ia64 | s390x | aarch64 | ppc64) LIB_DIR=/usr/lib64
                        SECONDARY_LIB_DIR=/usr/lib
                        ;;
 * )
@@ -291,6 +291,9 @@ fi
 
 
 %changelog
+* Sat Feb  8 2014 Peter Robinson <pbrobinson@fedoraproject.org> 6:3.8.0-6
+- Add PPC64 and aarch64 to the 64 bit architectures
+
 * Sat Feb 1 2014 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.0-5
 - Fix rpm macro install location
 
