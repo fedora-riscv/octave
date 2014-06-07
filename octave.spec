@@ -10,7 +10,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -291,6 +291,9 @@ fi
 
 
 %changelog
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6:3.8.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Fri Mar  7 2014 Susi Lehtola <jussilehtola@fedoraproject.org> - 6:3.8.1-1
 - Update to 3.8.1.
 
