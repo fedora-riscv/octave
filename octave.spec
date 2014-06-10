@@ -3,14 +3,15 @@
 
 # For rc versions, change release manually
 #global rcver %{nil}
+%global rcver 1
 %if 0%{?rcver:1}
 %global rctag -rc%{?rcver}
 %endif
 
 Name:           octave
 Epoch:          6
-Version:        3.8.1
-Release:        2%{?dist}
+Version:        3.8.2
+Release:        0.1.rc1%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -291,6 +292,9 @@ fi
 
 
 %changelog
+* Tue Jun 10 2014 Susi Lehtola <jussilehtola@fedoraproject.org> - 6:3.8.2-0.1.rc1
+- Update to 3.8.2-rc1.
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6:3.8.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
