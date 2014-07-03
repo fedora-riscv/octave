@@ -3,7 +3,7 @@
 
 # For rc versions, change release manually
 #global rcver %{nil}
-%global rcver 1
+%global rcver 2
 %if 0%{?rcver:1}
 %global rctag -rc%{?rcver}
 %endif
@@ -11,7 +11,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.2
-Release:        0.1.rc1%{?dist}
+Release:        0.2.rc2%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -27,8 +27,6 @@ Source1:        macros.octave
 # Fix to allow pkg build to use a directory
 # https://savannah.gnu.org/bugs/?func=detailitem&item_id=32839
 Patch0:         octave-3.8.0-pkgbuilddir.patch
-
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
@@ -104,9 +102,7 @@ applications which use GNU Octave.
 %package doc
 Summary:        Documentation for Octave
 Group:          Documentation
-%if 0%{?fedora} > 10 || 0%{?rhel} > 5
 BuildArch:      noarch
-%endif
 
 %description doc
 This package contains documentation for Octave.
@@ -153,7 +149,6 @@ fi
 make OCTAVE_RELEASE="Fedora %{version}%{?rctag}-%{release}"
 
 %install
-rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 rm -f %{buildroot}%{_infodir}/dir
 
@@ -243,9 +238,6 @@ cp -p %SOURCE1 %{buildroot}%{_rpmconfigdir}/macros.d/
 %check
 make check
 
-%clean
-rm -rf %{buildroot}
-
 %post
 /sbin/ldconfig
 /sbin/install-info --info-dir=%{_infodir} --section="Programming" \
@@ -292,6 +284,10 @@ fi
 
 
 %changelog
+* Thu Jul 03 2014 Susi Lehtola <jussilehtola@fedoraproject.org> - 6:3.8.2-0.2.rc2
+- Modernize rest of specfile.
+- Update to 3.8.2-rc2.
+
 * Tue Jun 10 2014 Susi Lehtola <jussilehtola@fedoraproject.org> - 6:3.8.2-0.1.rc1
 - Update to 3.8.2-rc1.
 
@@ -1002,7 +998,7 @@ does not exist.
 - add "Excludearch: " for Alpha - it triggers compiler bugs
 
 * Thu Jun 08 2000 Trond Eivind Glomsrød <teg@redhat.com>
-- use %%configure, %%makeinstall, %{_infodir}. %{_mandir}
+- use %%configure, %%makeinstall, %%{_infodir}. %%{_mandir}
 - remove prefix
 
 * Tue May 09 2000 Trond Eivind Glomsrød <teg@redhat.com>
