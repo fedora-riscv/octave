@@ -2,8 +2,7 @@
 %global octave_api api-v49+
 
 # For rc versions, change release manually
-#global rcver %{nil}
-%global rcver 2
+#global rcver 2
 %if 0%{?rcver:1}
 %global rctag -rc%{?rcver}
 %endif
@@ -11,7 +10,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.2
-Release:        0.2.rc2%{?dist}
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -162,11 +161,10 @@ perl -pi -e "s,%{buildroot},," %{buildroot}%{_datadir}/%{name}/ls-R
 # Make sure ls-R exists
 touch %{buildroot}%{_datadir}/%{name}/ls-R
 
-# Create desktop file
+# Update desktop file
 rm %{buildroot}%{_datadir}/applications/www.octave.org-octave.desktop
-desktop-file-install --remove-category Development --add-category "Education" \
-  --add-category "DataVisualization" --add-category "NumericalAnalysis" --add-category "Engineering" --add-category "Physics" \
-  --dir %{buildroot}%{_datadir}/applications doc/icons/octave.desktop
+desktop-file-install --add-category "DataVisualization" --add-category "NumericalAnalysis" --add-category "Engineering" --add-category "Physics" \
+  --dir %{buildroot}%{_datadir}/applications etc/icons/octave.desktop
 
 # Create directories for add-on packages
 HOST_TYPE=`%{buildroot}%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
@@ -284,6 +282,9 @@ fi
 
 
 %changelog
+* Thu Aug 14 2014 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-1
+- Update to 3.8.2 final
+
 * Thu Jul 03 2014 Susi Lehtola <jussilehtola@fedoraproject.org> - 6:3.8.2-0.2.rc2
 - Modernize rest of specfile.
 - Update to 3.8.2-rc2.
