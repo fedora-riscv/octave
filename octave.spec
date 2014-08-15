@@ -1,6 +1,12 @@
 # From src/version.h:#define OCTAVE_API_VERSION
 %global octave_api api-v49+
 
+# Building docs fails on EL7 due to https://bugzilla.redhat.com/show_bug.cgi?id=1064453
+%if 0%{?rhel} == 7
+%global builddocs 0
+%else
+%global builddocs 1
+%endif
 # For rc versions, change release manually
 #global rcver 2
 %if 0%{?rcver:1}
@@ -126,8 +132,12 @@ export F77=gfortran
 %global atlasblaslib -lf77blas -latlas
 %global atlaslapacklib -llapack
 %endif
+%if !%{builddocs}
+%global disabledocs --disable-docs
+%endif
 # JIT support is still experimental, and causes a segfault on ARM.
 %configure --enable-shared --disable-static --enable-64=%enable64 \
+ %{?disabledocs} \
  --with-blas="-L%{_libdir}/atlas %{atlasblaslib}" \
  --with-lapack="-L%{_libdir}/atlas %{atlaslapacklib}" \
  --with-qrupdate \
@@ -226,8 +236,10 @@ exec \$LIB_DIR/%{name}/%{version}%{?rctag}/${script} "\$@"
 EOF
    chmod +x %{buildroot}%{_bindir}/${script}
 done
+%if %{builddocs}
 # remove timestamp from doc-cache
 sed -i -e '/^# Created by Octave/d' %{buildroot}%{_datadir}/%{name}/%{version}%{?rctag}/etc/doc-cache
+%endif
 
 # rpm macros
 mkdir -p %{buildroot}%{_rpmconfigdir}/macros.d
@@ -255,9 +267,11 @@ fi
 %{_bindir}/octave*
 %{_libdir}/octave/
 %{_libexecdir}/octave/
+%if %{builddocs}
 %{_mandir}/man1/octave*.1.*
 %{_infodir}/liboctave.info*
 %{_infodir}/octave.info*
+%endif
 %{_datadir}/applications/octave.desktop
 # octave_packages is %ghost, so need to list everything else separately
 %dir %{_datadir}/octave
@@ -273,7 +287,9 @@ fi
 %{_bindir}/mkoctfile
 %{_bindir}/mkoctfile-%{version}%{?rctag}
 %{_includedir}/octave-%{version}%{?rctag}/
+%if %{builddocs}
 %{_mandir}/man1/mkoctfile.1.*
+%endif
 
 %files doc
 %doc doc/liboctave/liboctave.html doc/liboctave/liboctave.pdf
