@@ -16,7 +16,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -239,6 +239,8 @@ done
 %if %{builddocs}
 # remove timestamp from doc-cache
 sed -i -e '/^# Created by Octave/d' %{buildroot}%{_datadir}/%{name}/%{version}%{?rctag}/etc/doc-cache
+%else
+cp -p doc/interpreter/macros.texi %{buildroot}%{_datadir}/%{name}/%{version}/etc/macros.texi
 %endif
 
 # rpm macros
@@ -298,6 +300,9 @@ fi
 
 
 %changelog
+* Fri Aug 22 2014 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-2
+- Install macros.texi by hand if not building docs
+
 * Thu Aug 14 2014 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-1
 - Update to 3.8.2 final
 
