@@ -16,7 +16,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -252,13 +252,17 @@ make check
 
 %post
 /sbin/ldconfig
+%if %{builddocs}
 /sbin/install-info --info-dir=%{_infodir} --section="Programming" \
         %{_infodir}/octave.info || :
+%endif
 
 %preun
+%if %{builddocs}
 if [ "$1" = "0" ]; then
    /sbin/install-info --delete --info-dir=%{_infodir} %{_infodir}/octave.info || :
 fi
+%endif
 
 %postun -p /sbin/ldconfig
 
@@ -300,6 +304,9 @@ fi
 
 
 %changelog
+* Sat Aug 23 2014 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-4
+- No info scripts when not building docs
+
 * Fri Aug 22 2014 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-3
 - Install macros.texi by hand if not building docs
 
