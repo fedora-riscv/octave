@@ -307,11 +307,8 @@ fi
 * Sat Aug 23 2014 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-4
 - No info scripts when not building docs
 
-* Fri Aug 22 2014 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-3
+* Fri Aug 22 2014 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-2
 - Install macros.texi by hand if not building docs
-
-* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6:3.8.2-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
 * Thu Aug 14 2014 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-1
 - Update to 3.8.2 final
