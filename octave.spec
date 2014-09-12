@@ -16,7 +16,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -304,6 +304,9 @@ fi
 
 
 %changelog
+* Fri Sep 12 2014 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-5
+- Rebuild for libcholmod soname bump
+
 * Sat Aug 23 2014 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-4
 - No info scripts when not building docs
 
