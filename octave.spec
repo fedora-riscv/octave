@@ -16,7 +16,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.2
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -32,6 +32,9 @@ Source1:        macros.octave
 # Fix to allow pkg build to use a directory
 # https://savannah.gnu.org/bugs/?func=detailitem&item_id=32839
 Patch0:         octave-3.8.0-pkgbuilddir.patch
+# Patch to compile with suitesparse 4.3.1
+# https://savannah.gnu.org/bugs/?func=detailitem&item_id=43063
+Patch1:         octave-suitesparse.patch
 
 Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
@@ -115,6 +118,7 @@ This package contains documentation for Octave.
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
 %patch0 -p1 -b .pkgbuilddir
+%patch1 -p1 -b .suitesparse
 find -name \*.h -o -name \*.cc | xargs sed -i -e 's/<config.h>/"config.h"/' -e 's/<base-list.h>/"base-list.h"/'
 
 # Check permissions
@@ -304,6 +308,9 @@ fi
 
 
 %changelog
+* Mon Sep 15 2014 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-6
+- Add patch for suitesparse 4.3.1 support
+
 * Fri Sep 12 2014 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-5
 - Rebuild for libcholmod soname bump
 
