@@ -1,6 +1,15 @@
 diff -up octave-3.8.2/libinterp/dldfcn/amd.cc.suitesparse octave-3.8.2/libinterp/dldfcn/amd.cc
 --- octave-3.8.2/libinterp/dldfcn/amd.cc.suitesparse	2014-08-06 11:57:55.000000000 -0600
-+++ octave-3.8.2/libinterp/dldfcn/amd.cc	2014-09-12 15:53:32.819832086 -0600
++++ octave-3.8.2/libinterp/dldfcn/amd.cc	2014-09-16 15:14:12.538123673 -0600
+@@ -24,7 +24,7 @@ along with Octave; see the file COPYING.
+ // in the help of the functions.
+ 
+ #ifdef HAVE_CONFIG_H
+-#include <config.h>
++#include "config.h"
+ #endif
+ 
+ #include <cstdlib>
 @@ -164,11 +164,11 @@ The author of the code itself is Timothy
  
                // FIXME: how can we manage the memory allocation of amd
@@ -20,8 +29,17 @@ diff -up octave-3.8.2/libinterp/dldfcn/amd.cc.suitesparse octave-3.8.2/libinterp
                                                            Control, Info);
 diff -up octave-3.8.2/libinterp/dldfcn/symbfact.cc.suitesparse octave-3.8.2/libinterp/dldfcn/symbfact.cc
 --- octave-3.8.2/libinterp/dldfcn/symbfact.cc.suitesparse	2014-08-06 11:54:15.000000000 -0600
-+++ octave-3.8.2/libinterp/dldfcn/symbfact.cc	2014-09-12 15:53:32.821832075 -0600
-@@ -114,17 +114,17 @@ factorization as determined by @var{typ}
++++ octave-3.8.2/libinterp/dldfcn/symbfact.cc	2014-09-16 15:22:41.924557046 -0600
+@@ -22,7 +22,7 @@ along with Octave; see the file COPYING.
+ */
+ 
+ #ifdef HAVE_CONFIG_H
+-#include <config.h>
++#include "config.h"
+ #endif
+ 
+ #include "SparseCmplxCHOL.h"
+@@ -114,17 +114,15 @@ factorization as determined by @var{typ}
    if (spu == 0.)
      {
        cm->print = -1;
@@ -38,15 +56,22 @@ diff -up octave-3.8.2/libinterp/dldfcn/symbfact.cc.suitesparse octave-3.8.2/libi
    cm->error_handler = &SparseCholError;
 -  cm->complex_divide = CHOLMOD_NAME(divcomplex);
 -  cm->hypotenuse = CHOLMOD_NAME(hypot);
-+  suitesparse_assign_function(divcomplex_func, cm->complex_divide, CHOLMOD_NAME(divcomplex));
-+  suitesparse_assign_function(hypot_func, cm->hypotenuse, CHOLMOD_NAME(hypot));
  
    double dummy;
    cholmod_sparse Astore;
 diff -up octave-3.8.2/liboctave/array/CSparse.cc.suitesparse octave-3.8.2/liboctave/array/CSparse.cc
 --- octave-3.8.2/liboctave/array/CSparse.cc.suitesparse	2014-08-06 11:57:55.000000000 -0600
-+++ octave-3.8.2/liboctave/array/CSparse.cc	2014-09-12 15:53:33.791827033 -0600
-@@ -5664,17 +5664,17 @@ SparseComplexMatrix::fsolve (MatrixType
++++ octave-3.8.2/liboctave/array/CSparse.cc	2014-09-16 15:22:16.310677157 -0600
+@@ -23,7 +23,7 @@ along with Octave; see the file COPYING.
+ */
+ 
+ #ifdef HAVE_CONFIG_H
+-#include <config.h>
++#include "config.h"
+ #endif
+ 
+ #include <cfloat>
+@@ -5664,17 +5664,15 @@ SparseComplexMatrix::fsolve (MatrixType
            if (spu == 0.)
              {
                cm->print = -1;
@@ -63,12 +88,10 @@ diff -up octave-3.8.2/liboctave/array/CSparse.cc.suitesparse octave-3.8.2/liboct
            cm->error_handler = &SparseCholError;
 -          cm->complex_divide = CHOLMOD_NAME(divcomplex);
 -          cm->hypotenuse = CHOLMOD_NAME(hypot);
-+          suitesparse_assign_function(divcomplex_func, cm->complex_divide, CHOLMOD_NAME(divcomplex));
-+          suitesparse_assign_function(hypot_func, cm->hypotenuse, CHOLMOD_NAME(hypot));
  
            cm->final_ll = true;
  
-@@ -5907,17 +5907,17 @@ SparseComplexMatrix::fsolve (MatrixType
+@@ -5907,17 +5905,15 @@ SparseComplexMatrix::fsolve (MatrixType
            if (spu == 0.)
              {
                cm->print = -1;
@@ -85,12 +108,10 @@ diff -up octave-3.8.2/liboctave/array/CSparse.cc.suitesparse octave-3.8.2/liboct
            cm->error_handler = &SparseCholError;
 -          cm->complex_divide = CHOLMOD_NAME(divcomplex);
 -          cm->hypotenuse = CHOLMOD_NAME(hypot);
-+          suitesparse_assign_function(divcomplex_func, cm->complex_divide, CHOLMOD_NAME(divcomplex));
-+          suitesparse_assign_function(hypot_func, cm->hypotenuse, CHOLMOD_NAME(hypot));
  
            cm->final_ll = true;
  
-@@ -6198,17 +6198,17 @@ SparseComplexMatrix::fsolve (MatrixType
+@@ -6198,17 +6194,15 @@ SparseComplexMatrix::fsolve (MatrixType
            if (spu == 0.)
              {
                cm->print = -1;
@@ -107,12 +128,10 @@ diff -up octave-3.8.2/liboctave/array/CSparse.cc.suitesparse octave-3.8.2/liboct
            cm->error_handler = &SparseCholError;
 -          cm->complex_divide = CHOLMOD_NAME(divcomplex);
 -          cm->hypotenuse = CHOLMOD_NAME(hypot);
-+          suitesparse_assign_function(divcomplex_func, cm->complex_divide, CHOLMOD_NAME(divcomplex));
-+          suitesparse_assign_function(hypot_func, cm->hypotenuse, CHOLMOD_NAME(hypot));
  
            cm->final_ll = true;
  
-@@ -6420,17 +6420,17 @@ SparseComplexMatrix::fsolve (MatrixType
+@@ -6420,17 +6414,15 @@ SparseComplexMatrix::fsolve (MatrixType
            if (spu == 0.)
              {
                cm->print = -1;
@@ -129,15 +148,22 @@ diff -up octave-3.8.2/liboctave/array/CSparse.cc.suitesparse octave-3.8.2/liboct
            cm->error_handler = &SparseCholError;
 -          cm->complex_divide = CHOLMOD_NAME(divcomplex);
 -          cm->hypotenuse = CHOLMOD_NAME(hypot);
-+          suitesparse_assign_function(divcomplex_func, cm->complex_divide, CHOLMOD_NAME(divcomplex));
-+          suitesparse_assign_function(hypot_func, cm->hypotenuse, CHOLMOD_NAME(hypot));
  
            cm->final_ll = true;
  
 diff -up octave-3.8.2/liboctave/array/dSparse.cc.suitesparse octave-3.8.2/liboctave/array/dSparse.cc
 --- octave-3.8.2/liboctave/array/dSparse.cc.suitesparse	2014-08-06 11:57:55.000000000 -0600
-+++ octave-3.8.2/liboctave/array/dSparse.cc	2014-09-12 15:53:33.756827215 -0600
-@@ -5866,17 +5866,17 @@ SparseMatrix::fsolve (MatrixType &mattyp
++++ octave-3.8.2/liboctave/array/dSparse.cc	2014-09-16 15:22:01.253747787 -0600
+@@ -23,7 +23,7 @@ along with Octave; see the file COPYING.
+ */
+ 
+ #ifdef HAVE_CONFIG_H
+-#include <config.h>
++#include "config.h"
+ #endif
+ 
+ #include <cfloat>
+@@ -5866,17 +5866,15 @@ SparseMatrix::fsolve (MatrixType &mattyp
            if (spu == 0.)
              {
                cm->print = -1;
@@ -154,12 +180,10 @@ diff -up octave-3.8.2/liboctave/array/dSparse.cc.suitesparse octave-3.8.2/liboct
            cm->error_handler = &SparseCholError;
 -          cm->complex_divide = CHOLMOD_NAME(divcomplex);
 -          cm->hypotenuse = CHOLMOD_NAME(hypot);
-+          suitesparse_assign_function(divcomplex_func, cm->complex_divide, CHOLMOD_NAME(divcomplex));
-+          suitesparse_assign_function(hypot_func, cm->hypotenuse, CHOLMOD_NAME(hypot));
  
            cm->final_ll = true;
  
-@@ -6083,17 +6083,17 @@ SparseMatrix::fsolve (MatrixType &mattyp
+@@ -6083,17 +6081,15 @@ SparseMatrix::fsolve (MatrixType &mattyp
            if (spu == 0.)
              {
                cm->print = -1;
@@ -176,12 +200,10 @@ diff -up octave-3.8.2/liboctave/array/dSparse.cc.suitesparse octave-3.8.2/liboct
            cm->error_handler = &SparseCholError;
 -          cm->complex_divide = CHOLMOD_NAME(divcomplex);
 -          cm->hypotenuse = CHOLMOD_NAME(hypot);
-+          suitesparse_assign_function(divcomplex_func, cm->complex_divide, CHOLMOD_NAME(divcomplex));
-+          suitesparse_assign_function(hypot_func, cm->hypotenuse, CHOLMOD_NAME(hypot));
  
            cm->final_ll = true;
  
-@@ -6345,17 +6345,17 @@ SparseMatrix::fsolve (MatrixType &mattyp
+@@ -6345,17 +6341,15 @@ SparseMatrix::fsolve (MatrixType &mattyp
            if (spu == 0.)
              {
                cm->print = -1;
@@ -198,12 +220,10 @@ diff -up octave-3.8.2/liboctave/array/dSparse.cc.suitesparse octave-3.8.2/liboct
            cm->error_handler = &SparseCholError;
 -          cm->complex_divide = CHOLMOD_NAME(divcomplex);
 -          cm->hypotenuse = CHOLMOD_NAME(hypot);
-+          suitesparse_assign_function(divcomplex_func, cm->complex_divide, CHOLMOD_NAME(divcomplex));
-+          suitesparse_assign_function(hypot_func, cm->hypotenuse, CHOLMOD_NAME(hypot));
  
            cm->final_ll = true;
  
-@@ -6579,17 +6579,17 @@ SparseMatrix::fsolve (MatrixType &mattyp
+@@ -6579,17 +6573,15 @@ SparseMatrix::fsolve (MatrixType &mattyp
            if (spu == 0.)
              {
                cm->print = -1;
@@ -220,15 +240,22 @@ diff -up octave-3.8.2/liboctave/array/dSparse.cc.suitesparse octave-3.8.2/liboct
            cm->error_handler = &SparseCholError;
 -          cm->complex_divide = CHOLMOD_NAME(divcomplex);
 -          cm->hypotenuse = CHOLMOD_NAME(hypot);
-+          suitesparse_assign_function(divcomplex_func, cm->complex_divide, CHOLMOD_NAME(divcomplex));
-+          suitesparse_assign_function(hypot_func, cm->hypotenuse, CHOLMOD_NAME(hypot));
  
            cm->final_ll = true;
  
 diff -up octave-3.8.2/liboctave/numeric/sparse-base-chol.cc.suitesparse octave-3.8.2/liboctave/numeric/sparse-base-chol.cc
 --- octave-3.8.2/liboctave/numeric/sparse-base-chol.cc.suitesparse	2014-08-06 11:54:14.000000000 -0600
-+++ octave-3.8.2/liboctave/numeric/sparse-base-chol.cc	2014-09-12 15:53:33.521828437 -0600
-@@ -105,17 +105,17 @@ sparse_base_chol<chol_type, chol_elt, p_
++++ octave-3.8.2/liboctave/numeric/sparse-base-chol.cc	2014-09-16 15:23:24.252358549 -0600
+@@ -22,7 +22,7 @@ along with Octave; see the file COPYING.
+ */
+ 
+ #ifdef HAVE_CONFIG_H
+-#include <config.h>
++#include "config.h"
+ #endif
+ 
+ #include "sparse-base-chol.h"
+@@ -105,17 +105,15 @@ sparse_base_chol<chol_type, chol_elt, p_
    if (spu == 0.)
      {
        cm->print = -1;
@@ -245,14 +272,12 @@ diff -up octave-3.8.2/liboctave/numeric/sparse-base-chol.cc.suitesparse octave-3
    cm->error_handler = &SparseCholError;
 -  cm->complex_divide = CHOLMOD_NAME(divcomplex);
 -  cm->hypotenuse = CHOLMOD_NAME(hypot);
-+  suitesparse_assign_function(divcomplex_func, cm->complex_divide, CHOLMOD_NAME(divcomplex));
-+  suitesparse_assign_function(hypot_func, cm->hypotenuse, CHOLMOD_NAME(hypot));
  
    cm->final_asis = false;
    cm->final_super = false;
 diff -up octave-3.8.2/liboctave/util/oct-sparse.h.suitesparse octave-3.8.2/liboctave/util/oct-sparse.h
 --- octave-3.8.2/liboctave/util/oct-sparse.h.suitesparse	2014-08-06 11:54:15.000000000 -0600
-+++ octave-3.8.2/liboctave/util/oct-sparse.h	2014-09-15 12:14:12.663644773 -0600
++++ octave-3.8.2/liboctave/util/oct-sparse.h	2014-09-16 15:14:13.417119567 -0600
 @@ -94,4 +94,12 @@ along with Octave; see the file COPYING.
  #endif
  #endif
