@@ -16,7 +16,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.2
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -314,6 +314,9 @@ fi
 
 
 %changelog
+* Wed Jan 07 2015 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-8
+- Rebuild for hdf5 1.8.14
+
 * Mon Oct 6 2014 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-7
 - Disable test failure on arm for now (bug #1149953)
 
