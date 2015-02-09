@@ -16,7 +16,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.2
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -76,6 +76,7 @@ BuildRequires:  zlib-devel
 
 Requires:        epstool gnuplot gnuplot-common less info texinfo 
 Requires:        hdf5 = %{_hdf5_version}
+Requires:        java-headless
 Requires(post):  info
 Requires(preun): info
 
@@ -139,11 +140,15 @@ export F77=gfortran
 %if !%{builddocs}
 %global disabledocs --disable-docs
 %endif
+# Find libjvm.so for this architecture in generic location
+libjvm=$(find /usr/lib/jvm/jre/lib -name libjvm.so -printf %h)
+export JAVA_HOME=%{java_home}
 # JIT support is still experimental, and causes a segfault on ARM.
 %configure --enable-shared --disable-static --enable-64=%enable64 \
  %{?disabledocs} \
  --with-blas="-L%{_libdir}/atlas %{atlasblaslib}" \
  --with-lapack="-L%{_libdir}/atlas %{atlaslapacklib}" \
+ --with-java-libdir=$libjvm \
  --with-qrupdate \
  --with-amd --with-umfpack --with-colamd --with-ccolamd --with-cholmod \
  --with-cxsparse \
@@ -314,6 +319,9 @@ fi
 
 
 %changelog
+* Sun Feb 08 2015 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-9
+- Use a generic location for libjvm.so, require java-headless (bug #1190523)
+
 * Wed Jan 07 2015 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-8
 - Rebuild for hdf5 1.8.14
 
