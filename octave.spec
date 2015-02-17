@@ -16,7 +16,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.2
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -319,6 +319,9 @@ fi
 
 
 %changelog
+* Tue Feb 17 2015 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-10
+- Rebuild for gcc 5 C++11 ABI
+
 * Sun Feb 08 2015 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-9
 - Use a generic location for libjvm.so, require java-headless (bug #1190523)
 
