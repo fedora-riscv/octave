@@ -16,7 +16,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.2
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -319,6 +319,9 @@ fi
 
 
 %changelog
+* Wed Feb 18 2015 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-11
+- Rebuild for fltk 1.3.3
+
 * Tue Feb 17 2015 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-10
 - Rebuild for gcc 5 C++11 ABI
 
