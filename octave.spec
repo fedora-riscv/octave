@@ -16,7 +16,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.2
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -319,6 +319,9 @@ fi
 
 
 %changelog
+* Mon Mar 09 2015 Rex Dieter <rdieter@fedoraproject.org> 3.8.2-13
+- rebuild (GraphicsMagick)
+
 * Fri Feb 20 2015 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-12
 - Rebuild for rebuilt swig
 
