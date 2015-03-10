@@ -319,7 +319,7 @@ fi
 
 
 %changelog
-* Mon Mar 09 2015 Rex Dieter <rdieter@fedoraproject.org> 3.8.2-13
+* Mon Mar 09 2015 Rex Dieter <rdieter@fedoraproject.org> - 6:3.8.2-13
 - rebuild (GraphicsMagick)
 
 * Fri Feb 20 2015 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-12
