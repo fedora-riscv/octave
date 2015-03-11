@@ -16,7 +16,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.2
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -144,7 +144,9 @@ export F77=gfortran
 libjvm=$(find /usr/lib/jvm/jre/lib -name libjvm.so -printf %h)
 export JAVA_HOME=%{java_home}
 # JIT support is still experimental, and causes a segfault on ARM.
+# --enable-float-truncate - https://savannah.gnu.org/bugs/?40560
 %configure --enable-shared --disable-static --enable-64=%enable64 \
+ --enable-float-truncate \
  %{?disabledocs} \
  --with-blas="-L%{_libdir}/atlas %{atlasblaslib}" \
  --with-lapack="-L%{_libdir}/atlas %{atlaslapacklib}" \
@@ -162,9 +164,7 @@ then
   exit 1
 fi
 
-# SMP make still not working in Octave 3.6.0
-#make OCTAVE_RELEASE="Fedora %{version}-%{release}" %{?_smp_mflags}
-make OCTAVE_RELEASE="Fedora %{version}%{?rctag}-%{release}"
+make OCTAVE_RELEASE="Fedora %{version}%{?rctag}-%{release}" %{?_smp_mflags}
 
 %install
 make install DESTDIR=%{buildroot}
@@ -319,6 +319,10 @@ fi
 
 
 %changelog
+* Tue Mar 10 2015 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-14
+- Build with --enable-float-truncate (https://savannah.gnu.org/bugs/?40560)
+- Re-enable parallel builds
+
 * Mon Mar 09 2015 Rex Dieter <rdieter@fedoraproject.org> - 6:3.8.2-13
 - rebuild (GraphicsMagick)
 
