@@ -16,7 +16,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.2
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -256,6 +256,49 @@ cp -p doc/interpreter/macros.texi %{buildroot}%{_datadir}/%{name}/%{version}/etc
 mkdir -p %{buildroot}%{_rpmconfigdir}/macros.d
 cp -p %SOURCE1 %{buildroot}%{_rpmconfigdir}/macros.d/
 
+# Register as an application to be visible in the software center
+#
+# NOTE: It would be *awesome* if this file was maintained by the upstream
+# project, translated and installed into the right place during `make install`.
+#
+# See http://www.freedesktop.org/software/appstream/docs/ for more details.
+#
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/appdata
+cat > $RPM_BUILD_ROOT%{_datadir}/appdata/%{name}.appdata.xml <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2014 Richard Hughes <richard@hughsie.com> -->
+<!--
+BugReportURL: https://savannah.gnu.org/bugs/index.php?43279
+SentUpstream: 2014-09-22
+-->
+<application>
+  <id type="desktop">octave.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <summary>Interactive programming environment for numerical computations</summary>
+  <description>
+    <p>
+      GNU Octave is a high-level interpreted language, primarily intended for
+      numerical computations.
+      It provides capabilities for the numerical solution of linear and
+      nonlinear problems, and for performing other numerical experiments.
+      It also provides extensive graphics capabilities for data visualization
+      and manipulation.
+    </p>
+    <p>
+      Octave is normally used through its interactive command line interface,
+      but it can also be used to write non-interactive programs.
+      The Octave language is quite similar to Matlab so that most programs are
+      easily portable.
+    </p>
+  </description>
+  <url type="homepage">http://www.octave.org</url>
+  <screenshots>
+    <screenshot type="default">http://www.gnu.org/software/octave/images/screenshot.png</screenshot>
+  </screenshots>
+  <updatecontact>octave-maintainers@octave.org</updatecontact>
+</application>
+EOF
+
 %check
 # Tests are currently segfaulting on arm
 # https://bugzilla.redhat.com/show_bug.cgi?id=1149953
@@ -293,6 +336,7 @@ fi
 %{_infodir}/liboctave.info*
 %{_infodir}/octave.info*
 %endif
+%{_datadir}/appdata/%{name}.appdata.xml
 %{_datadir}/applications/octave.desktop
 # octave_packages is %ghost, so need to list everything else separately
 %dir %{_datadir}/octave
@@ -319,6 +363,9 @@ fi
 
 
 %changelog
+* Thu Mar 26 2015 Richard Hughes <rhughes@redhat.com> - 6:3.8.2-15
+- Add an AppData file for the software center
+
 * Tue Mar 10 2015 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-14
 - Build with --enable-float-truncate (https://savannah.gnu.org/bugs/?40560)
 - Re-enable parallel builds
