@@ -16,7 +16,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.2
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -363,6 +363,9 @@ fi
 
 
 %changelog
+* Sun May 17 2015 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-17
+- Rebuild for hdf5 1.8.15
+
 * Mon Apr 20 2015 Rex Dieter <rdieter@fedoraproject.org> - 6:3.8.2-16
 - rebuild (qscintilla)
 
