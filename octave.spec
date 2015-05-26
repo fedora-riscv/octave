@@ -1,5 +1,5 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%global octave_api api-v49+
+%global octave_api api-v50+
 
 %{?!_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}}
 
@@ -17,26 +17,24 @@
 
 Name:           octave
 Epoch:          6
-Version:        3.8.2
-Release:        20%{?dist}
+Version:        4.0.0
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
 URL:            http://www.octave.org
 
 %if 0%{!?rcver:1}
-Source0:        ftp://ftp.gnu.org/gnu/octave/octave-%{version}.tar.bz2
+Source0:        ftp://ftp.gnu.org/gnu/octave/octave-%{version}.tar.xz
 %else
 Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}%{rctag}.tar.gz
 %endif
 # RPM macros for helping to build Octave packages
 Source1:        macros.octave
+Source2:        xorg.conf
 # Fix to allow pkg build to use a directory
 # https://savannah.gnu.org/bugs/?func=detailitem&item_id=32839
-Patch0:         octave-3.8.0-pkgbuilddir.patch
-# Patch to compile with suitesparse 4.3.1
-# https://savannah.gnu.org/bugs/?func=detailitem&item_id=43063
-Patch1:         octave-suitesparse.patch
+Patch0:         octave-pkgbuilddir.patch
 
 Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
@@ -64,6 +62,7 @@ BuildRequires:  libX11-devel
 BuildRequires:  llvm-devel
 BuildRequires:  mesa-libGL-devel
 BuildRequires:  mesa-libGLU-devel
+BuildRequires:  mesa-libOSMesa-devel
 BuildRequires:  ncurses-devel
 BuildRequires:  pcre-devel
 BuildRequires:  qhull-devel
@@ -75,6 +74,10 @@ BuildRequires:  tex(dvips)
 BuildRequires:  texinfo
 BuildRequires:  texinfo-tex
 BuildRequires:  zlib-devel
+# For check
+BuildRequires:  mesa-dri-drivers
+BuildRequires:  xorg-x11-apps
+BuildRequires:  xorg-x11-drv-dummy
 
 Requires:        epstool gnuplot gnuplot-common less info texinfo 
 Requires:        hdf5 = %{_hdf5_version}
@@ -121,7 +124,6 @@ This package contains documentation for Octave.
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
 %patch0 -p1 -b .pkgbuilddir
-%patch1 -p1 -b .suitesparse
 find -name \*.h -o -name \*.cc | xargs sed -i -e 's/<config.h>/"config.h"/' -e 's/<base-list.h>/"base-list.h"/'
 
 # Check permissions
@@ -150,6 +152,7 @@ export JAVA_HOME=%{java_home}
 %configure --enable-shared --disable-static --enable-64=%enable64 \
  --enable-float-truncate \
  %{?disabledocs} \
+ --disable-silent-rules \
  --with-blas="-L%{_libdir}/atlas %{atlasblaslib}" \
  --with-lapack="-L%{_libdir}/atlas %{atlaslapacklib}" \
  --with-java-libdir=$libjvm \
@@ -190,10 +193,7 @@ perl -pi -e "s,%{buildroot},," %{buildroot}%{_datadir}/%{name}/ls-R
 # Make sure ls-R exists
 touch %{buildroot}%{_datadir}/%{name}/ls-R
 
-# Update desktop file
-rm %{buildroot}%{_datadir}/applications/www.octave.org-octave.desktop
-desktop-file-install --add-category "DataVisualization" --add-category "NumericalAnalysis" --add-category "Engineering" --add-category "Physics" \
-  --dir %{buildroot}%{_datadir}/applications etc/icons/octave.desktop
+desktop-file-validate %{buildroot}%{_datadir}/applications/www.octave.org-octave.desktop
 
 # Create directories for add-on packages
 HOST_TYPE=`%{buildroot}%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
@@ -266,50 +266,17 @@ cp -p doc/interpreter/macros.texi %{buildroot}%{_datadir}/%{name}/%{version}/etc
 mkdir -p %{buildroot}%{_rpmconfigdir}/macros.d
 cp -p %SOURCE1 %{buildroot}%{_rpmconfigdir}/macros.d/
 
-# Register as an application to be visible in the software center
-#
-# NOTE: It would be *awesome* if this file was maintained by the upstream
-# project, translated and installed into the right place during `make install`.
-#
-# See http://www.freedesktop.org/software/appstream/docs/ for more details.
-#
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/appdata
-cat > $RPM_BUILD_ROOT%{_datadir}/appdata/%{name}.appdata.xml <<EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2014 Richard Hughes <richard@hughsie.com> -->
-<!--
-BugReportURL: https://savannah.gnu.org/bugs/index.php?43279
-SentUpstream: 2014-09-22
--->
-<application>
-  <id type="desktop">octave.desktop</id>
-  <metadata_license>CC0-1.0</metadata_license>
-  <summary>Interactive programming environment for numerical computations</summary>
-  <description>
-    <p>
-      GNU Octave is a high-level interpreted language, primarily intended for
-      numerical computations.
-      It provides capabilities for the numerical solution of linear and
-      nonlinear problems, and for performing other numerical experiments.
-      It also provides extensive graphics capabilities for data visualization
-      and manipulation.
-    </p>
-    <p>
-      Octave is normally used through its interactive command line interface,
-      but it can also be used to write non-interactive programs.
-      The Octave language is quite similar to Matlab so that most programs are
-      easily portable.
-    </p>
-  </description>
-  <url type="homepage">http://www.octave.org</url>
-  <screenshots>
-    <screenshot type="default">http://www.gnu.org/software/octave/images/screenshot.png</screenshot>
-  </screenshots>
-  <updatecontact>octave-maintainers@octave.org</updatecontact>
-</application>
-EOF
 
 %check
+cp %SOURCE2 .
+if [ -x /usr/libexec/Xorg ]; then
+   Xorg=/usr/libexec/Xorg
+else
+   Xorg=/usr/libexec/Xorg.bin
+fi
+$Xorg -noreset +extension GLX +extension RANDR +extension RENDER -logfile ./xorg.log -config ./xorg.conf :99 &
+sleep 2
+export DISPLAY=:99
 # Tests are currently segfaulting on arm
 # https://bugzilla.redhat.com/show_bug.cgi?id=1149953
 %ifarch %{arm}
@@ -320,6 +287,7 @@ make check
 
 %post
 /sbin/ldconfig
+/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 %if %{builddocs}
 /sbin/install-info --info-dir=%{_infodir} --section="Programming" \
         %{_infodir}/octave.info || :
@@ -332,7 +300,16 @@ if [ "$1" = "0" ]; then
 fi
 %endif
 
-%postun -p /sbin/ldconfig
+%postun
+/sbin/ldconfig
+if [ $1 -eq 0 ] ; then
+    /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+    /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+fi
+
+%posttrans
+/usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+
 
 %files
 %license COPYING
@@ -349,8 +326,10 @@ fi
 %{_mandir}/man1/octave*.1.*
 %{_infodir}/liboctave.info*
 %{_infodir}/octave.info*
-%{_datadir}/appdata/%{name}.appdata.xml
-%{_datadir}/applications/octave.desktop
+%{_datadir}/appdata/www.octave.org-octave.appdata.xml
+%{_datadir}/applications/www.octave.org-octave.desktop
+%{_datadir}/icons/hicolor/*/apps/octave.png
+%{_datadir}/icons/hicolor/scalable/apps/octave.svg
 # octave_packages is %ghost, so need to list everything else separately
 %dir %{_datadir}/octave
 %{_datadir}/octave/%{version}%{?rctag}/
@@ -376,6 +355,12 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Mon Jul 6 2015 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.0-1
+- Update to 4.0.0
+- Rebase pkgbuilddir patch
+- Drop suitesparse patch
+- Run X server for tests
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6:3.8.2-20
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
