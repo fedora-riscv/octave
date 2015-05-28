@@ -1,6 +1,8 @@
 # From src/version.h:#define OCTAVE_API_VERSION
 %global octave_api api-v49+
 
+%{?!_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}}
+
 # Building docs fails on EL7 due to https://bugzilla.redhat.com/show_bug.cgi?id=1064453
 %if 0%{?rhel} == 7
 %global builddocs 0
@@ -16,7 +18,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.2
-Release:        11%{?dist}
+Release:        18%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -144,7 +146,9 @@ export F77=gfortran
 libjvm=$(find /usr/lib/jvm/jre/lib -name libjvm.so -printf %h)
 export JAVA_HOME=%{java_home}
 # JIT support is still experimental, and causes a segfault on ARM.
+# --enable-float-truncate - https://savannah.gnu.org/bugs/?40560
 %configure --enable-shared --disable-static --enable-64=%enable64 \
+ --enable-float-truncate \
  %{?disabledocs} \
  --with-blas="-L%{_libdir}/atlas %{atlasblaslib}" \
  --with-lapack="-L%{_libdir}/atlas %{atlaslapacklib}" \
@@ -162,12 +166,18 @@ then
   exit 1
 fi
 
-# SMP make still not working in Octave 3.6.0
-#make OCTAVE_RELEASE="Fedora %{version}-%{release}" %{?_smp_mflags}
-make OCTAVE_RELEASE="Fedora %{version}%{?rctag}-%{release}"
+make OCTAVE_RELEASE="Fedora %{version}%{?rctag}-%{release}" %{?_smp_mflags}
 
 %install
 make install DESTDIR=%{buildroot}
+
+# Docs - In case we didn't build them and to explicitly install pre-built docs
+make -C doc install-data install-html install-info install-pdf DESTDIR=%{buildroot}
+mkdir -p %{buildroot}%{_pkgdocdir}
+cp -ar AUTHORS BUGS ChangeLog examples NEWS README %{buildroot}%{_pkgdocdir}/
+cp -a doc/refcard/*.pdf %{buildroot}%{_pkgdocdir}/
+
+# No info directory
 rm -f %{buildroot}%{_infodir}/dir
 
 # Make library links
@@ -256,6 +266,49 @@ cp -p doc/interpreter/macros.texi %{buildroot}%{_datadir}/%{name}/%{version}/etc
 mkdir -p %{buildroot}%{_rpmconfigdir}/macros.d
 cp -p %SOURCE1 %{buildroot}%{_rpmconfigdir}/macros.d/
 
+# Register as an application to be visible in the software center
+#
+# NOTE: It would be *awesome* if this file was maintained by the upstream
+# project, translated and installed into the right place during `make install`.
+#
+# See http://www.freedesktop.org/software/appstream/docs/ for more details.
+#
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/appdata
+cat > $RPM_BUILD_ROOT%{_datadir}/appdata/%{name}.appdata.xml <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2014 Richard Hughes <richard@hughsie.com> -->
+<!--
+BugReportURL: https://savannah.gnu.org/bugs/index.php?43279
+SentUpstream: 2014-09-22
+-->
+<application>
+  <id type="desktop">octave.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <summary>Interactive programming environment for numerical computations</summary>
+  <description>
+    <p>
+      GNU Octave is a high-level interpreted language, primarily intended for
+      numerical computations.
+      It provides capabilities for the numerical solution of linear and
+      nonlinear problems, and for performing other numerical experiments.
+      It also provides extensive graphics capabilities for data visualization
+      and manipulation.
+    </p>
+    <p>
+      Octave is normally used through its interactive command line interface,
+      but it can also be used to write non-interactive programs.
+      The Octave language is quite similar to Matlab so that most programs are
+      easily portable.
+    </p>
+  </description>
+  <url type="homepage">http://www.octave.org</url>
+  <screenshots>
+    <screenshot type="default">http://www.gnu.org/software/octave/images/screenshot.png</screenshot>
+  </screenshots>
+  <updatecontact>octave-maintainers@octave.org</updatecontact>
+</application>
+EOF
+
 %check
 # Tests are currently segfaulting on arm
 # https://bugzilla.redhat.com/show_bug.cgi?id=1149953
@@ -282,17 +335,21 @@ fi
 %postun -p /sbin/ldconfig
 
 %files
-%doc AUTHORS BUGS ChangeLog COPYING NEWS README
+%license COPYING
+%{_pkgdocdir}/AUTHORS
+%{_pkgdocdir}/BUGS
+%{_pkgdocdir}/ChangeLog
+%{_pkgdocdir}/NEWS
+%{_pkgdocdir}/README
 # FIXME: Create an -emacs package that has the emacs addon
 %config(noreplace) %{_sysconfdir}/ld.so.conf.d/octave-*.conf
 %{_bindir}/octave*
 %{_libdir}/octave/
 %{_libexecdir}/octave/
-%if %{builddocs}
 %{_mandir}/man1/octave*.1.*
 %{_infodir}/liboctave.info*
 %{_infodir}/octave.info*
-%endif
+%{_datadir}/appdata/%{name}.appdata.xml
 %{_datadir}/applications/octave.desktop
 # octave_packages is %ghost, so need to list everything else separately
 %dir %{_datadir}/octave
@@ -308,17 +365,39 @@ fi
 %{_bindir}/mkoctfile
 %{_bindir}/mkoctfile-%{version}%{?rctag}
 %{_includedir}/octave-%{version}%{?rctag}/
-%if %{builddocs}
 %{_mandir}/man1/mkoctfile.1.*
-%endif
 
 %files doc
-%doc doc/liboctave/liboctave.html doc/liboctave/liboctave.pdf
-%doc doc/refcard/*.pdf
-%doc examples/
-
+%{_pkgdocdir}/examples/
+%{_pkgdocdir}/liboctave.html/
+%{_pkgdocdir}/liboctave.pdf
+%{_pkgdocdir}/octave.html
+%{_pkgdocdir}/octave.pdf
+%{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Thu May 28 2015 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-18
+- Fix doc install (bug #799662)
+
+* Sun May 17 2015 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-17
+- Rebuild for hdf5 1.8.15
+
+* Mon Apr 20 2015 Rex Dieter <rdieter@fedoraproject.org> - 6:3.8.2-16
+- rebuild (qscintilla)
+
+* Thu Mar 26 2015 Richard Hughes <rhughes@redhat.com> - 6:3.8.2-15
+- Add an AppData file for the software center
+
+* Tue Mar 10 2015 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-14
+- Build with --enable-float-truncate (https://savannah.gnu.org/bugs/?40560)
+- Re-enable parallel builds
+
+* Mon Mar 09 2015 Rex Dieter <rdieter@fedoraproject.org> - 6:3.8.2-13
+- rebuild (GraphicsMagick)
+
+* Fri Feb 20 2015 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-12
+- Rebuild for rebuilt swig
+
 * Wed Feb 18 2015 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-11
 - Rebuild for fltk 1.3.3
 
