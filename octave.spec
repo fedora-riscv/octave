@@ -1,6 +1,8 @@
 # From src/version.h:#define OCTAVE_API_VERSION
 %global octave_api api-v49+
 
+%{?!_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}}
+
 # Building docs fails on EL7 due to https://bugzilla.redhat.com/show_bug.cgi?id=1064453
 %if 0%{?rhel} == 7
 %global builddocs 0
@@ -16,7 +18,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.2
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -168,6 +170,14 @@ make OCTAVE_RELEASE="Fedora %{version}%{?rctag}-%{release}" %{?_smp_mflags}
 
 %install
 make install DESTDIR=%{buildroot}
+
+# Docs - In case we didn't build them and to explicitly install pre-built docs
+make -C doc install-data install-html install-info install-pdf DESTDIR=%{buildroot}
+mkdir -p %{buildroot}%{_pkgdocdir}
+cp -ar AUTHORS BUGS ChangeLog examples NEWS README %{buildroot}%{_pkgdocdir}/
+cp -a doc/refcard/*.pdf %{buildroot}%{_pkgdocdir}/
+
+# No info directory
 rm -f %{buildroot}%{_infodir}/dir
 
 # Make library links
@@ -325,17 +335,20 @@ fi
 %postun -p /sbin/ldconfig
 
 %files
-%doc AUTHORS BUGS ChangeLog COPYING NEWS README
+%license COPYING
+%{_pkgdocdir}/AUTHORS
+%{_pkgdocdir}/BUGS
+%{_pkgdocdir}/ChangeLog
+%{_pkgdocdir}/NEWS
+%{_pkgdocdir}/README
 # FIXME: Create an -emacs package that has the emacs addon
 %config(noreplace) %{_sysconfdir}/ld.so.conf.d/octave-*.conf
 %{_bindir}/octave*
 %{_libdir}/octave/
 %{_libexecdir}/octave/
-%if %{builddocs}
 %{_mandir}/man1/octave*.1.*
 %{_infodir}/liboctave.info*
 %{_infodir}/octave.info*
-%endif
 %{_datadir}/appdata/%{name}.appdata.xml
 %{_datadir}/applications/octave.desktop
 # octave_packages is %ghost, so need to list everything else separately
@@ -352,17 +365,20 @@ fi
 %{_bindir}/mkoctfile
 %{_bindir}/mkoctfile-%{version}%{?rctag}
 %{_includedir}/octave-%{version}%{?rctag}/
-%if %{builddocs}
 %{_mandir}/man1/mkoctfile.1.*
-%endif
 
 %files doc
-%doc doc/liboctave/liboctave.html doc/liboctave/liboctave.pdf
-%doc doc/refcard/*.pdf
-%doc examples/
-
+%{_pkgdocdir}/examples/
+%{_pkgdocdir}/liboctave.html/
+%{_pkgdocdir}/liboctave.pdf
+%{_pkgdocdir}/octave.html
+%{_pkgdocdir}/octave.pdf
+%{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Thu May 28 2015 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-18
+- Fix doc install (bug #799662)
+
 * Sun May 17 2015 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-17
 - Rebuild for hdf5 1.8.15
 
