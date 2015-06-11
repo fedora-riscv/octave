@@ -18,7 +18,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.2
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -376,6 +376,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Thu Jun 11 2015 Nils Philippsen <nils@redhat.com> - 6:3.8.2-19
+- rebuild for suitesparse-4.4.4
+
 * Thu May 28 2015 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-18
 - Fix doc install (bug #799662)
 
