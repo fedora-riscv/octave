@@ -18,7 +18,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -77,7 +77,9 @@ BuildRequires:  zlib-devel
 # For check
 BuildRequires:  mesa-dri-drivers
 BuildRequires:  xorg-x11-apps
+%ifnarch s390 s390x
 BuildRequires:  xorg-x11-drv-dummy
+%endif
 
 Requires:        epstool gnuplot gnuplot-common less info texinfo 
 Requires:        hdf5 = %{_hdf5_version}
@@ -355,6 +357,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Mon Jul 13 2015 Dan Horák <dan[at]danny.cz> - 6:4.0.0-2
+- build without the dummy Xorg driver on s390(x)
+
 * Mon Jul 6 2015 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.0-1
 - Update to 4.0.0
 - Rebase pkgbuilddir patch
