@@ -232,7 +232,7 @@ do
 ARCH=\$(uname -m)
 
 case \$ARCH in
-x86_64 | ia64 | s390x | aarch64 | ppc64) LIB_DIR=/usr/lib64
+x86_64 | ia64 | s390x | aarch64 | ppc64 | ppc64le) LIB_DIR=/usr/lib64
                        SECONDARY_LIB_DIR=/usr/lib
                        ;;
 * )
