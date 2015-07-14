@@ -18,7 +18,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.0.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -35,6 +35,9 @@ Source2:        xorg.conf
 # Fix to allow pkg build to use a directory
 # https://savannah.gnu.org/bugs/?func=detailitem&item_id=32839
 Patch0:         octave-pkgbuilddir.patch
+# Upstream patch to fix texinfo6 doc builds
+# http://hg.savannah.gnu.org/hgweb/octave/rev/2ec049e50ed8
+Patch1:         octave-texinfo6-2ec049e50ed8.patch
 
 Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
@@ -73,6 +76,7 @@ BuildRequires:  suitesparse-devel
 BuildRequires:  tex(dvips)
 BuildRequires:  texinfo
 BuildRequires:  texinfo-tex
+BuildRequires:  texlive-collection-fontsrecommended
 BuildRequires:  zlib-devel
 # For check
 BuildRequires:  mesa-dri-drivers
@@ -126,6 +130,8 @@ This package contains documentation for Octave.
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
 %patch0 -p1 -b .pkgbuilddir
+%patch1 -p1 -b .texinfo6
+rm doc/texinfo.tex
 find -name \*.h -o -name \*.cc | xargs sed -i -e 's/<config.h>/"config.h"/' -e 's/<base-list.h>/"base-list.h"/'
 
 # Check permissions
@@ -357,6 +363,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Tue Jul 14 2015 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.0-3
+- Add patch to fix build with texinfo 6.0
+
 * Mon Jul 13 2015 Dan Horák <dan[at]danny.cz> - 6:4.0.0-2
 - build without the dummy Xorg driver on s390(x)
 
