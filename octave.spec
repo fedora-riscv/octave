@@ -76,7 +76,9 @@ BuildRequires:  suitesparse-devel
 BuildRequires:  tex(dvips)
 BuildRequires:  texinfo
 BuildRequires:  texinfo-tex
+%if 0%{?fedora} || 0%{?rhel} >= 7
 BuildRequires:  texlive-collection-fontsrecommended
+%endif
 BuildRequires:  zlib-devel
 # For check
 BuildRequires:  mesa-dri-drivers
@@ -84,6 +86,7 @@ BuildRequires:  xorg-x11-apps
 %ifnarch s390 s390x
 BuildRequires:  xorg-x11-drv-dummy
 %endif
+BuildRequires:  zip
 
 Requires:        epstool gnuplot gnuplot-common less info texinfo 
 Requires:        hdf5 = %{_hdf5_version}
@@ -130,8 +133,10 @@ This package contains documentation for Octave.
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
 %patch0 -p1 -b .pkgbuilddir
+%if %{builddocs}
 %patch1 -p1 -b .texinfo6
 rm doc/texinfo.tex
+%endif
 find -name \*.h -o -name \*.cc | xargs sed -i -e 's/<config.h>/"config.h"/' -e 's/<base-list.h>/"base-list.h"/'
 
 # Check permissions
@@ -320,6 +325,7 @@ fi
 
 
 %files
+%{!?_licensedir:%global license %%doc}
 %license COPYING
 %{_pkgdocdir}/AUTHORS
 %{_pkgdocdir}/BUGS
