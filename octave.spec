@@ -3,6 +3,8 @@
 
 %{?!_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}}
 
+%global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
+
 # Building docs fails on EL7 due to https://bugzilla.redhat.com/show_bug.cgi?id=1064453
 %if 0%{?rhel} == 7
 %global builddocs 0
@@ -276,8 +278,8 @@ cp -p doc/interpreter/macros.texi %{buildroot}%{_datadir}/%{name}/%{version}/etc
 %endif
 
 # rpm macros
-mkdir -p %{buildroot}%{_rpmconfigdir}/macros.d
-cp -p %SOURCE1 %{buildroot}%{_rpmconfigdir}/macros.d/
+mkdir -p %{buildroot}%{macrosdir}
+cp -p %SOURCE1 %{buildroot}%{macrosdir}
 
 
 %check
@@ -354,7 +356,7 @@ fi
 #%{_sysconfdir}/prelink.conf.d/octave.conf
 
 %files devel
-%{_rpmconfigdir}/macros.d/macros.octave
+%{macrosdir}/macros.octave
 %{_bindir}/mkoctfile
 %{_bindir}/mkoctfile-%{version}%{?rctag}
 %{_includedir}/octave-%{version}%{?rctag}/
