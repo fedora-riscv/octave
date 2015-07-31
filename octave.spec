@@ -20,7 +20,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.0.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -218,10 +218,6 @@ mkdir -p %{buildroot}%{_datadir}/%{name}/packages
 mkdir -p %{buildroot}%{_libdir}/%{name}/packages
 touch %{buildroot}%{_datadir}/%{name}/octave_packages
 
-# work-around broken pre-linking (bug 524493)
-#install -d %{buildroot}%{_sysconfdir}/prelink.conf.d
-#echo "-b %{_bindir}/octave-%{version}" > %{buildroot}%{_sysconfdir}/prelink.conf.d/octave.conf
-
 # Fix multilib installs
 for include in config defaults oct-conf
 do
@@ -353,7 +349,6 @@ fi
 %ghost %{_datadir}/octave/octave_packages
 %{_datadir}/octave/packages/
 %{_datadir}/octave/site/
-#%{_sysconfdir}/prelink.conf.d/octave.conf
 
 %files devel
 %{macrosdir}/macros.octave
@@ -371,6 +366,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Fri Jul 31 2015 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.0-4
+- Add octave_pkg_check rpm macro, other macro cleanup
+
 * Tue Jul 14 2015 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.0-3
 - Add patch to fix build with texinfo 6.0
 
