@@ -20,7 +20,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.0.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -366,6 +366,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Sun Oct 04 2015 Rex Dieter <rdieter@fedoraproject.org> - 6:4.0.0-5
+- rebuild (GraphicsMagick)
+
 * Fri Jul 31 2015 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.0-4
 - Add octave_pkg_check rpm macro, other macro cleanup
 
