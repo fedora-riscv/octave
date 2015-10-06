@@ -20,7 +20,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.0.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -43,6 +43,24 @@ Patch1:         octave-texinfo6-2ec049e50ed8.patch
 
 Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
+Provides:       bundled(qterminal)
+# From liboctave/cruft
+Provides:       bundled(amos)
+Provides:       bundled(blas-xtra)
+Provides:       bundled(daspk)
+Provides:       bundled(dasrt)
+Provides:       bundled(dassl)
+Provides:       bundled(faddeeva)
+Provides:       bundled(lapack-xtra)
+Provides:       bundled(odepack)
+Provides:       bundled(ordered-qz)
+Provides:       bundled(quadpack)
+Provides:       bundled(ranlib)
+Provides:       bundled(slatec-err)
+Provides:       bundled(slatec-fn)
+
+# For autoreconf
+BuildRequires:  libtool
 
 BuildRequires:  arpack-devel
 BuildRequires:  atlas-devel 
@@ -143,6 +161,11 @@ find -name \*.h -o -name \*.cc | xargs sed -i -e 's/<config.h>/"config.h"/' -e '
 
 # Check permissions
 find -name *.cc -exec chmod 644 {} \;
+
+# Remove unused fftpack
+sed -i -e '/fftpack/d' liboctave/cruft/module.mk
+rm -r liboctave/cruft/fftpack
+autoreconf
 
 %build
 %global enable64 no
@@ -366,6 +389,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Tue Oct 6 2015 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.0-6
+- Remove unused fftpack code, note bundled libraries
+
 * Sun Oct 04 2015 Rex Dieter <rdieter@fedoraproject.org> - 6:4.0.0-5
 - rebuild (GraphicsMagick)
 
