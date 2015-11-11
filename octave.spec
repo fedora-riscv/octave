@@ -20,7 +20,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.0.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -81,6 +81,7 @@ BuildRequires:  GraphicsMagick-c++-devel
 BuildRequires:  hdf5-devel
 BuildRequires:  java-devel
 BuildRequires:  less
+BuildRequires:  libsndfile-devel
 BuildRequires:  libX11-devel
 BuildRequires:  llvm-devel
 BuildRequires:  mesa-libGL-devel
@@ -88,6 +89,7 @@ BuildRequires:  mesa-libGLU-devel
 BuildRequires:  mesa-libOSMesa-devel
 BuildRequires:  ncurses-devel
 BuildRequires:  pcre-devel
+BuildRequires:  portaudio-devel
 BuildRequires:  qhull-devel
 BuildRequires:  qrupdate-devel
 BuildRequires:  qscintilla-devel
@@ -389,6 +391,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Wed Nov 11 2015 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.0-7
+- Add BR libsndfile-devel and portaudio-devel for audio support (bug #1279924)
+
 * Tue Oct 6 2015 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.0-6
 - Remove unused fftpack code, note bundled libraries
 
