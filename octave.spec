@@ -40,6 +40,9 @@ Patch0:         octave-pkgbuilddir.patch
 # Upstream patch to fix texinfo6 doc builds
 # http://hg.savannah.gnu.org/hgweb/octave/rev/2ec049e50ed8
 Patch1:         octave-texinfo6-2ec049e50ed8.patch
+# Remove project_group from appdata.xml file
+# https://bugzilla.redhat.com/show_bug.cgi?id=1293561
+Patch2:         octave-appdata.patch
 
 Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
@@ -61,12 +64,14 @@ Provides:       bundled(slatec-fn)
 
 # For autoreconf
 BuildRequires:  libtool
+# For validating desktop and appdata files
+BuildRequires:  desktop-file-utils
+BuildRequires:  libappstream-glib
 
 BuildRequires:  arpack-devel
 BuildRequires:  atlas-devel 
 BuildRequires:  bison
 BuildRequires:  curl-devel
-BuildRequires:  desktop-file-utils
 BuildRequires:  fftw-devel
 BuildRequires:  flex
 BuildRequires:  fltk-devel
@@ -159,6 +164,7 @@ This package contains documentation for Octave.
 %patch1 -p1 -b .texinfo6
 rm doc/texinfo.tex
 %endif
+%patch2 -p1 -b .appdata
 find -name \*.h -o -name \*.cc | xargs sed -i -e 's/<config.h>/"config.h"/' -e 's/<base-list.h>/"base-list.h"/'
 
 # Check permissions
@@ -234,6 +240,7 @@ perl -pi -e "s,%{buildroot},," %{buildroot}%{_datadir}/%{name}/ls-R
 touch %{buildroot}%{_datadir}/%{name}/ls-R
 
 desktop-file-validate %{buildroot}%{_datadir}/applications/www.octave.org-octave.desktop
+appstream-util validate-relax --nonet %{buildroot}/%{_datadir}/appdata/*.appdata.xml
 
 # Create directories for add-on packages
 HOST_TYPE=`%{buildroot}%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
@@ -391,6 +398,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Tue Dec 29 2015 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.0-8
+- Validate and fix appdata file (bug #1293561)
+
 * Wed Nov 11 2015 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.0-7
 - Add BR libsndfile-devel and portaudio-devel for audio support (bug #1279924)
 
