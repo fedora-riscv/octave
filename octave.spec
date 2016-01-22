@@ -20,7 +20,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.0.0
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -398,6 +398,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Fri Jan 22 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.0-10
+- Rebuild for poppler-0.40.0
+
 * Thu Jan 21 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.0-9
 - Rebuild for hdf5 1.8.16
 
