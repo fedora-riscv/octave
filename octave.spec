@@ -20,7 +20,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.0.0
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -398,6 +398,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 6:4.0.0-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
 * Fri Jan 22 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.0-10
 - Rebuild for poppler-0.40.0
 
