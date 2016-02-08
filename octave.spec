@@ -18,7 +18,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.2
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -376,6 +376,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Mon Feb 08 2016 Rex Dieter <rdieter@fedoraproject.org> - 6:3.8.2-19
+- rebuild (GraphicsMagick)
+
 * Thu May 28 2015 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-18
 - Fix doc install (bug #799662)
 
