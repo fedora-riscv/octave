@@ -3,7 +3,7 @@
 
 Name:           octave
 Version:        3.4.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
@@ -242,6 +242,9 @@ fi
 
 
 %changelog
+* Mon Feb 08 2016 Rex Dieter <rdieter@fedoraproject.org> - 6:3.4.3-2
+- rebuild (GraphicsMagick)
+
 * Mon Jun 4 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.3-1
 - Update to 3.4.3
 - Drop upstreamed patches
