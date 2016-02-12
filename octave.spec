@@ -16,6 +16,10 @@ Patch2:         octave-3.4.0-pkgbuilddir.patch
 URL:            http://www.octave.org
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+# suitesparse is currently only available for ix86 and x86_64
+# https://bugzilla.redhat.com/show_bug.cgi?id=1224483
+ExclusiveArch: %{ix86} x86_64
+
 Provides:       octave(api) = %{octave_api}
 
 BuildRequires:  bison flex less tetex gcc-gfortran atlas-devel 
@@ -244,6 +248,7 @@ fi
 %changelog
 * Mon Feb 08 2016 Rex Dieter <rdieter@fedoraproject.org> - 6:3.4.3-2
 - rebuild (GraphicsMagick)
+- ExclusiveArch: %%ix86 x86_64 (#1224483)
 
 * Mon Jun 4 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.3-1
 - Update to 3.4.3
