@@ -20,7 +20,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.0.0
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -43,6 +43,13 @@ Patch1:         octave-texinfo6-2ec049e50ed8.patch
 # Remove project_group from appdata.xml file
 # https://bugzilla.redhat.com/show_bug.cgi?id=1293561
 Patch2:         octave-appdata.patch
+# Fix gnulib signbit for g++ 6
+# https://bugzilla.redhat.com/show_bug.cgi?id=1276893
+Patch3:         octave-signbit.patch
+# Add needed #include <math.h> to bring in gnulib
+Patch4:         octave-gnulib.patch
+# Handle g++ 6 abs() change
+Patch5:         octave-abs.patch
 
 Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
@@ -165,6 +172,11 @@ This package contains documentation for Octave.
 rm doc/texinfo.tex
 %endif
 %patch2 -p1 -b .appdata
+%patch3 -p1 -b .signbit
+%patch4 -p1 -b .gnulib
+%patch5 -p1 -b .abs
+# Explicitly use gnulib headers
+find -name \*.cc -o -name \*.h -o -name \*.yy | xargs sed -i -e 's/#include <c\(math\|stdlib\)>/#include <\1.h>/'
 find -name \*.h -o -name \*.cc | xargs sed -i -e 's/<config.h>/"config.h"/' -e 's/<base-list.h>/"base-list.h"/'
 
 # Check permissions
@@ -398,6 +410,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Sun Feb 21 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.0-13
+- Fix build with gcc 6
+
 * Thu Feb 18 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.0-12
 - Rebuild for glpk 4.58
 
