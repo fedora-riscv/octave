@@ -20,7 +20,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.0.0
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -410,6 +410,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Fri Mar 11 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.0-14
+- Rebuild for glpk 4.59
+
 * Sun Feb 21 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.0-13
 - Fix build with gcc 6
 
