@@ -20,7 +20,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -70,7 +70,9 @@ Provides:       bundled(slatec-fn)
 BuildRequires:  libtool
 # For validating desktop and appdata files
 BuildRequires:  desktop-file-utils
+%if 0%{?fedora} || 0%{?rhel} >= 7
 BuildRequires:  libappstream-glib
+%endif
 
 BuildRequires:  arpack-devel
 BuildRequires:  atlas-devel 
@@ -245,7 +247,9 @@ perl -pi -e "s,%{buildroot},," %{buildroot}%{_datadir}/%{name}/ls-R
 touch %{buildroot}%{_datadir}/%{name}/ls-R
 
 desktop-file-validate %{buildroot}%{_datadir}/applications/www.octave.org-octave.desktop
+%if 0%{?fedora} || 0%{?rhel} >= 7
 appstream-util validate-relax --nonet %{buildroot}/%{_datadir}/appdata/*.appdata.xml
+%endif
 
 # Create directories for add-on packages
 HOST_TYPE=`%{buildroot}%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
@@ -403,6 +407,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Tue Mar 22 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.1-2
+- libappstream-glib is not in EL6
+
 * Tue Mar 22 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.1-1
 - Update to 4.0.1
 - Drop upstream texinfo patch
