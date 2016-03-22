@@ -403,7 +403,7 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
-* Mon Mar 22 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.1-1
+* Tue Mar 22 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.1-1
 - Update to 4.0.1
 - Drop upstream texinfo patch
 
