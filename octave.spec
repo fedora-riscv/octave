@@ -19,8 +19,8 @@
 
 Name:           octave
 Epoch:          6
-Version:        4.0.0
-Release:        14%{?dist}
+Version:        4.0.1
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -37,9 +37,6 @@ Source2:        xorg.conf
 # Fix to allow pkg build to use a directory
 # https://savannah.gnu.org/bugs/?func=detailitem&item_id=32839
 Patch0:         octave-pkgbuilddir.patch
-# Upstream patch to fix texinfo6 doc builds
-# http://hg.savannah.gnu.org/hgweb/octave/rev/2ec049e50ed8
-Patch1:         octave-texinfo6-2ec049e50ed8.patch
 # Remove project_group from appdata.xml file
 # https://bugzilla.redhat.com/show_bug.cgi?id=1293561
 Patch2:         octave-appdata.patch
@@ -167,10 +164,6 @@ This package contains documentation for Octave.
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
 %patch0 -p1 -b .pkgbuilddir
-%if %{builddocs}
-%patch1 -p1 -b .texinfo6
-rm doc/texinfo.tex
-%endif
 %patch2 -p1 -b .appdata
 %patch3 -p1 -b .signbit
 %patch4 -p1 -b .gnulib
@@ -410,6 +403,10 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Mon Mar 22 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.1-1
+- Update to 4.0.1
+- Drop upstream texinfo patch
+
 * Fri Mar 11 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.0-14
 - Rebuild for glpk 4.59
 
