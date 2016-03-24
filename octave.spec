@@ -5,12 +5,8 @@
 
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
-# Building docs fails on EL7 due to https://bugzilla.redhat.com/show_bug.cgi?id=1064453
-%if 0%{?rhel} == 7
-%global builddocs 0
-%else
 %global builddocs 1
-%endif
+
 # For rc versions, change release manually
 #global rcver 2
 %if 0%{?rcver:1}
@@ -111,6 +107,10 @@ BuildRequires:  texinfo
 BuildRequires:  texinfo-tex
 %if 0%{?fedora} || 0%{?rhel} >= 7
 BuildRequires:  texlive-collection-fontsrecommended
+%endif
+%if 0%{?rhel} >= 7
+BuildRequires:  texlive-ec
+BuildRequires:  texlive-metapost
 %endif
 BuildRequires:  zlib-devel
 # For check
