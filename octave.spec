@@ -20,7 +20,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.0.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -171,7 +171,9 @@ This package contains documentation for Octave.
 %patch4 -p1 -b .gnulib
 %patch5 -p1 -b .abs
 # Explicitly use gnulib headers
+%if 0%{?fedora} >= 24
 find -name \*.cc -o -name \*.h -o -name \*.yy | xargs sed -i -e 's/#include <c\(math\|stdlib\)>/#include <\1.h>/'
+%endif
 find -name \*.h -o -name \*.cc | xargs sed -i -e 's/<config.h>/"config.h"/' -e 's/<base-list.h>/"base-list.h"/'
 
 # Check permissions
@@ -407,6 +409,10 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Wed Mar 23 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.1-3
+- Update signbit patch from gnulib upstream to work with older compilers
+- Only munge headers for gnulib on Fedora 24+
+
 * Tue Mar 22 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.1-2
 - libappstream-glib is not in EL6
 
