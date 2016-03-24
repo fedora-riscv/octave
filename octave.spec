@@ -16,7 +16,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.0.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -409,6 +409,10 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Thu Mar 24 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.1-4
+- Swap quoting in octave macros to make set -x output a little cleaner
+- Stop trying to turn octave warnings off in macros
+
 * Wed Mar 23 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.1-3
 - Update signbit patch from gnulib upstream to work with older compilers
 - Only munge headers for gnulib on Fedora 24+
