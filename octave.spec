@@ -16,7 +16,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.0.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -331,13 +331,7 @@ fi
 $Xorg -noreset +extension GLX +extension RANDR +extension RENDER -logfile ./xorg.log -config ./xorg.conf :99 &
 sleep 2
 export DISPLAY=:99
-# Tests are currently segfaulting on arm
-# https://bugzilla.redhat.com/show_bug.cgi?id=1149953
-%ifarch %{arm}
-make check || :
-%else
 make check
-%endif
 
 %post
 /sbin/ldconfig
@@ -409,6 +403,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Mon Apr 4 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.1-5
+- Arm tests appear to be running okay now (bug #1149953)
+
 * Thu Mar 24 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.1-4
 - Swap quoting in octave macros to make set -x output a little cleaner
 - Stop trying to turn octave warnings off in macros
