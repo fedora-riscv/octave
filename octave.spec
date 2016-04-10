@@ -16,7 +16,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.0.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -43,6 +43,9 @@ Patch3:         octave-signbit.patch
 Patch4:         octave-gnulib.patch
 # Handle g++ 6 abs() change
 Patch5:         octave-abs.patch
+# Make sure TERM variable is set correctly
+# http://hg.savannah.gnu.org/hgweb/octave/raw-rev/c64e57319f08
+Patch6:         octave-term.patch
 
 Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
@@ -170,6 +173,7 @@ This package contains documentation for Octave.
 %patch3 -p1 -b .signbit
 %patch4 -p1 -b .gnulib
 %patch5 -p1 -b .abs
+%patch6 -p1 -b .term
 # Explicitly use gnulib headers
 %if 0%{?fedora} >= 24
 find -name \*.cc -o -name \*.h -o -name \*.yy | xargs sed -i -e 's/#include <c\(math\|stdlib\)>/#include <\1.h>/'
@@ -403,6 +407,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Sun Apr 10 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.1-6
+- Add upstream patch to fix setting TERM variable (bug #1325548)
+
 * Mon Apr 4 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.1-5
 - Arm tests appear to be running okay now (bug #1149953)
 

@@ -1,0 +1,41 @@
+
+# HG changeset patch
+# User Mike Miller <mtmiller@octave.org>
+# Date 1458325635 25200
+# Node ID c64e57319f081803d4510a09478e853674e90625
+# Parent  eebbb80bf6d9fa7e5e0a75a4e0c3d589d9be55d9
+octave-gui: Set TERM unconditionally to Octave's expected terminal type (bug #47449)
+
+* octave-gui.cc (octave_start_gui): Set TERM unconditionally to the expected
+terminal type for the host system.
+
+diff --git a/libgui/src/octave-gui.cc b/libgui/src/octave-gui.cc
+--- a/libgui/src/octave-gui.cc
++++ b/libgui/src/octave-gui.cc
+@@ -160,20 +160,12 @@
+       // update network-settings
+       resource_manager::update_network_settings ();
+ 
+-#if ! defined (__WIN32__) || defined (__CYGWIN__)
+-      // If we were started from a launcher, TERM might not be
+-      // defined, but we provide a terminal with xterm
+-      // capabilities.
+-
+-      std::string term = octave_env::getenv ("TERM");
+-
+-      if (term.empty ())
+-        octave_env::putenv ("TERM", "xterm");
++      // We provide specific terminal capabilities, so ensure that TERM is
++      // always set appropriately
++#if defined (__WIN32__) && ! defined (__CYGWIN__)
++      octave_env::putenv ("TERM", "cygwin");
+ #else
+-      std::string term = octave_env::getenv ("TERM");
+-
+-      if (term.empty ())
+-        octave_env::putenv ("TERM", "cygwin");
++      octave_env::putenv ("TERM", "xterm");
+ #endif
+ 
+       // shortcut manager
+
