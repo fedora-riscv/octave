@@ -15,8 +15,8 @@
 
 Name:           octave
 Epoch:          6
-Version:        4.0.1
-Release:        6%{?dist}
+Version:        4.0.2
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -407,6 +407,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Thu Apr 21 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.2-1
+- Update to 4.0.2
+
 * Sun Apr 10 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.1-6
 - Add upstream patch to fix setting TERM variable (bug #1325548)
 
