@@ -16,7 +16,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -407,6 +407,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Fri Apr 29 2016 Ralf Corsépius <corsepiu@fedoraproject.org> - 6:4.0.2-2
+- Rebuild for qhull-2015.2-1.
+
 * Thu Apr 21 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.2-1
 - Update to 4.0.2
 
