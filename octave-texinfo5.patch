@@ -1,0 +1,12 @@
+diff -up octave-4.0.3/libinterp/dldfcn/dmperm.cc.texinfo5 octave-4.0.3/libinterp/dldfcn/dmperm.cc
+--- octave-4.0.3/libinterp/dldfcn/dmperm.cc.texinfo5	2016-09-09 11:35:32.560355572 -0600
++++ octave-4.0.3/libinterp/dldfcn/dmperm.cc	2016-09-09 11:36:04.340209857 -0600
+@@ -136,7 +136,7 @@ DEFUN_DLD (dmperm, args, nargout,
+ @deftypefn  {Loadable Function} {@var{p} =} dmperm (@var{S})\n\
+ @deftypefnx {Loadable Function} {[@var{p}, @var{q}, @var{r}, @var{S}] =} dmperm (@var{S})\n\
+ \n\
+-@cindex @nospell{Dulmage-Mendelsohn} decomposition\n\
++@cindex Dulmage-Mendelsohn decomposition\n\
+ Perform a @nospell{Dulmage-Mendelsohn} permutation of the sparse matrix\n\
+ @var{S}.\n\
+ \n\

@@ -16,7 +16,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.0.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -36,6 +36,9 @@ Patch0:         octave-pkgbuilddir.patch
 # Remove project_group from appdata.xml file
 # https://bugzilla.redhat.com/show_bug.cgi?id=1293561
 Patch2:         octave-appdata.patch
+# Fix build with texinfo5 on <=EL7
+# http://hg.savannah.gnu.org/hgweb/octave/rev/b602ce0b5acf
+Patch3:         octave-texinfo5.patch
 # Add needed #include <math.h> to bring in gnulib
 Patch4:         octave-gnulib.patch
 # Handle g++ 6 abs() change
@@ -167,6 +170,7 @@ This package contains documentation for Octave.
 %setup -q -n %{name}-%{version}%{?rctag}
 %patch0 -p1 -b .pkgbuilddir
 %patch2 -p1 -b .appdata
+%patch3 -p1 -b .texinfo5
 %patch4 -p1 -b .gnulib
 %patch5 -p1 -b .abs
 %patch6 -p1 -b .term
@@ -403,6 +407,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Fri Sep 9 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.3-2
+- Add upstream patch to fix build with texinfo 5 on <=EL7
+
 * Sun Jul 3 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.3-1
 - Update to 4.0.3
 
