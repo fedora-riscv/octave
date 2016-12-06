@@ -11,7 +11,7 @@ diff -up octave-4.2.0/m4/acinclude.m4.implicit octave-4.2.0/m4/acinclude.m4
            #else
              typedef int octave_idx_type;
            #endif
-+          void F77_FUNC(foo,FOO) (octave_idx_type*, octave_idx_type**, octave_idx_type**]);
++          void F77_FUNC(foo,FOO) (octave_idx_type*, octave_idx_type**, octave_idx_type**);
 +          ]], [[
            octave_idx_type n = 2;
            octave_idx_type in[2];
