@@ -16,7 +16,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.0.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -407,6 +407,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Tue Dec 06 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.3-3
+- Rebuild for hdf5 1.8.18
+
 * Fri Sep 9 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.0.3-2
 - Add upstream patch to fix build with texinfo 5 on <=EL7
 
