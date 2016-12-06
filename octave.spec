@@ -386,7 +386,6 @@ fi
 
 
 %files
-%{!?_licensedir:%global license %%doc}
 %license COPYING
 %{_pkgdocdir}/AUTHORS
 %{_pkgdocdir}/BUGS
