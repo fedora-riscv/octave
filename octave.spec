@@ -1,8 +1,6 @@
 # From src/version.h:#define OCTAVE_API_VERSION
 %global octave_api api-v51
 
-%{?!_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}}
-
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 %global builddocs 1
@@ -16,7 +14,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.0
-Release:        1%{?rcver:.rc%{rcver}}%{?dist}
+Release:        2%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -30,9 +28,6 @@ Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}%{rctag}.tar.lz
 # RPM macros for helping to build Octave packages
 Source1:        macros.octave
 Source2:        xorg.conf
-# Fix to allow pkg build to use a directory
-# https://savannah.gnu.org/bugs/?func=detailitem&item_id=32839
-Patch0:         octave-pkgbuilddir.patch
 # Fix compilation with -Werror=implicit-declarations
 Patch1:         octave-implicit.patch
 # Remove project_group from appdata.xml file
@@ -187,7 +182,6 @@ This package contains documentation for Octave.
 
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
-%patch0 -p1 -b .pkgbuilddir
 %patch1 -p1 -b .implicit
 %patch2 -p1 -b .appdata
 %patch4 -p1 -b .gnulib
@@ -428,6 +422,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Tue Dec 06 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.0-2
+- Rework pkg build/install macros
+
 * Tue Dec 06 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.0-1
 - Update to 4.2.0
 - Drop texinfo5 patch
