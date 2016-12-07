@@ -25,7 +25,7 @@
   -- print(rpm.expand("%octave_cmd pkg build -verbose -nodeps %{_builddir}/%{buildsubdir} "..octpkg_tarfile).."\\n")
   print(rpm.expand("octave -H -q --no-window-system --no-site-file --eval 'pkg build -verbose -nodeps %{_builddir}/%{buildsubdir} "..octpkg_tarfile).."'\\n")
   -- Extract the build tarball for debuginfo generation
-  print(rpm.expand("tar xf %{octpkg}-%{version}-%{_arch}-redhat-linux-gnu-%{octave_api}.tar.gz\\n"))
+  print(rpm.expand("tar xf %{octpkg}-%{version}-%{_host}-%{octave_api}.tar.gz\\n"))
 }
 
 # Install a package.  We use the octave pkg install command to install the
@@ -36,7 +36,7 @@
 %octave_pkg_install \
 mkdir -p %{buildroot}%{octprefix} \
 mkdir -p %{buildroot}%{octarchprefix} \
-%octave_cmd pkg("prefix","%{buildroot}%{octprefix}","%{buildroot}%{octarchprefix}");pkg("global_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("local_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("install","-nodeps","-verbose","%{octpkg}-%{version}-%{_arch}-redhat-linux-gnu-%{octave_api}.tar.gz");unlink(pkg("local_list"));unlink(pkg("global_list")); \
+%octave_cmd pkg("prefix","%{buildroot}%{octprefix}","%{buildroot}%{octarchprefix}");pkg("global_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("local_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("install","-nodeps","-verbose","%{octpkg}-%{version}-%{_host}-%{octave_api}.tar.gz");unlink(pkg("local_list"));unlink(pkg("global_list")); \
 if [ -e %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m ] \
 then \
     mv %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m.orig \
@@ -49,7 +49,7 @@ echo "endfunction" >> %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m \
 # Run pkg tests - We need to reinstall to recreate 'octave_packages' so that
 # octave can find the package, then remove 'octave_packages' again.
 %octave_pkg_check \
-%octave_cmd pkg("prefix","%{buildroot}%{octprefix}","%{buildroot}%{octarchprefix}");pkg("global_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("local_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("install","-nodeps","-verbose","%{octpkg}-%{version}-%{_arch}-redhat-linux-gnu-%{octave_api}.tar.gz");pkg("load","%{octpkg}");runtests("%{buildroot}%{octpkgdir}");unlink(pkg("local_list"));unlink(pkg("global_list")); \
+%octave_cmd pkg("prefix","%{buildroot}%{octprefix}","%{buildroot}%{octarchprefix}");pkg("global_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("local_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("install","-nodeps","-verbose","%{octpkg}-%{version}-%{_host}-%{octave_api}.tar.gz");pkg("load","%{octpkg}");runtests("%{buildroot}%{octpkgdir}");unlink(pkg("local_list"));unlink(pkg("global_list")); \
 %{nil}
 
 # preun script - we need to remove our uninstall protection and perhaps
