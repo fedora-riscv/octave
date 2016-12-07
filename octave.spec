@@ -14,7 +14,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.0
-Release:        3%{?rcver:.rc%{rcver}}%{?dist}
+Release:        4%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -422,6 +422,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Wed Dec 07 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.0-4
+- Use 'octave-config -p CANONICAL_HOST_TYPE' in macros
+
 * Wed Dec 07 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.0-3
 - Use %%_host in macros
 
