@@ -14,7 +14,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.0
-Release:        7%{?rcver:.rc%{rcver}}%{?dist}
+Release:        8%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -33,6 +33,8 @@ Patch1:         octave-implicit.patch
 # Remove project_group from appdata.xml file
 # https://bugzilla.redhat.com/show_bug.cgi?id=1293561
 Patch2:         octave-appdata.patch
+# Do not have gzip delete target file, emit warning message
+Patch3:         octave-gzip.patch
 # Add needed #include <math.h> to bring in gnulib
 Patch4:         octave-gnulib.patch
 
@@ -166,7 +168,6 @@ Group:          Development/Libraries
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       readline-devel fftw-devel hdf5-devel zlib-devel
 Requires:       atlas-devel gcc-c++ gcc-gfortran
-Requires:       strace
 
 %description devel
 The octave-devel package contains files needed for developing
@@ -185,6 +186,7 @@ This package contains documentation for Octave.
 %setup -q -n %{name}-%{version}%{?rctag}
 %patch1 -p1 -b .implicit
 %patch2 -p1 -b .appdata
+%patch3 -p1 -b .gzip
 %patch4 -p1 -b .gnulib
 # __osmesa_print__ test is triggering a crash in libgcc, disable it
 # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78409
@@ -201,6 +203,11 @@ find -name *.cc -exec chmod 644 {} \;
 # Remove unused fftpack
 sed -i -e '/fftpack/d' liboctave/cruft/module.mk
 rm -r liboctave/cruft/fftpack
+
+# libinterp/dldfcn/__osmesa_print__.cc-tst is segfaulting
+# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78409
+sed -i -e '/^%/d' libinterp/dldfcn/__osmesa_print__.cc scripts/plot/util/__pltopt__.m
+
 autoreconf -i
 
 %build
@@ -423,7 +430,12 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
-* Thu Dec 07 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.0-7
+* Thu Dec 08 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.0-8
+- Add patch to prevent gzip from deleting target file, instead emit warning
+- Drop debug code
+- Disable segfaulting osmesa_print and pltopt tests
+
+* Thu Dec 08 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.0-7
 - Fix version option
 
 * Wed Dec 07 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.0-6

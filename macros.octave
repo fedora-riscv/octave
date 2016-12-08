@@ -30,12 +30,9 @@
   print(rpm.expand("mkdir -p %{_builddir}/%{buildsubdir}/build\\n"))
   -- This fails to keep the arguments to %octave_cmd for some reason
   -- print(rpm.expand("%octave_cmd pkg build -verbose -nodeps %{_builddir}/%{buildsubdir} "..octpkg_tarfile).."\\n")
-  print(rpm.expand("strace -f -s 1024 -o octave.strace octave -H -V --no-window-system --no-site-file --eval 'pkg build -verbose -nodeps %{_builddir}/%{buildsubdir}/build "..octpkg_tarfile).."'\\n")
-  print("ls -l *\\n")
+  print(rpm.expand("octave -H -q --no-window-system --no-site-file --eval 'pkg build -verbose -nodeps %{_builddir}/%{buildsubdir}/build "..octpkg_tarfile).."'\\n")
   -- Extract the source tarball for debuginfo generation
   print(rpm.expand("tar xf "..octpkg_tarfile.." -C %{_builddir}/%{buildsubdir}/build\\n"))
-  print("ls -l *\\n")
-  print("cat octave.strace\\n")
 }
 
 # Install a package.  We use the octave pkg install command to install the
