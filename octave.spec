@@ -14,7 +14,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.0
-Release:        5%{?rcver:.rc%{rcver}}%{?dist}
+Release:        6%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -166,6 +166,7 @@ Group:          Development/Libraries
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       readline-devel fftw-devel hdf5-devel zlib-devel
 Requires:       atlas-devel gcc-c++ gcc-gfortran
+Requires:       strace
 
 %description devel
 The octave-devel package contains files needed for developing
@@ -422,6 +423,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Wed Dec 07 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.0-6
+- A desparate attempt to debug octave package building
+
 * Wed Dec 07 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.0-5
 - Build in a build sub-directory
 
