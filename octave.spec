@@ -14,7 +14,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.0
-Release:        10%{?rcver:.rc%{rcver}}%{?dist}
+Release:        11%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -431,6 +431,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Fri Dec 09 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.0-11
+- Handle noarch package tarball names
+
 * Fri Dec 09 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.0-10
 - Patch gzip from upstream bug report
 

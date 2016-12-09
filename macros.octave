@@ -33,6 +33,12 @@
   print(rpm.expand("octave -H -q --no-window-system --no-site-file --eval 'pkg build -verbose -nodeps %{_builddir}/%{buildsubdir}/build "..octpkg_tarfile).."'\\n")
   -- Extract the source tarball for debuginfo generation
   print(rpm.expand("tar xf "..octpkg_tarfile.." -C %{_builddir}/%{buildsubdir}/build\\n"))
+  -- Define %octave_tar_suffix for later use by install/check macros
+  if (rpm.expand("%{?buildarch}") ~= "noarch") then
+    rpm.define("octave_tar_suffix %{octave_host}-%{octave_api}")
+  else
+    rpm.define("octave_tar_suffix any-none")
+  end
 }
 
 # Install a package.  We use the octave pkg install command to install the
@@ -43,7 +49,7 @@
 %octave_pkg_install \
 mkdir -p %{buildroot}%{octprefix} \
 mkdir -p %{buildroot}%{octarchprefix} \
-%octave_cmd pkg("prefix","%{buildroot}%{octprefix}","%{buildroot}%{octarchprefix}");pkg("global_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("local_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("install","-nodeps","-verbose","%{_builddir}/%{buildsubdir}/build/%{octpkg}-%{version}-%{octave_host}-%{octave_api}.tar.gz");unlink(pkg("local_list"));unlink(pkg("global_list")); \
+%octave_cmd pkg("prefix","%{buildroot}%{octprefix}","%{buildroot}%{octarchprefix}");pkg("global_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("local_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("install","-nodeps","-verbose","%{_builddir}/%{buildsubdir}/build/%{octpkg}-%{version}-%{octave_tar_suffix}.tar.gz");unlink(pkg("local_list"));unlink(pkg("global_list")); \
 if [ -e %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m ] \
 then \
     mv %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m.orig \
@@ -56,7 +62,7 @@ echo "endfunction" >> %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m \
 # Run pkg tests - We need to reinstall to recreate 'octave_packages' so that
 # octave can find the package, then remove 'octave_packages' again.
 %octave_pkg_check \
-%octave_cmd pkg("prefix","%{buildroot}%{octprefix}","%{buildroot}%{octarchprefix}");pkg("global_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("local_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("install","-nodeps","-verbose","%{_builddir}/%{buildsubdir}/build/%{octpkg}-%{version}-%{octave_host}-%{octave_api}.tar.gz");pkg("load","%{octpkg}");runtests("%{buildroot}%{octpkgdir}");unlink(pkg("local_list"));unlink(pkg("global_list")); \
+%octave_cmd pkg("prefix","%{buildroot}%{octprefix}","%{buildroot}%{octarchprefix}");pkg("global_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("local_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("install","-nodeps","-verbose","%{_builddir}/%{buildsubdir}/build/%{octpkg}-%{version}-%{octave_tar_suffix}.tar.gz");pkg("load","%{octpkg}");runtests("%{buildroot}%{octpkgdir}");unlink(pkg("local_list"));unlink(pkg("global_list")); \
 %{nil}
 
 # preun script - we need to remove our uninstall protection and perhaps
