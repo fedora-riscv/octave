@@ -14,7 +14,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.0
-Release:        8%{?rcver:.rc%{rcver}}%{?dist}
+Release:        9%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -206,7 +206,7 @@ rm -r liboctave/cruft/fftpack
 
 # libinterp/dldfcn/__osmesa_print__.cc-tst is segfaulting
 # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78409
-sed -i -e '/^%/d' libinterp/dldfcn/__osmesa_print__.cc scripts/plot/util/__pltopt__.m
+sed -i -e '/^%/d' libinterp/dldfcn/__osmesa_print__.cc scripts/plot/util/{__opengl_info__,__pltopt__,allchild}.m test/publish/publish.tst
 
 autoreconf -i
 
@@ -430,6 +430,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Thu Dec 08 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.0-9
+- Disable more segfaulting tests
+
 * Thu Dec 08 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.0-8
 - Add patch to prevent gzip from deleting target file, instead emit warning
 - Drop debug code
