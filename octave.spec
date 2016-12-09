@@ -33,7 +33,8 @@ Patch1:         octave-implicit.patch
 # Remove project_group from appdata.xml file
 # https://bugzilla.redhat.com/show_bug.cgi?id=1293561
 Patch2:         octave-appdata.patch
-# Do not have gzip delete target file, emit warning message
+# Fix gzip
+# https://savannah.gnu.org/bugs/?49760
 Patch3:         octave-gzip.patch
 # Add needed #include <math.h> to bring in gnulib
 Patch4:         octave-gnulib.patch
@@ -186,7 +187,7 @@ This package contains documentation for Octave.
 %setup -q -n %{name}-%{version}%{?rctag}
 %patch1 -p1 -b .implicit
 %patch2 -p1 -b .appdata
-%patch3 -p1 -b .gzip
+%patch3 -p0 -b .gzip
 %patch4 -p1 -b .gnulib
 # __osmesa_print__ test is triggering a crash in libgcc, disable it
 # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78409
@@ -430,8 +431,8 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
-* Thu Dec 08 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.0-10
-- Try to get more info from gzip failure
+* Fri Dec 09 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.0-10
+- Patch gzip from upstream bug report
 
 * Thu Dec 08 2016 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.0-9
 - Disable more segfaulting tests
