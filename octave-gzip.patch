@@ -1,14 +1,36 @@
 diff -up octave-4.2.0/libinterp/dldfcn/gzip.cc.gzip octave-4.2.0/libinterp/dldfcn/gzip.cc
 --- octave-4.2.0/libinterp/dldfcn/gzip.cc.gzip	2016-11-13 08:16:10.000000000 -0700
-+++ octave-4.2.0/libinterp/dldfcn/gzip.cc	2016-12-08 13:23:56.325297196 -0700
-@@ -449,14 +449,15 @@ namespace octave
++++ octave-4.2.0/libinterp/dldfcn/gzip.cc	2016-12-08 20:59:14.216903463 -0700
+@@ -376,15 +376,18 @@ namespace octave
+             while (strm->avail_out == 0);
+ 
+             if (strm->avail_in != 0)
+-              throw std::runtime_error ("failed to wrote file");
++              throw std::runtime_error ("failed to write file");
+           }
+       }
+ 
+       void
+       close (void)
+       {
+-        if (deflateEnd (strm) != Z_OK)
+-          throw std::runtime_error ("failed to close zlib stream");
++        if (deflateEnd (strm) != Z_OK) {
++          char msg[256];
++          snprintf(msg, 255, "failed to close zlib stream: %s", strm->msg);
++          throw std::runtime_error (msg);
++        }
+         strm = nullptr;
+ 
+         // We have no error handling for failing to close source, let
+@@ -449,14 +452,15 @@ namespace octave
              {
                X::zip (path, dest_path);
              }
 -          catch (...)
 +          catch ( const std::exception & ex )
              {
-+              warning ("gzip: zip threw exception %s", ex.what());
++              warning ("gzip: zip threw exception: %s", ex.what());
                // Error "handling" is not including filename on the output list.
                // Also remove created file which maybe was not even created
                // in the first place.  Note that it is possible for the file
