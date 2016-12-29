@@ -1,6 +1,14 @@
-diff -up octave-4.0.0/etc/icons/octave.appdata.xml.in.appdata octave-4.0.0/etc/icons/octave.appdata.xml.in
---- octave-4.0.0/etc/icons/octave.appdata.xml.in.appdata	2015-05-23 08:21:53.000000000 -0600
-+++ octave-4.0.0/etc/icons/octave.appdata.xml.in	2015-12-30 16:19:24.324969806 -0700
+--- octave-4.2.0/etc/icons/octave.appdata.xml.in.appdata	2016-11-13 16:16:10.000000000 +0100
++++ octave-4.2.0/etc/icons/octave.appdata.xml.in	2016-12-29 14:54:32.389932341 +0100
+@@ -17,7 +17,7 @@
+ -->
+ <application>
+   <id type="desktop">%OCTAVE_DESKTOP_FILE%</id>
+-  <licence>GPLv3+</licence>
++  <licence>GPL-3.0+</licence>
+   <name>GNU Octave</name>
+   <summary>Interactive programming environment for numerical computations</summary>
+   <description>
 @@ -52,5 +52,4 @@
    </screenshots>
    <url type="homepage">http://www.octave.org</url>
