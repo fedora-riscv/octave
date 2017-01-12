@@ -14,7 +14,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.0
-Release:        12%{?rcver:.rc%{rcver}}%{?dist}
+Release:        12%{?rcver:.rc%{rcver}}%{?dist}.1
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -431,6 +431,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Thu Jan 12 2017 Igor Gnatenko <ignatenko@redhat.com> - 6:4.2.0-12.1
+- Rebuild for readline 7.x
+
 * Thu Dec 29 2016 Kalev Lember <klember@redhat.com> - 6:4.2.0-12
 - Fix license in appdata file (bug #1293561)
 
