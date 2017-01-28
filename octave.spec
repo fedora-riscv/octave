@@ -14,7 +14,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.0
-Release:        12%{?rcver:.rc%{rcver}}%{?dist}.1
+Release:        13%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -69,7 +69,7 @@ BuildRequires:  libappstream-glib
 %endif
 
 BuildRequires:  arpack-devel
-BuildRequires:  atlas-devel 
+BuildRequires:  atlas-devel
 BuildRequires:  bison
 BuildRequires:  curl-devel
 BuildRequires:  fftw-devel
@@ -126,7 +126,7 @@ Requires:       hdf5 = %{_hdf5_version}
 Requires:       java-headless
 Requires:       less
 Requires:       info
-Requires:       texinfo 
+Requires:       texinfo
 # Rrom scripts/general/private/__publish_latex_output__.m
 Requires:       tex(amssymb.sty)
 Requires:       tex(fontenc.sty)
@@ -214,7 +214,7 @@ autoreconf -i
 %build
 %global enable64 no
 export F77=gfortran
-# TODO: some items appear to be bundled in libcruft.. 
+# TODO: some items appear to be bundled in libcruft..
 #   gl2ps.c is bundled.  Anything else?
 %if 0%{?fedora} >= 21 || 0%{?rhel} >= 7
 %global atlasblaslib -ltatlas
@@ -431,6 +431,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Sat Jan 28 2017 Björn Esser <besser82@fedoraproject.org> - 6:4.2.0-13
+- Rebuilt for GCC-7
+
 * Thu Jan 12 2017 Igor Gnatenko <ignatenko@redhat.com> - 6:4.2.0-12.1
 - Rebuild for readline 7.x
 
@@ -823,7 +826,7 @@ fi
 
 * Sun Feb 28 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.2.4-3
 - Temporarily disable %%check to enable build to complete and ensure
-  upgrade path works.  This works around a crash in the imread.m image test 
+  upgrade path works.  This works around a crash in the imread.m image test
   script, this may be the same problem as described by upstream here:
   https://www-old.cae.wisc.edu/pipermail/octave-maintainers/2010-January/014891.html
 
@@ -848,7 +851,7 @@ fi
 - Re-add make check
 
 * Tue Sep 22 2009 Rakesh Pandit <rakesh@fedoraproject.org> - 6:3.2.2-5
-- Added categories to desktop file: Education, DataVisualization, NumericalAnalysis 
+- Added categories to desktop file: Education, DataVisualization, NumericalAnalysis
 
 * Mon Sep  7 2009 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.2.2-4
 - Rebuild against new ATLAS
@@ -899,7 +902,7 @@ fi
   well as C++.  Hopefully this will #435600 for real.
 
 * Sun Mar  2 2008 Alex Lancaster <alexlan[AT]fedoraproject org> - 6:3.0.0-5
-- Backout GCC 4.3 patch temporarily, causes trouble for octave-forge and 
+- Backout GCC 4.3 patch temporarily, causes trouble for octave-forge and
   may not be necessary (#435600)
 
 * Fri Feb 29 2008 Orion Poplawski <orion@cora.nwra.com> 3.0.0-4
@@ -936,7 +939,7 @@ fi
 - New release. Remove old patch.
 
 * Tue Sep 25 2007 Orion Poplawski <orion@ora.nwra.com> 2.9.14-2
-- Add /usr/share/octave/packages for add on packages and %%ghost 
+- Add /usr/share/octave/packages for add on packages and %%ghost
   /usr/share/octave/octave_packages
 - Add patch for octave package manager that will be going upstream
 
@@ -957,7 +960,7 @@ fi
 - New release.
 
 * Tue Feb 20 2007 Quentin Spencer <qspencer@users.sourceforge.net> 2.9.9-2
-- Fix install-info bug (Bug 219404). 
+- Fix install-info bug (Bug 219404).
 - Add dependency on octave API so that breakages will be detected. (Bug 224050).
 - Remove libtermcap-devel as build dependency (Bug 226768).
 
@@ -1096,7 +1099,7 @@ fi
 - Fix configure command. Remove irrelevant files from docs.
 
 * Fri May 27 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-3
-- Added patch for http://www.octave.org/mailing-lists/bug-octave/2005/617 
+- Added patch for http://www.octave.org/mailing-lists/bug-octave/2005/617
 
 * Thu May 26 2005 Quentin Spencer <qspencer@users.sourceforge.net> 2.1.71-2
 - Added dist tag.
@@ -1123,7 +1126,7 @@ fi
 - add $RPM_OPT_FLAGS
 
 * Tue Feb 15 2005 Ivana Varekova <varekova@redhat.com> 2.1.57-10
-- Fix bug 142477 - problem with signbit definition (Patch2) 
+- Fix bug 142477 - problem with signbit definition (Patch2)
 
 * Wed Jan 19 2005 Ivana Varekova <varekova@redhat.com> 2.1.57-9
 - Fix bug #142440 - change octave.spec: autoconf is BuildPrereq
@@ -1156,7 +1159,7 @@ fi
 * Tue Jun 15 2004 Elliot Lee <sopwith@redhat.com>
 - rebuilt
 
-* Tue Mar 30 2004 Karsten Hopp <karsten@redhat.de> 2.1.50-9 
+* Tue Mar 30 2004 Karsten Hopp <karsten@redhat.de> 2.1.50-9
 - remove builddir references from file list (#119112)
 
 * Tue Mar 02 2004 Elliot Lee <sopwith@redhat.com>
@@ -1322,7 +1325,7 @@ does not exist.
 - Rebuild with new C++
 
 * Mon Jul  3 2000 Matt Wilson <msw@redhat.com>
-- added missing %% before {_infodir} in the %%post 
+- added missing %% before {_infodir} in the %%post
 
 * Fri Jun 09 2000 Trond Eivind Glomsrød <teg@redhat.com>
 - 2.1.30 - the old version contains invalid C++ code
@@ -1372,8 +1375,8 @@ does not exist.
 - removed libreadline stuff from the file list
 
 * Mon Nov 24 1997 Otto Hammersmith <otto@redhat.com>
-- changed configure command to put things in $RPM_ARCH-rehat-linux, 
-  rather than genereated one... was causing problems between building 
+- changed configure command to put things in $RPM_ARCH-rehat-linux,
+  rather than genereated one... was causing problems between building
   on i686 build machine.
 
 * Mon Nov 17 1997 Otto Hammersmith <otto@redhat.com>
