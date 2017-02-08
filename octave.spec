@@ -14,7 +14,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.0
-Release:        13%{?rcver:.rc%{rcver}}%{?dist}
+Release:        14%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -431,6 +431,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Tue Feb 07 2017 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.0-14
+- Rebuild with fixed pkgconf (bug #1419685)
+
 * Sat Jan 28 2017 Björn Esser <besser82@fedoraproject.org> - 6:4.2.0-13
 - Rebuilt for GCC-7
 
