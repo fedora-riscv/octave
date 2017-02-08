@@ -60,9 +60,11 @@ echo "endfunction" >> %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m \
 %{nil}
 
 # Run pkg tests - We need to reinstall to recreate 'octave_packages' so that
-# octave can find the package, then remove 'octave_packages' again.
+# octave can find the package, then remove 'octave_packages' again, and re-strip
+# any shared objects.
 %octave_pkg_check \
 %octave_cmd pkg("prefix","%{buildroot}%{octprefix}","%{buildroot}%{octarchprefix}");pkg("global_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("local_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("install","-nodeps","-verbose","%{_builddir}/%{buildsubdir}/build/%{octpkg}-%{version}-%{octave_tar_suffix}.tar.gz");pkg("load","%{octpkg}");runtests("%{buildroot}%{octpkgdir}");unlink(pkg("local_list"));unlink(pkg("global_list")); \
+/usr/lib/rpm/brp-strip-shared %{__strip} \
 %{nil}
 
 # preun script - we need to remove our uninstall protection and perhaps
