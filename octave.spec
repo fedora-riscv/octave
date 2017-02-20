@@ -14,7 +14,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.0
-Release:        15%{?rcver:.rc%{rcver}}%{?dist}
+Release:        16%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -431,6 +431,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Mon Feb 20 2017 Rex Dieter <rdieter@fedoraproject.org> - 6:4.2.0-16
+- rebuild (qscintilla)
+
 * Wed Feb 08 2017 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.0-15
 - Have %%octave_pkg_check re-strip shared objects
 
