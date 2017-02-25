@@ -1,8 +1,6 @@
 # From src/version.h:#define OCTAVE_API_VERSION
 %global octave_api api-v49+
 
-%{?!_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}}
-
 # Building docs fails on EL7 due to https://bugzilla.redhat.com/show_bug.cgi?id=1064453
 %if 0%{?rhel} == 7
 %global builddocs 0
@@ -18,7 +16,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.2
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -176,6 +174,7 @@ make -C doc install-data install-html install-info install-pdf DESTDIR=%{buildro
 mkdir -p %{buildroot}%{_pkgdocdir}
 cp -ar AUTHORS BUGS ChangeLog examples NEWS README %{buildroot}%{_pkgdocdir}/
 cp -a doc/refcard/*.pdf %{buildroot}%{_pkgdocdir}/
+mv %{buildroot}%{_docdir}/%{name}/* %{buildroot}%{_pkgdocdir}/
 
 # No info directory
 rm -f %{buildroot}%{_infodir}/dir
@@ -376,6 +375,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Fri Feb 24 2017 Orion Poplawski <orion@cora.nwra.com> - 6:3.8.2-20
+- Use versioned doc dir again
+
 * Mon Feb 08 2016 Rex Dieter <rdieter@fedoraproject.org> - 6:3.8.2-19
 - rebuild (GraphicsMagick)
 
