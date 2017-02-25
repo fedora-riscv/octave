@@ -1,17 +1,9 @@
---- octave-4.2.0/etc/icons/octave.appdata.xml.in.appdata	2016-11-13 16:16:10.000000000 +0100
-+++ octave-4.2.0/etc/icons/octave.appdata.xml.in	2016-12-29 14:54:32.389932341 +0100
-@@ -17,7 +17,7 @@
- -->
- <application>
-   <id type="desktop">%OCTAVE_DESKTOP_FILE%</id>
--  <licence>GPLv3+</licence>
-+  <licence>GPL-3.0+</licence>
-   <name>GNU Octave</name>
-   <summary>Interactive programming environment for numerical computations</summary>
-   <description>
-@@ -52,5 +52,4 @@
-   </screenshots>
+diff -up octave-4.2.1/etc/icons/octave.appdata.xml.in.appdata octave-4.2.1/etc/icons/octave.appdata.xml.in
+--- octave-4.2.1/etc/icons/octave.appdata.xml.in.appdata	2017-02-24 20:46:50.581334701 -0700
++++ octave-4.2.1/etc/icons/octave.appdata.xml.in	2017-02-24 20:47:29.866515768 -0700
+@@ -58,5 +58,4 @@
+ 
    <url type="homepage">http://www.octave.org</url>
-   <updatecontact>maintainers@octave.org</updatecontact>
+   <update_contact>maintainers@octave.org</update_contact>
 -  <project_group>GNU</project_group>
- </application>
+ </component>

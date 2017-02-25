@@ -13,8 +13,8 @@
 
 Name:           octave
 Epoch:          6
-Version:        4.2.0
-Release:        16%{?rcver:.rc%{rcver}}%{?dist}
+Version:        4.2.1
+Release:        1%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -28,14 +28,9 @@ Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}%{rctag}.tar.lz
 # RPM macros for helping to build Octave packages
 Source1:        macros.octave
 Source2:        xorg.conf
-# Fix compilation with -Werror=implicit-declarations
-Patch1:         octave-implicit.patch
 # Remove project_group from appdata.xml file
 # https://bugzilla.redhat.com/show_bug.cgi?id=1293561
 Patch2:         octave-appdata.patch
-# Fix gzip
-# https://savannah.gnu.org/bugs/?49760
-Patch3:         octave-gzip.patch
 # Add needed #include <math.h> to bring in gnulib
 Patch4:         octave-gnulib.patch
 
@@ -185,9 +180,7 @@ This package contains documentation for Octave.
 
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
-%patch1 -p1 -b .implicit
 %patch2 -p1 -b .appdata
-%patch3 -p0 -b .gzip
 %patch4 -p1 -b .gnulib
 # __osmesa_print__ test is triggering a crash in libgcc, disable it
 # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78409
@@ -431,6 +424,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Fri Feb 24 2017 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.1-1
+- Update to 4.2.1
+
 * Mon Feb 20 2017 Rex Dieter <rdieter@fedoraproject.org> - 6:4.2.0-16
 - rebuild (qscintilla)
 
