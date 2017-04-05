@@ -14,7 +14,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.1
-Release:        1%{?rcver:.rc%{rcver}}%{?dist}
+Release:        2%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -424,6 +424,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Wed Apr  5 2017 Jerry James <loganjerry@gmail.com> - 6:4.2.1-2
+- Rebuild for glpk 4.61
+
 * Fri Feb 24 2017 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.1-1
 - Update to 4.2.1
 
