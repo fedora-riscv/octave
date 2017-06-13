@@ -5,6 +5,13 @@
 
 %global builddocs 1
 
+# Use Qt5 on F26+
+%if 0%{?fedora} >= 26
+%bcond_without qt5
+%else
+%bcond_with qt5
+%endif
+
 # For rc versions, change release manually
 #global rcver 2
 %if 0%{?rcver:1}
@@ -14,7 +21,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.1
-Release:        2%{?rcver:.rc%{rcver}}%{?dist}
+Release:        3%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -92,7 +99,12 @@ BuildRequires:  pcre-devel
 BuildRequires:  portaudio-devel
 BuildRequires:  qhull-devel
 BuildRequires:  qrupdate-devel
+%if %{with qt5}
+BuildRequires:  qscintilla-qt5-devel
+BuildRequires:  qt5-linguist
+%else
 BuildRequires:  qscintilla-devel
+%endif
 BuildRequires:  readline-devel
 BuildRequires:  suitesparse-devel
 BuildRequires:  tex(dvips)
@@ -424,6 +436,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Tue Jun 13 2017 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.1-3
+- Use Qt5 on Fedora 26+
+
 * Wed Apr  5 2017 Jerry James <loganjerry@gmail.com> - 6:4.2.1-2
 - Rebuild for glpk 4.61
 
