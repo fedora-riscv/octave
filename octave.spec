@@ -21,7 +21,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.1
-Release:        3%{?rcver:.rc%{rcver}}%{?dist}
+Release:        3%{?rcver:.rc%{rcver}}%{?dist}.1
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -436,6 +436,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Thu Jul 27 2017 Fedora Release Engineering <releng@fedoraproject.org> - 6:4.2.1-3.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
 * Tue Jun 13 2017 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.1-3
 - Use Qt5 on Fedora 26+
 
