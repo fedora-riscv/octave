@@ -436,7 +436,7 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
-* Fri Aug 10 2017 Orion Poplawski <orion@nwra.com> - 6:4.2.1-4
+* Thu Aug 10 2017 Orion Poplawski <orion@nwra.com> - 6:4.2.1-4
 - Install metainfo.xml files in %%octave_pkg_install
 
 * Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 6:4.2.1-3.2
