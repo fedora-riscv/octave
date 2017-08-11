@@ -21,7 +21,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.1
-Release:        3%{?rcver:.rc%{rcver}}%{?dist}.2
+Release:        4%{?rcver:.rc%{rcver}}%{?dist}.2
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -436,6 +436,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Fri Aug 10 2017 Orion Poplawski <orion@nwra.com> - 6:4.2.1-4
+- Install metainfo.xml files in %%octave_pkg_install
+
 * Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 6:4.2.1-3.2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
 
