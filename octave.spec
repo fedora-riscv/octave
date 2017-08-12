@@ -21,7 +21,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.1
-Release:        4%{?rcver:.rc%{rcver}}%{?dist}.2
+Release:        4%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -71,7 +71,11 @@ BuildRequires:  libappstream-glib
 %endif
 
 BuildRequires:  arpack-devel
+%if 0%{?fedora} >= 27
+BuildRequires:  openblas-devel
+%else
 BuildRequires:  atlas-devel
+%endif
 BuildRequires:  bison
 BuildRequires:  curl-devel
 BuildRequires:  fftw-devel
@@ -175,7 +179,12 @@ Summary:        Development headers and files for Octave
 Group:          Development/Libraries
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       readline-devel fftw-devel hdf5-devel zlib-devel
-Requires:       atlas-devel gcc-c++ gcc-gfortran
+Requires:       gcc-c++ gcc-gfortran
+%if 0%{?fedora} >= 27
+Requires:       openblas-devel
+%else
+Requires:       atlas-devel
+%endif
 
 %description devel
 The octave-devel package contains files needed for developing
@@ -240,8 +249,10 @@ export JAVA_HOME=%{java_home}
  --enable-float-truncate \
  %{?disabledocs} \
  --disable-silent-rules \
+%if 0%{?fedora} < 27
  --with-blas="-L%{_libdir}/atlas %{atlasblaslib}" \
  --with-lapack="-L%{_libdir}/atlas %{atlaslapacklib}" \
+%endif
  --with-java-libdir=$libjvm \
  --with-qrupdate \
  --with-amd --with-umfpack --with-colamd --with-ccolamd --with-cholmod \
@@ -436,6 +447,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Fri Aug 11 2017 Orion Poplawski <orion@nwra.com> - 6:4.2.1-4
+- Use openblas on Fedora 27+
+
 * Thu Aug 10 2017 Orion Poplawski <orion@nwra.com> - 6:4.2.1-4
 - Install metainfo.xml files in %%octave_pkg_install
 
