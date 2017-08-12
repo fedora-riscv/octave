@@ -52,15 +52,17 @@ mkdir -p %{buildroot}%{octarchprefix} \
 %octave_cmd pkg("prefix","%{buildroot}%{octprefix}","%{buildroot}%{octarchprefix}");pkg("global_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("local_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("install","-nodeps","-verbose","%{_builddir}/%{buildsubdir}/build/%{octpkg}-%{version}-%{octave_tar_suffix}.tar.gz");unlink(pkg("local_list"));unlink(pkg("global_list")); \
 if [ -e %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m ] \
 then \
-    mv %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m.orig \
+  mv %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m.orig \
 fi \
 echo "function on_uninstall (desc)" > %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m \
 echo "  error ('Can not uninstall %s installed by the redhat package manager', desc.name);" >> %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m \
 echo "endfunction" >> %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m \
 if [ -e %{_builddir}/%{buildsubdir}/build/%{octpkg}-%{version}/octave-%{octpkg}.metainfo.xml ] \
 then \
+  echo "Found octave-%{octpkg}.metainfo.xml" \
   mkdir -p %{buildroot}/%{_datadir}/appdata \
   cp -p %{_builddir}/%{buildsubdir}/build/%{octpkg}-%{version}/octave-%{octpkg}.metainfo.xml %{buildroot}/%{_datadir}/appdata/ \
+  appstream-util validate-relax --nonet %{buildroot}/%{_datadir}/appdata/octave-%{octpkg}.metainfo.xml \
 fi \
 %{nil}
 

@@ -21,7 +21,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.1
-Release:        4%{?rcver:.rc%{rcver}}%{?dist}
+Release:        4%{?rcver:.rc%{rcver}}%{?dist}.1
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -447,6 +447,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Sat Aug 12 2017 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.1-4.1
+- Run appstream-util validate-relax on metainfo.xml files
+
 * Fri Aug 11 2017 Orion Poplawski <orion@nwra.com> - 6:4.2.1-4
 - Use openblas on Fedora 27+
 
