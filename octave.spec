@@ -21,7 +21,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.1
-Release:        4%{?rcver:.rc%{rcver}}%{?dist}.1
+Release:        4%{?rcver:.rc%{rcver}}%{?dist}.2
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -185,6 +185,7 @@ Requires:       openblas-devel
 %else
 Requires:       atlas-devel
 %endif
+Requires:       libappstream-glib
 
 %description devel
 The octave-devel package contains files needed for developing
@@ -447,6 +448,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Sun Aug 12 2017 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.1-4.2
+- Make octave-devel require libappstream-glib
+
 * Sat Aug 12 2017 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.1-4.1
 - Run appstream-util validate-relax on metainfo.xml files
 
