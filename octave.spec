@@ -448,7 +448,7 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
-* Sun Aug 12 2017 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.1-4.2
+* Sun Aug 13 2017 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.1-4.2
 - Make octave-devel require libappstream-glib
 
 * Sat Aug 12 2017 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.1-4.1
