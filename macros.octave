@@ -70,7 +70,7 @@ fi \
 # octave can find the package, then remove 'octave_packages' again, and re-strip
 # any shared objects.
 %octave_pkg_check \
-%octave_cmd pkg("prefix","%{buildroot}%{octprefix}","%{buildroot}%{octarchprefix}");pkg("global_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("local_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("install","-nodeps","-verbose","%{_builddir}/%{buildsubdir}/build/%{octpkg}-%{version}-%{octave_tar_suffix}.tar.gz");pkg("load","%{octpkg}");runtests("%{buildroot}%{octpkgdir}");unlink(pkg("local_list"));unlink(pkg("global_list")); \
+%octave_cmd pkg("prefix","%{buildroot}%{octprefix}","%{buildroot}%{octarchprefix}");pkg("local_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("list");pkg("install","-verbose","%{_builddir}/%{buildsubdir}/build/%{octpkg}-%{version}-%{octave_tar_suffix}.tar.gz");pkg("load","%{octpkg}");pkg("list");runtests("%{buildroot}%{octpkgdir}");unlink(pkg("local_list")); \
 /usr/lib/rpm/brp-strip-shared %{__strip} \
 %{nil}
 
