@@ -21,7 +21,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.1
-Release:        4%{?rcver:.rc%{rcver}}%{?dist}.2
+Release:        4%{?rcver:.rc%{rcver}}%{?dist}.3
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -381,7 +381,6 @@ make check || :
 
 %post
 /sbin/ldconfig
-/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 %if %{builddocs}
 /sbin/install-info --info-dir=%{_infodir} --section="Programming" \
         %{_infodir}/octave.info || :
@@ -394,15 +393,7 @@ if [ "$1" = "0" ]; then
 fi
 %endif
 
-%postun
-/sbin/ldconfig
-if [ $1 -eq 0 ] ; then
-    /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
-    /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-fi
-
-%posttrans
-/usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+%postun -p /sbin/ldconfig
 
 
 %files
@@ -448,6 +439,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Fri Jan 05 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 6:4.2.1-4.3
+- Remove obsolete scriptlets
+
 * Sun Aug 13 2017 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.1-4.2
 - Make octave-devel require libappstream-glib
 
