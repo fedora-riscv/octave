@@ -21,7 +21,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.1
-Release:        4%{?rcver:.rc%{rcver}}%{?dist}.4
+Release:        4%{?rcver:.rc%{rcver}}%{?dist}.5
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -439,6 +439,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Thu Feb 08 2018 Jitka Plesnikova <jplesnik@redhat.com> - 6:4.2.1-4.5
+- Rebuild for hdf5 1.8.20
+
 * Mon Feb 05 2018 Jitka Plesnikova <jplesnik@redhat.com> - 6:4.2.1-4.4
 - Rebuild for new gfortran
 
