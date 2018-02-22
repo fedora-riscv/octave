@@ -21,7 +21,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.1
-Release:        4%{?rcver:.rc%{rcver}}%{?dist}.5
+Release:        5%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -82,6 +82,7 @@ BuildRequires:  fftw-devel
 BuildRequires:  flex
 BuildRequires:  fltk-devel
 BuildRequires:  ftgl-devel
+BuildRequires:  gcc-c++
 BuildRequires:  gcc-gfortran
 BuildRequires:  ghostscript
 BuildRequires:  gl2ps-devel
@@ -439,6 +440,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Wed Feb 21 2018 Orion Poplawski <orion@nwra.com> - 6:4.2.1-5
+- Add BR gcc-c++
+
 * Thu Feb 08 2018 Jitka Plesnikova <jplesnik@redhat.com> - 6:4.2.1-4.5
 - Rebuild for hdf5 1.8.20
 
