@@ -20,8 +20,8 @@
 
 Name:           octave
 Epoch:          6
-Version:        4.2.1
-Release:        5%{?rcver:.rc%{rcver}}%{?dist}
+Version:        4.2.2
+Release:        1%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -376,9 +376,7 @@ fi
 $Xorg -noreset +extension GLX +extension RANDR +extension RENDER -logfile ./xorg.log -config ./xorg.conf :99 &
 sleep 2
 export DISPLAY=:99
-# libinterp/dldfcn/__osmesa_print__.cc-tst is segfaulting
-# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78409
-make check || :
+make check
 
 %post
 /sbin/ldconfig
@@ -440,6 +438,10 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Wed Mar 14 2018 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.2-1
+- Update to 4.2.2
+- Fail build again if make check fails
+
 * Wed Feb 21 2018 Orion Poplawski <orion@nwra.com> - 6:4.2.1-5
 - Add BR gcc-c++
 
