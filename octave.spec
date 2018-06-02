@@ -21,7 +21,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.2
-Release:        1%{?rcver:.rc%{rcver}}%{?dist}
+Release:        2%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -379,7 +379,7 @@ export DISPLAY=:99
 make check
 
 %post
-/sbin/ldconfig
+%{?ldconfig}
 %if %{builddocs}
 /sbin/install-info --info-dir=%{_infodir} --section="Programming" \
         %{_infodir}/octave.info || :
@@ -392,7 +392,7 @@ if [ "$1" = "0" ]; then
 fi
 %endif
 
-%postun -p /sbin/ldconfig
+%ldconfig_postun
 
 
 %files
@@ -438,6 +438,10 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Sat Jun  2 2018 Jerry James <loganjerry@gmail.com> - 6:4.2.2-2
+- Rebuild for glpk 4.65
+- Use ldconfig macros
+
 * Wed Mar 14 2018 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.2-1
 - Update to 4.2.2
 - Fail build again if make check fails
