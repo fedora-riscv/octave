@@ -40,6 +40,8 @@ Source2:        xorg.conf
 Patch2:         octave-appdata.patch
 # Add needed #include <math.h> to bring in gnulib
 Patch4:         octave-gnulib.patch
+# Add #include <QButtonGroup> to fix build with latest Qt
+Patch5:         octave-qbuttongroup.patch
 
 Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
@@ -205,6 +207,7 @@ This package contains documentation for Octave.
 %setup -q -n %{name}-%{version}%{?rctag}
 %patch2 -p1 -b .appdata
 %patch4 -p1 -b .gnulib
+%patch5 -p1 -b .qbuttongroup
 # __osmesa_print__ test is triggering a crash in libgcc, disable it
 # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78409
 #sed -i -e '/^%!/d' libinterp/dldfcn/__osmesa_print__.cc
@@ -441,6 +444,7 @@ fi
 * Sat Jun  2 2018 Jerry James <loganjerry@gmail.com> - 6:4.2.2-2
 - Rebuild for glpk 4.65
 - Use ldconfig macros
+- Add -qbuttongroup patch to fix FTBFS
 
 * Wed Mar 14 2018 Orion Poplawski <orion@cora.nwra.com> - 6:4.2.2-1
 - Update to 4.2.2
