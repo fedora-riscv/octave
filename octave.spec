@@ -21,9 +21,8 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.2
-Release:        2%{?rcver:.rc%{rcver}}%{?dist}
+Release:        3%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
-Group:          Applications/Engineering
 License:        GPLv3+
 URL:            http://www.octave.org
 
@@ -137,6 +136,7 @@ Requires:       epstool
 Requires:       gnuplot
 Requires:       gnuplot-common
 Requires:       hdf5 = %{_hdf5_version}
+Requires:       hicolor-icon-theme
 Requires:       java-headless
 Requires:       less
 Requires:       info
@@ -272,10 +272,10 @@ then
   exit 1
 fi
 
-make OCTAVE_RELEASE="Fedora %{version}%{?rctag}-%{release}" %{?_smp_mflags}
+%make_build OCTAVE_RELEASE="Fedora %{version}%{?rctag}-%{release}"
 
 %install
-make install DESTDIR=%{buildroot}
+%make_install
 
 # Docs - In case we didn't build them and to explicitly install pre-built docs
 make install-data install-html install-info install-pdf DESTDIR=%{buildroot}
@@ -441,6 +441,10 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Sun Jun 17 2018 Orion Poplawski <orion@nwra.com> - 6:4.2.2-3
+- Add requires hicolor-icon-theme
+- Use make macros
+
 * Sat Jun  2 2018 Jerry James <loganjerry@gmail.com> - 6:4.2.2-2
 - Rebuild for glpk 4.65
 - Use ldconfig macros
