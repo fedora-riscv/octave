@@ -21,7 +21,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.2
-Release:        3%{?rcver:.rc%{rcver}}%{?dist}
+Release:        4%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -34,6 +34,9 @@ Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}%{rctag}.tar.lz
 # RPM macros for helping to build Octave packages
 Source1:        macros.octave
 Source2:        xorg.conf
+# Fix crash with Ctrl-D
+# https://bugzilla.redhat.com/show_bug.cgi?id=1589460
+Patch0:         octave-crash.patch
 # Remove project_group from appdata.xml file
 # https://bugzilla.redhat.com/show_bug.cgi?id=1293561
 Patch2:         octave-appdata.patch
@@ -205,6 +208,7 @@ This package contains documentation for Octave.
 
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
+%patch0 -p1 -b .crash
 %patch2 -p1 -b .appdata
 %patch4 -p1 -b .gnulib
 %patch5 -p1 -b .qbuttongroup
@@ -441,6 +445,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Thu Jun 21 2018 Orion Poplawski <orion@nwra.com> - 6:4.2.2-4
+- Add patch to fix crash with Ctrl-D (bug #1589460)
+
 * Sun Jun 17 2018 Orion Poplawski <orion@nwra.com> - 6:4.2.2-3
 - Add requires hicolor-icon-theme
 - Use make macros
