@@ -57,12 +57,14 @@ fi \
 echo "function on_uninstall (desc)" > %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m \
 echo "  error ('Can not uninstall %s installed by the redhat package manager', desc.name);" >> %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m \
 echo "endfunction" >> %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m \
-if [ -e %{_builddir}/%{buildsubdir}/build/%{octpkg}-%{version}/octave-%{octpkg}.metainfo.xml ] \
+if [ -e %{_builddir}/%{buildsubdir}/build/%{octpkg}-%{version}/*.metainfo.xml ] \
 then \
-  echo "Found octave-%{octpkg}.metainfo.xml" \
+  echo "Found .metainfo.xml appdata file" \
   mkdir -p %{buildroot}/%{_datadir}/appdata \
-  cp -p %{_builddir}/%{buildsubdir}/build/%{octpkg}-%{version}/octave-%{octpkg}.metainfo.xml %{buildroot}/%{_datadir}/appdata/ \
-  appstream-util validate-relax --nonet %{buildroot}/%{_datadir}/appdata/octave-%{octpkg}.metainfo.xml \
+  cp -p %{_builddir}/%{buildsubdir}/build/%{octpkg}-%{version}/*.metainfo.xml %{buildroot}/%{_datadir}/appdata/ \
+  appstream-util validate-relax --nonet %{buildroot}/%{_datadir}/appdata/*.metainfo.xml \
+else \
+  echo "Did not find a .metainfo.xml appdata file" \
 fi \
 %{nil}
 
