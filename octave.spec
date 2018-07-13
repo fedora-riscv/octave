@@ -21,7 +21,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.2
-Release:        6%{?rcver:.rc%{rcver}}%{?dist}
+Release:        6%{?rcver:.rc%{rcver}}%{?dist}.1
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -445,6 +445,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 6:4.2.2-6.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
+
 * Mon Jul 02 2018 Colin B. Macdonald <cbm@m.fsf.org> - 6:4.2.2-6
 - macros: support other names for appdata .metainfo.xml files
 
