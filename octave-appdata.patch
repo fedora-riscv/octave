@@ -1,9 +1,0 @@
-diff -up octave-4.2.1/etc/icons/octave.appdata.xml.in.appdata octave-4.2.1/etc/icons/octave.appdata.xml.in
---- octave-4.2.1/etc/icons/octave.appdata.xml.in.appdata	2017-02-24 20:46:50.581334701 -0700
-+++ octave-4.2.1/etc/icons/octave.appdata.xml.in	2017-02-24 20:47:29.866515768 -0700
-@@ -58,5 +58,4 @@
- 
-   <url type="homepage">http://www.octave.org</url>
-   <update_contact>maintainers@octave.org</update_contact>
--  <project_group>GNU</project_group>
- </component>

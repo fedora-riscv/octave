@@ -60,9 +60,9 @@ echo "endfunction" >> %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m \
 if [ -e %{_builddir}/%{buildsubdir}/build/%{octpkg}-%{version}/*.metainfo.xml ] \
 then \
   echo "Found .metainfo.xml appdata file" \
-  mkdir -p %{buildroot}/%{_datadir}/appdata \
-  cp -p %{_builddir}/%{buildsubdir}/build/%{octpkg}-%{version}/*.metainfo.xml %{buildroot}/%{_datadir}/appdata/ \
-  appstream-util validate-relax --nonet %{buildroot}/%{_datadir}/appdata/*.metainfo.xml \
+  mkdir -p %{buildroot}/%{_metainfodir} \
+  cp -p %{_builddir}/%{buildsubdir}/build/%{octpkg}-%{version}/*.metainfo.xml %{buildroot}/%{_metainfodir}/ \
+  appstream-util validate-relax --nonet %{buildroot}/%{_metainfodir}/*.metainfo.xml \
 else \
   echo "Did not find a .metainfo.xml appdata file" \
 fi \

@@ -1,5 +1,5 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%global octave_api api-v51
+%global octave_api api-v52
 
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
@@ -20,8 +20,8 @@
 
 Name:           octave
 Epoch:          6
-Version:        4.2.2
-Release:        6%{?rcver:.rc%{rcver}}%{?dist}.1
+Version:        4.4.1
+Release:        1%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -34,16 +34,14 @@ Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}%{rctag}.tar.lz
 # RPM macros for helping to build Octave packages
 Source1:        macros.octave
 Source2:        xorg.conf
+# Prebuilt docs from Fedora for EPEL
+Source3:        octave-4.4.1-docs.tar.gz
 # Fix crash with Ctrl-D
 # https://bugzilla.redhat.com/show_bug.cgi?id=1589460
 Patch0:         octave-crash.patch
-# Remove project_group from appdata.xml file
-# https://bugzilla.redhat.com/show_bug.cgi?id=1293561
-Patch2:         octave-appdata.patch
-# Add needed #include <math.h> to bring in gnulib
-Patch4:         octave-gnulib.patch
-# Add #include <QButtonGroup> to fix build with latest Qt
-Patch5:         octave-qbuttongroup.patch
+# SUNDIALS 3 support
+# https://savannah.gnu.org/bugs/?52475
+Patch1:         octave-sundials3.patch
 
 Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
@@ -67,6 +65,7 @@ Provides:       bundled(slatec-fn)
 BuildRequires:  lzip
 
 # For autoreconf
+BuildRequires:  automake
 BuildRequires:  libtool
 # For validating desktop and appdata files
 BuildRequires:  desktop-file-utils
@@ -81,6 +80,7 @@ BuildRequires:  openblas-devel
 BuildRequires:  atlas-devel
 %endif
 BuildRequires:  bison
+BuildRequires:  bzip2-devel
 BuildRequires:  curl-devel
 BuildRequires:  fftw-devel
 BuildRequires:  flex
@@ -96,6 +96,9 @@ BuildRequires:  gperf
 BuildRequires:  GraphicsMagick-c++-devel
 BuildRequires:  hdf5-devel
 BuildRequires:  java-devel
+%if 0%{?fedora}
+BuildRequires:  javapackages-local
+%endif
 BuildRequires:  less
 BuildRequires:  libsndfile-devel
 BuildRequires:  libX11-devel
@@ -111,11 +114,13 @@ BuildRequires:  qrupdate-devel
 %if %{with qt5}
 BuildRequires:  qscintilla-qt5-devel
 BuildRequires:  qt5-linguist
+BuildRequires:  qt5-qttools-devel
 %else
 BuildRequires:  qscintilla-devel
 %endif
 BuildRequires:  readline-devel
 BuildRequires:  suitesparse-devel
+BuildRequires:  sundials-devel
 BuildRequires:  tex(dvips)
 BuildRequires:  texinfo
 BuildRequires:  texinfo-tex
@@ -209,30 +214,19 @@ This package contains documentation for Octave.
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
 %patch0 -p1 -b .crash
-%patch2 -p1 -b .appdata
-%patch4 -p1 -b .gnulib
-%patch5 -p1 -b .qbuttongroup
-# __osmesa_print__ test is triggering a crash in libgcc, disable it
-# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78409
-#sed -i -e '/^%!/d' libinterp/dldfcn/__osmesa_print__.cc
-# Explicitly use gnulib headers
-%if 0%{?fedora} >= 24
-#find -name \*.cc -o -name \*.h -o -name \*.yy | xargs sed -i -e 's/#include <c\(math\|stdlib\)>/#include <\1.h>/'
-%endif
-#find -name \*.h -o -name \*.cc | xargs sed -i -e 's/<config.h>/"config.h"/' -e 's/<base-list.h>/"base-list.h"/'
-
-# Check permissions
-find -name *.cc -exec chmod 644 {} \;
+# EPEL7's autoconf/automake is too old so don't do
+# unneeded patches there
+%if 0%{?fedora}
+%patch1 -p1 -b .sundials3
 
 # Remove unused fftpack
-sed -i -e '/fftpack/d' liboctave/cruft/module.mk
-rm -r liboctave/cruft/fftpack
+sed -i -e '/fftpack/d' liboctave/external/module.mk
+rm -r liboctave/external/fftpack
 
-# libinterp/dldfcn/__osmesa_print__.cc-tst is segfaulting
-# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78409
-sed -i -e '/^%/d' libinterp/dldfcn/__osmesa_print__.cc scripts/plot/util/{__opengl_info__,__pltopt__,allchild}.m test/publish/publish.tst
-
+# Touching module.mk appears to trigger the need for this
 autoreconf -i
+%endif
+
 
 %build
 %global enable64 no
@@ -254,6 +248,8 @@ libjvm=$(find /usr/lib/jvm/jre/lib -name libjvm.so -printf %h)
 export JAVA_HOME=%{java_home}
 # JIT support is still experimental, and causes a segfault on ARM.
 # --enable-float-truncate - https://savannah.gnu.org/bugs/?40560
+# sundials headers need to know where to find suitesparse headers
+export CPPFLAGS=-I%{_includedir}/suitesparse
 %configure --enable-shared --disable-static --enable-64=%enable64 \
  --enable-float-truncate \
  %{?disabledocs} \
@@ -262,6 +258,7 @@ export JAVA_HOME=%{java_home}
  --with-blas="-L%{_libdir}/atlas %{atlasblaslib}" \
  --with-lapack="-L%{_libdir}/atlas %{atlaslapacklib}" \
 %endif
+ --with-java-includedir=/usr/lib/jvm/java/include \
  --with-java-libdir=$libjvm \
  --with-qrupdate \
  --with-amd --with-umfpack --with-colamd --with-ccolamd --with-cholmod \
@@ -290,6 +287,9 @@ cp -a doc/refcard/*.pdf %{buildroot}%{_pkgdocdir}/
 # No info directory
 rm -f %{buildroot}%{_infodir}/dir
 
+# EL7's makeinfo doesn't support @sortas, so use prebuilt docs
+%{?el7:tar xvf %SOURCE3 -C %{buildroot}}
+
 # Make library links
 mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d
 echo "%{_libdir}/octave/%{version}%{?rctag}" > %{buildroot}%{_sysconfdir}/ld.so.conf.d/octave-%{_arch}.conf
@@ -300,9 +300,11 @@ perl -pi -e "s,%{buildroot},," %{buildroot}%{_datadir}/%{name}/ls-R
 # Make sure ls-R exists
 touch %{buildroot}%{_datadir}/%{name}/ls-R
 
-desktop-file-validate %{buildroot}%{_datadir}/applications/www.octave.org-octave.desktop
+desktop-file-validate %{buildroot}%{_datadir}/applications/org.octave.Octave.desktop
+# RHEL7 still doesn't like the GNU project_group
+%{?el7:sed -i -e /project_group/d %{buildroot}/%{_datadir}/metainfo/org.octave.Octave.appdata.xml}
 %if 0%{?fedora} || 0%{?rhel} >= 7
-appstream-util validate-relax --nonet %{buildroot}/%{_datadir}/appdata/*.appdata.xml
+appstream-util validate-relax --nonet %{buildroot}/%{_datadir}/metainfo/org.octave.Octave.appdata.xml
 %endif
 
 # Create directories for add-on packages
@@ -314,7 +316,7 @@ mkdir -p %{buildroot}%{_libdir}/%{name}/packages
 touch %{buildroot}%{_datadir}/%{name}/octave_packages
 
 # Fix multilib installs
-for include in config defaults
+for include in octave-config defaults
 do
    mv %{buildroot}%{_includedir}/%{name}-%{version}%{?rctag}/%{name}/${include}.h \
       %{buildroot}%{_includedir}/%{name}-%{version}%{?rctag}/%{name}/${include}-%{__isa_bits}.h
@@ -417,10 +419,10 @@ fi
 %{_mandir}/man1/octave*.1.*
 %{_infodir}/liboctave.info*
 %{_infodir}/octave.info*
-%{_datadir}/appdata/www.octave.org-octave.appdata.xml
-%{_datadir}/applications/www.octave.org-octave.desktop
+%{_datadir}/applications/org.octave.Octave.desktop
 %{_datadir}/icons/hicolor/*/apps/octave.png
 %{_datadir}/icons/hicolor/scalable/apps/octave.svg
+%{_datadir}/metainfo/org.octave.Octave.appdata.xml
 # octave_packages is %ghost, so need to list everything else separately
 %dir %{_datadir}/octave
 %{_datadir}/octave/%{version}%{?rctag}/
@@ -445,6 +447,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Sun Nov 11 2018 Orion Poplawski <orion@nwra.com> - 6:4.4.1-1
+- Update to 4.4.1
+
 * Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 6:4.2.2-6.1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
