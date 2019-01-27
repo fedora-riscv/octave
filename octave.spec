@@ -387,22 +387,7 @@ sleep 2
 export DISPLAY=:99
 make check
 
-%post
-%{?ldconfig}
-%if %{builddocs}
-/sbin/install-info --info-dir=%{_infodir} --section="Programming" \
-        %{_infodir}/octave.info || :
-%endif
-
-%preun
-%if %{builddocs}
-if [ "$1" = "0" ]; then
-   /sbin/install-info --delete --info-dir=%{_infodir} %{_infodir}/octave.info || :
-fi
-%endif
-
-%ldconfig_postun
-
+%ldconfig_scriptlets
 
 %files
 %license COPYING
