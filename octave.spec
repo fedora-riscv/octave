@@ -187,7 +187,6 @@ C++, C, Fortran, or other languages.
 
 %package devel
 Summary:        Development headers and files for Octave
-Group:          Development/Libraries
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       readline-devel fftw-devel hdf5-devel zlib-devel
 Requires:       gcc-c++ gcc-gfortran
@@ -205,7 +204,6 @@ applications which use GNU Octave.
 
 %package doc
 Summary:        Documentation for Octave
-Group:          Documentation
 BuildArch:      noarch
 
 %description doc
