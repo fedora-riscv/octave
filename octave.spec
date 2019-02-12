@@ -15,13 +15,14 @@
 # For rc versions, change release manually
 #global rcver 2
 %if 0%{?rcver:1}
-%global rctag -rc%{?rcver}
+%global rctag  -rc%{?rcver}
+%global relsuf .rc%{?rcver}
 %endif
 
 Name:           octave
 Epoch:          6
 Version:        4.4.1
-Release:        1%{?rcver:.rc%{rcver}}%{?dist}.1
+Release:        2%{?relsuf}%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -430,6 +431,10 @@ make check
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Tue Feb 12 2019 Björn Esser <besser82@fedoraproject.org> - 6:4.4.1-2
+- rebuilt (qscintilla)
+- Fix pre-release tag
+
 * Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 6:4.4.1-1.1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
