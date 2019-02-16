@@ -22,7 +22,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.4.1
-Release:        2%{?relsuf}%{?dist}
+Release:        3%{?relsuf}%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -431,6 +431,9 @@ make check
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Sat Feb 16 2019 Björn Esser <besser82@fedoraproject.org> - 6:4.4.1-3
+- rebuilt (qscintilla)
+
 * Tue Feb 12 2019 Björn Esser <besser82@fedoraproject.org> - 6:4.4.1-2
 - rebuilt (qscintilla)
 - Fix pre-release tag
