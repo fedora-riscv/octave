@@ -22,7 +22,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.4.1
-Release:        4%{?relsuf}%{?dist}
+Release:        5%{?relsuf}%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -166,9 +166,6 @@ Requires:       tex(color.sty)
 Requires:       tex(epsfig.sty)
 Requires:       tex(geometry.sty)
 Requires:       tex(graphicx.sty)
-
-Requires(post): info
-Requires(preun): info
 
 
 %description
@@ -431,6 +428,9 @@ make check
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Thu Mar  7 2019 Tim Landscheidt <tim@tim-landscheidt.de> - 6:4.4.1-5
+- Remove obsolete requirements for post/preun scriptlets
+
 * Sun Feb 17 2019 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 6:4.4.1-4
 - Rebuild for readline 8.0
 
