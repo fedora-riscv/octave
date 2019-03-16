@@ -22,7 +22,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.4.1
-Release:        5%{?relsuf}%{?dist}
+Release:        6%{?relsuf}%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -428,6 +428,9 @@ make check
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Sat Mar 16 2019 Orion Poplawski <orion@nwra.com> - 6:4.4.1-6
+- Rebuild for hdf5 1.10.5
+
 * Thu Mar  7 2019 Tim Landscheidt <tim@tim-landscheidt.de> - 6:4.4.1-5
 - Remove obsolete requirements for post/preun scriptlets
 
