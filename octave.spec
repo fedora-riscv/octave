@@ -22,7 +22,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.4.1
-Release:        7%{?relsuf}%{?dist}
+Release:        8%{?relsuf}%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -43,6 +43,10 @@ Patch0:         octave-crash.patch
 # SUNDIALS 3 support
 # https://savannah.gnu.org/bugs/?52475
 Patch1:         octave-sundials3.patch
+# Proper EOF handling
+# https://bugzilla.redhat.com/show_bug.cgi?id=1705129
+# https://hg.savannah.gnu.org/hgweb/octave/rev/c3716220d5b9
+Patch2:         octave-eof.patch
 
 Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
@@ -210,6 +214,7 @@ This package contains documentation for Octave.
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
 %patch0 -p1 -b .crash
+%patch2 -p1 -b .eof
 # EPEL7's autoconf/automake is too old so don't do
 # unneeded patches there
 %if 0%{?fedora}
@@ -428,6 +433,9 @@ make check
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Mon May  6 2019 Orion Poplawski <orion@nwra.com> - 6:4.4.1-8
+- Backport upstream patch for proper EOF handling (bugz#1705129)
+
 * Tue Apr 23 2019 Björn Esser <besser82@fedoraproject.org> - 6:4.4.1-7
 - rebuilt (sundials)
 

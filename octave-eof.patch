@@ -1,0 +1,15 @@
+diff -up octave-4.4.1/libinterp/corefcn/sysdep.cc.eof octave-4.4.1/libinterp/corefcn/sysdep.cc
+--- octave-4.4.1/libinterp/corefcn/sysdep.cc.eof	2019-05-06 21:43:06.906724728 -0600
++++ octave-4.4.1/libinterp/corefcn/sysdep.cc	2019-05-06 21:44:58.445306461 -0600
+@@ -559,7 +559,10 @@ octave_kbhit (bool wait)
+   int c = std::cin.get ();
+ 
+   if (std::cin.fail () || std::cin.eof ())
+-    std::cin.clear ();
++    {
++      std::cin.clear ();
++      clearerr (stdin);
++    }
+ 
+   // Restore it, enabling system call restarts (if possible).
+   octave::set_interrupt_handler (saved_interrupt_handler, true);
