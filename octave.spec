@@ -21,7 +21,7 @@
 Name:           octave
 Epoch:          6
 Version:        4.2.2
-Release:        6%{?rcver:.rc%{rcver}}%{?dist}.1
+Release:        7%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -44,6 +44,10 @@ Patch2:         octave-appdata.patch
 Patch4:         octave-gnulib.patch
 # Add #include <QButtonGroup> to fix build with latest Qt
 Patch5:         octave-qbuttongroup.patch
+# Proper EOF handling
+# https://bugzilla.redhat.com/show_bug.cgi?id=1705129
+# https://hg.savannah.gnu.org/hgweb/octave/rev/c3716220d5b9
+Patch6:         octave-eof.patch
 
 Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
@@ -212,6 +216,7 @@ This package contains documentation for Octave.
 %patch2 -p1 -b .appdata
 %patch4 -p1 -b .gnulib
 %patch5 -p1 -b .qbuttongroup
+%patch6 -p1 -b .eof
 # __osmesa_print__ test is triggering a crash in libgcc, disable it
 # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78409
 #sed -i -e '/^%!/d' libinterp/dldfcn/__osmesa_print__.cc
@@ -445,6 +450,9 @@ fi
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Mon May  6 2019 Orion Poplawski <orion@nwra.com> - 6:4.2.2-7
+- Backport upstream patch for proper EOF handling (bugz#1705129)
+
 * Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 6:4.2.2-6.1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
