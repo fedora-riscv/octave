@@ -22,7 +22,7 @@
 Name:           octave
 Epoch:          6
 Version:        5.1.0
-Release:        1%{?rcver:.rc%{rcver}}%{?dist}.1
+Release:        2%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -410,6 +410,9 @@ make check %{?el7:|| :}
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Wed Jul 31 2019 Orion Poplawski <orion@nwra.com> - 6:5.1.0-2
+- Drop use of %%buildarch in macros.octave (bugz#1733898)
+
 * Thu Jul 25 2019 Fedora Release Engineering <releng@fedoraproject.org> - 6:5.1.0-1.1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
