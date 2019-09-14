@@ -5,8 +5,8 @@
 
 %global builddocs 1
 
-# Use Qt5 on F26+
-%if 0%{?fedora}
+# Use Qt5 on Fedora and EL8+
+%if 0%{?fedora} || 0%{?rhel} >= 8
 %bcond_without qt5
 %else
 %bcond_with qt5
