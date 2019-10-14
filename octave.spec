@@ -22,7 +22,7 @@
 Name:           octave
 Epoch:          6
 Version:        5.1.0
-Release:        2%{?rcver:.rc%{rcver}}%{?dist}
+Release:        2%{?rcver:.rc%{rcver}}%{?dist}.1
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -410,6 +410,9 @@ make check %{?el7:|| :}
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Mon Oct 14 2019 Orion Poplawski <orion@nwra.com> - 6:5.1.0-2.1
+- Rebuild for suitesparse 5.4.0
+
 * Wed Jul 31 2019 Orion Poplawski <orion@nwra.com> - 6:5.1.0-2
 - Drop use of %%buildarch in macros.octave (bugz#1733898)
 
