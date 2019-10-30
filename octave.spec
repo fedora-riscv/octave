@@ -19,6 +19,9 @@
 %global relsuf .rc%{?rcver}
 %endif
 
+%global optflags %{optflags} -flto=auto
+%global build_ldflags %{build_ldflags} -flto
+
 Name:           octave
 Epoch:          6
 Version:        5.1.0
@@ -213,6 +216,9 @@ autoreconf -i
 
 
 %build
+export AR=%{_bindir}/gcc-ar
+export RANLIB=%{_bindir}/gcc-ranlib
+export NM=%{_bindir}/gcc-nm
 %global enable64 no
 export F77=gfortran
 # TODO: some items appear to be bundled in libcruft..
