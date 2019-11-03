@@ -12,6 +12,9 @@
 %bcond_with qt5
 %endif
 
+# Compile with ILP64 BLAS - not yet working
+%bcond_with blas64
+
 # For rc versions, change release manually
 #global rcver 2
 %if 0%{?rcver:1}
@@ -25,7 +28,7 @@
 Name:           octave
 Epoch:          6
 Version:        5.1.0
-Release:        3%{?rcver:.rc%{rcver}}%{?dist}
+Release:        4%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -117,7 +120,11 @@ BuildRequires:  qt5-qttools-devel
 BuildRequires:  qscintilla-devel
 %endif
 BuildRequires:  readline-devel
+%if %{with blas64}
+BuildRequires:  suitesparse64-devel
+%else
 BuildRequires:  suitesparse-devel
+%endif
 BuildRequires:  sundials-devel
 BuildRequires:  tex(dvips)
 BuildRequires:  texinfo
@@ -207,6 +214,9 @@ This package contains documentation for Octave.
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
 %patch2 -p1 -b .eof
+%if %{with blas64}
+sed -i -e 's/OCTAVE_CHECK_LIB(suitesparseconfig,/OCTAVE_CHECK_LIB(suitesparseconfig64,/' configure.ac
+%endif
 # EPEL7's autoconf/automake is too old so don't do
 # unneeded patches there
 %if 0%{?fedora}
@@ -219,7 +229,6 @@ autoreconf -i
 export AR=%{_bindir}/gcc-ar
 export RANLIB=%{_bindir}/gcc-ranlib
 export NM=%{_bindir}/gcc-nm
-%global enable64 no
 export F77=gfortran
 # TODO: some items appear to be bundled in libcruft..
 #   gl2ps.c is bundled.  Anything else?
@@ -236,10 +245,13 @@ export CPPFLAGS=-I%{_includedir}/suitesparse
 # Disable _GLIBCXX_ASSERTIONS for now
 # https://savannah.gnu.org/bugs/?55547
 export CXXFLAGS="$(echo %optflags | sed s/-Wp,-D_GLIBCXX_ASSERTIONS//)"
-%configure --enable-shared --disable-static --enable-64=%enable64 \
+%configure --enable-shared --disable-static \
  --enable-float-truncate \
  %{?disabledocs} \
  --disable-silent-rules \
+%if %{with blas64}
+ --with-blas=openblas64 \
+%endif
  --with-java-includedir=/usr/lib/jvm/java/include \
  --with-java-libdir=$libjvm \
  --with-qrupdate \
@@ -416,6 +428,9 @@ make check %{?el7:|| :}
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Sat Nov  2 2019 Orion Poplawski <orion@nwra.com> - 6:5.1.0-4
+- Enable 64-bit array indexes
+
 * Sat Nov  2 2019 Orion Poplawski <orion@nwra.com> - 6:5.1.0-3
 - Enable LTO optimisations
 
