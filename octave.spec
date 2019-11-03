@@ -25,7 +25,7 @@
 Name:           octave
 Epoch:          6
 Version:        5.1.0
-Release:        2%{?rcver:.rc%{rcver}}%{?dist}.1
+Release:        3%{?rcver:.rc%{rcver}}%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -416,6 +416,9 @@ make check %{?el7:|| :}
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Sat Nov  2 2019 Orion Poplawski <orion@nwra.com> - 6:5.1.0-3
+- Enable LTO optimisations
+
 * Mon Oct 14 2019 Orion Poplawski <orion@nwra.com> - 6:5.1.0-2.1
 - Rebuild for suitesparse 5.4.0
 
