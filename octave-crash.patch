@@ -1,0 +1,12 @@
+diff -up octave-4.4.1/libinterp/corefcn/input.cc.crash octave-4.4.1/libinterp/corefcn/input.cc
+--- octave-4.4.1/libinterp/corefcn/input.cc.crash	2018-11-11 17:27:39.588037444 -0700
++++ octave-4.4.1/libinterp/corefcn/input.cc	2018-11-11 17:30:42.344208272 -0700
+@@ -255,7 +255,7 @@ namespace octave
+ 
+         octave_diary << retval;
+ 
+-        if (retval.back () != '\n')
++        if (!retval.empty () && retval.back () != '\n')
+           octave_diary << "\n";
+       }
+     else
