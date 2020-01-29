@@ -28,7 +28,7 @@
 Name:           octave
 Epoch:          6
 Version:        5.1.0
-Release:        4%{?rcver:.rc%{rcver}}%{?dist}
+Release:        4%{?rcver:.rc%{rcver}}%{?dist}.1
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -428,6 +428,9 @@ make check %{?el7:|| :}
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Wed Jan 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 6:5.1.0-4.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
+
 * Sat Nov  2 2019 Orion Poplawski <orion@nwra.com> - 6:5.1.0-4
 - Enable 64-bit array indexes
 
