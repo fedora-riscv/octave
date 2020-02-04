@@ -27,8 +27,8 @@
 
 Name:           octave
 Epoch:          6
-Version:        5.1.0
-Release:        4%{?rcver:.rc%{rcver}}%{?dist}.1
+Version:        5.2.0
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -39,14 +39,10 @@ Source0:        https://ftp.gnu.org/gnu/octave/octave-%{version}.tar.lz
 Source1:        macros.octave
 Source2:        xorg.conf
 # Prebuilt docs from Fedora for EPEL
-Source3:        octave-5.1.0-docs.tar.lz
+Source3:        octave-5.2.0-docs.tar.lz
 # SUNDIALS 3 support
 # https://savannah.gnu.org/bugs/?52475
 Patch1:         octave-sundials3.patch
-# Proper EOF handling
-# https://bugzilla.redhat.com/show_bug.cgi?id=1705129
-# https://hg.savannah.gnu.org/hgweb/octave/rev/c3716220d5b9
-Patch2:         octave-eof.patch
 
 Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
@@ -213,7 +209,6 @@ This package contains documentation for Octave.
 
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
-%patch2 -p1 -b .eof
 %if %{with blas64}
 sed -i -e 's/OCTAVE_CHECK_LIB(suitesparseconfig,/OCTAVE_CHECK_LIB(suitesparseconfig64,/' configure.ac
 %endif
@@ -428,6 +423,9 @@ make check %{?el7:|| :}
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Mon Feb 03 2020 Orion Poplawski <orion@nwra.com> - 6:5.2.0-1
+- Update to 5.2.0
+
 * Wed Jan 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 6:5.1.0-4.1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 
