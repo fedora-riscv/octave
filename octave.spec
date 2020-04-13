@@ -28,7 +28,7 @@
 Name:           octave
 Epoch:          6
 Version:        5.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -423,6 +423,9 @@ make check %{?el7:|| :}
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Mon Apr 13 2020 Orion Poplawski <orion@nwra.com> - 6:5.2.0-2
+- Rebuild for sundials 5.2.0
+
 * Mon Feb 03 2020 Orion Poplawski <orion@nwra.com> - 6:5.2.0-1
 - Update to 5.2.0
 
