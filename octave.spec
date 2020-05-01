@@ -374,9 +374,7 @@ fi
 $Xorg -noreset +extension GLX +extension RANDR +extension RENDER -logfile ./xorg.log -config ./xorg.conf :99 &
 sleep 2
 export DISPLAY=:99
-# Getting SIGILL on sparse/eigs.m on s390x on EL8
-# https://bugzilla.redhat.com/show_bug.cgi?id=1752241
-make check %{?el7:|| :}%{?el8:|| :}
+make check %{?el7:|| :}
 
 %ldconfig_scriptlets
 
