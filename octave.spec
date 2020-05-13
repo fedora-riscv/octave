@@ -22,7 +22,7 @@
 %global relsuf .rc%{?rcver}
 %endif
 
-%global optflags %{optflags} -flto=auto
+%global optflags %{optflags}
 %global build_ldflags %{build_ldflags} -flto
 
 Name:           octave
@@ -240,6 +240,14 @@ export CPPFLAGS=-I%{_includedir}/suitesparse
 # Disable _GLIBCXX_ASSERTIONS for now
 # https://savannah.gnu.org/bugs/?55547
 export CXXFLAGS="$(echo %optflags | sed s/-Wp,-D_GLIBCXX_ASSERTIONS//)"
+
+verstr=$(%{__cxx} --version | head -1)
+if [[ "$verstr" == *"GCC"* ]]; then
+  CXXFLAGS="$CXXFLAGS -flto=auto"
+else
+  CXXFLAGS="$CXXFLAGS -flto"
+fi
+
 %configure --enable-shared --disable-static \
  --enable-float-truncate \
  %{?disabledocs} \
