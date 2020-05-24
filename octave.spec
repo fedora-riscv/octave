@@ -380,6 +380,7 @@ make check %{?el7:|| :}
 
 %files
 %license COPYING
+%dir %{_pkgdocdir}
 %{_pkgdocdir}/AUTHORS
 %{_pkgdocdir}/BUGS
 %{_pkgdocdir}/ChangeLog
