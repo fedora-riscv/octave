@@ -28,7 +28,7 @@
 Name:           octave
 Epoch:          6
 Version:        5.2.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -432,6 +432,9 @@ make check %{?el7:|| :}
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Tue Jul 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 6:5.2.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
+
 * Sat Jul 11 2020 Jiri Vanek <jvanek@redhat.com> - 6:5.2.0-4
 - Rebuilt for JDK-11, see https://fedoraproject.org/wiki/Changes/Java11
 
