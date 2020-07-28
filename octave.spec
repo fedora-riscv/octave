@@ -28,7 +28,7 @@
 Name:           octave
 Epoch:          6
 Version:        5.2.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -135,7 +135,6 @@ BuildRequires:  texlive-metapost
 BuildRequires:  zlib-devel
 # For check
 BuildRequires:  mesa-dri-drivers
-BuildRequires:  xorg-x11-apps
 %ifnarch s390 s390x
 BuildRequires:  xorg-x11-drv-dummy
 %endif
@@ -432,6 +431,9 @@ make check %{?el7:|| :}
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Tue Jul 28 2020 Adam Jackson <ajax@redhat.com> - 5.2.0-6
+- Drop unnecessary (apparently unused) BuildRequires: xorg-x11-apps
+
 * Tue Jul 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 6:5.2.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
 
