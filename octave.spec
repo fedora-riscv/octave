@@ -12,6 +12,15 @@
 %bcond_with qt5
 %endif
 
+%if 0%{?fedora} >= 33
+%bcond_without flexiblas
+%endif
+%if %{with flexiblas}
+%global blaslib flexiblas
+%else
+%global blaslib openblas
+%endif
+
 # Compile with ILP64 BLAS - not yet working
 %bcond_with blas64
 
@@ -28,7 +37,7 @@
 Name:           octave
 Epoch:          6
 Version:        5.2.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -75,7 +84,7 @@ BuildRequires:  libappstream-glib
 %endif
 
 BuildRequires:  arpack-devel
-BuildRequires:  openblas-devel
+BuildRequires:  %{blaslib}-devel
 BuildRequires:  bison
 BuildRequires:  bzip2-devel
 BuildRequires:  curl-devel
@@ -189,7 +198,7 @@ Requires:       gcc-c++
 Requires:       gcc-gfortran
 Requires:       fftw-devel%{?_isa}
 Requires:       hdf5-devel%{?_isa}
-Requires:       openblas-devel%{?_isa}
+Requires:       %{blaslib}-devel%{?_isa}
 Requires:       readline-devel%{?_isa}
 Requires:       zlib-devel
 Requires:       libappstream-glib
@@ -251,9 +260,7 @@ fi
  --enable-float-truncate \
  %{?disabledocs} \
  --disable-silent-rules \
-%if %{with blas64}
- --with-blas=openblas64 \
-%endif
+ --with-blas=%{blaslib}%{?with_blas64:64}  \
  --with-java-includedir=/usr/lib/jvm/java/include \
  --with-java-libdir=$libjvm \
  --with-qrupdate \
@@ -381,6 +388,7 @@ fi
 $Xorg -noreset +extension GLX +extension RANDR +extension RENDER -logfile ./xorg.log -config ./xorg.conf :99 &
 sleep 2
 export DISPLAY=:99
+export FLEXIBLAS=netlib
 make check %{?el7:|| :}
 
 %ldconfig_scriptlets
@@ -431,6 +439,9 @@ make check %{?el7:|| :}
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Thu Aug 13 2020 Iñaki Úcar <iucar@fedoraproject.org> - 5.2.0-7
+- https://fedoraproject.org/wiki/Changes/FlexiBLAS_as_BLAS/LAPACK_manager
+
 * Tue Jul 28 2020 Adam Jackson <ajax@redhat.com> - 5.2.0-6
 - Drop unnecessary (apparently unused) BuildRequires: xorg-x11-apps
 
