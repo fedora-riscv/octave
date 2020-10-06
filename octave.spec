@@ -37,7 +37,7 @@
 Name:           octave
 Epoch:          6
 Version:        5.2.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -439,6 +439,9 @@ make check %{?el7:|| :}
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Mon Oct 05 2020 Orion Poplawski <orion@nwra.com> - 6:5.2.0-8
+- Rebuild for sundials 5.4.0
+
 * Thu Aug 13 2020 Iñaki Úcar <iucar@fedoraproject.org> - 5.2.0-7
 - https://fedoraproject.org/wiki/Changes/FlexiBLAS_as_BLAS/LAPACK_manager
 
