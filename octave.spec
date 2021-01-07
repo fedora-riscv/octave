@@ -72,6 +72,7 @@ Provides:       bundled(slatec-err)
 Provides:       bundled(slatec-fn)
 
 # For Source0
+BuildRequires: make
 BuildRequires:  lzip
 
 # For autoreconf
