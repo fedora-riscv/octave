@@ -1,12 +1,12 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%global octave_api api-v53
+%global octave_api api-v55
 
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 %global builddocs 1
 
-# Use Qt5 on Fedora and EL8+
-%if 0%{?fedora} || 0%{?rhel} >= 8
+# Use Qt5 on Fedora and EL7+
+%if 0%{?fedora} || 0%{?rhel} >= 7
 %bcond_without qt5
 %else
 %bcond_with qt5
@@ -36,8 +36,8 @@
 
 Name:           octave
 Epoch:          6
-Version:        5.2.0
-Release:        11%{?dist}
+Version:        6.1.0
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -48,10 +48,7 @@ Source0:        https://ftp.gnu.org/gnu/octave/octave-%{version}.tar.lz
 Source1:        macros.octave
 Source2:        xorg.conf
 # Prebuilt docs from Fedora for EPEL
-Source3:        octave-5.2.0-docs.tar.lz
-# SUNDIALS 3 support
-# https://savannah.gnu.org/bugs/?52475
-Patch1:         octave-sundials3.patch
+Source3:        octave-6.1.0-docs.tar.lz
 
 Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
@@ -220,12 +217,6 @@ This package contains documentation for Octave.
 %setup -q -n %{name}-%{version}%{?rctag}
 %if %{with blas64}
 sed -i -e 's/OCTAVE_CHECK_LIB(suitesparseconfig,/OCTAVE_CHECK_LIB(suitesparseconfig64,/' configure.ac
-%endif
-# EPEL7's autoconf/automake is too old so don't do
-# unneeded patches there
-%if 0%{?fedora}
-%patch1 -p1 -b .sundials3
-autoreconf -i
 %endif
 
 
@@ -440,6 +431,9 @@ make check %{?el7:|| :}
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Fri Jan 29 2021 Orion Poplawski <orion@nwra.com> - 6:6.1.0-1
+- Update to 6.1.0
+
 * Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 6:5.2.0-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
