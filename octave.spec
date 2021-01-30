@@ -1,12 +1,12 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%global octave_api api-v53
+%global octave_api api-v55
 
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 %global builddocs 1
 
-# Use Qt5 on Fedora and EL8+
-%if 0%{?fedora} || 0%{?rhel} >= 8
+# Use Qt5 on Fedora and EL7+
+%if 0%{?fedora} || 0%{?rhel} >= 7
 %bcond_without qt5
 %else
 %bcond_with qt5
@@ -36,8 +36,8 @@
 
 Name:           octave
 Epoch:          6
-Version:        5.2.0
-Release:        14%{?dist}
+Version:        6.2.0
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -48,14 +48,6 @@ Source0:        https://ftp.gnu.org/gnu/octave/octave-%{version}.tar.lz
 Source1:        macros.octave
 Source2:        xorg.conf
 # Prebuilt docs from Fedora for EPEL
-Source3:        octave-5.2.0-docs.tar.lz
-# SUNDIALS 3 support
-# https://savannah.gnu.org/bugs/?52475
-Patch1:         octave-sundials3.patch
-# Fix readline 8.1 bracketed-paste support
-# https://savannah.gnu.org/bugs/?func=detailitem&item_id=59483
-# Backported patches
-Patch2:         octave-readline.patch
 
 Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
@@ -225,13 +217,6 @@ This package contains documentation for Octave.
 %if %{with blas64}
 sed -i -e 's/OCTAVE_CHECK_LIB(suitesparseconfig,/OCTAVE_CHECK_LIB(suitesparseconfig64,/' configure.ac
 %endif
-# EPEL7's autoconf/automake is too old so don't do
-# unneeded patches there
-%if 0%{?fedora}
-%patch1 -p1 -b .sundials3
-%patch2 -p1 -b .readline
-autoreconf -i
-%endif
 
 %build
 export AR=%{_bindir}/gcc-ar
@@ -294,9 +279,6 @@ cp -a doc/refcard/*.pdf %{buildroot}%{_pkgdocdir}/
 
 # No info directory
 rm -f %{buildroot}%{_infodir}/dir
-
-# EL7's makeinfo doesn't support @sortas, so use prebuilt docs
-%{?el7:tar xvf %SOURCE3 -C %{buildroot}}
 
 # Make library links
 mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d
@@ -444,6 +426,9 @@ make check %{?el7:|| :}
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Mon Aug 09 2021 Orion Poplawski <orion@nwra.com> - 6:6.2.0-1
+- Update to 6.2.0
+
 * Thu Jul 22 2021 Fedora Release Engineering <releng@fedoraproject.org> - 6:5.2.0-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
 
