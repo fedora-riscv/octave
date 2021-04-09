@@ -1,0 +1,375 @@
+diff --git a/libgui/qterminal/libqterminal/unix/Emulation.cpp b/libgui/qterminal/libqterminal/unix/Emulation.cpp
+index ee301a7dae..39b0b8d922 100644
+--- a/libgui/qterminal/libqterminal/unix/Emulation.cpp
++++ b/libgui/qterminal/libqterminal/unix/Emulation.cpp
+@@ -54,7 +54,8 @@ Emulation::Emulation() :
+   _codec(nullptr),
+   _decoder(nullptr),
+   _keyTranslator(nullptr),
+-  _usesMouse(false)
++  _usesMouse(false),
++  _bracketedPasteMode(false)
+ {
+ 
+   // create screens with a default size
+@@ -68,6 +69,8 @@ Emulation::Emulation() :
+   // listen for mouse status changes
+   connect( this , SIGNAL(programUsesMouseChanged(bool)) ,
+            SLOT(usesMouseChanged(bool)) );
++  connect(this , SIGNAL(programBracketedPasteModeChanged(bool)) ,
++           SLOT(bracketedPasteModeChanged(bool)));
+ }
+ 
+ bool Emulation::programUsesMouse() const
+@@ -80,6 +83,16 @@ void Emulation::usesMouseChanged(bool usesMouse)
+     _usesMouse = usesMouse;
+ }
+ 
++bool Emulation::programBracketedPasteMode() const
++{
++    return _bracketedPasteMode;
++}
++
++void Emulation::bracketedPasteModeChanged(bool bracketedPasteMode)
++{
++    _bracketedPasteMode = bracketedPasteMode;
++}
++
+ ScreenWindow* Emulation::createWindow()
+ {
+     ScreenWindow* window = new ScreenWindow();
+diff --git a/libgui/qterminal/libqterminal/unix/Emulation.h b/libgui/qterminal/libqterminal/unix/Emulation.h
+index 549a5916f4..4cc62fd46c 100644
+--- a/libgui/qterminal/libqterminal/unix/Emulation.h
++++ b/libgui/qterminal/libqterminal/unix/Emulation.h
+@@ -213,6 +213,8 @@ public:
+    */
+   bool programUsesMouse() const;
+ 
++  bool programBracketedPasteMode() const;
++
+ public slots:
+ 
+   /** Change the size of the emulation's image */
+@@ -317,6 +319,8 @@ signals:
+    */
+   void programUsesMouseChanged(bool usesMouse);
+ 
++  void programBracketedPasteModeChanged(bool bracketedPasteMode);
++
+   /**
+    * Emitted when the contents of the screen image change.
+    * The emulation buffers the updates from successive image changes,
+@@ -445,9 +449,12 @@ private slots:
+ 
+   void usesMouseChanged(bool usesMouse);
+ 
++  void bracketedPasteModeChanged(bool bracketedPasteMode);
++
+ private:
+ 
+   bool _usesMouse;
++  bool _bracketedPasteMode;
+   QTimer _bulkTimer1;
+   QTimer _bulkTimer2;
+ 
+diff --git a/libgui/qterminal/libqterminal/unix/TerminalModel.cpp b/libgui/qterminal/libqterminal/unix/TerminalModel.cpp
+index d5371d2af2..16be0c5eb8 100644
+--- a/libgui/qterminal/libqterminal/unix/TerminalModel.cpp
++++ b/libgui/qterminal/libqterminal/unix/TerminalModel.cpp
+@@ -131,6 +131,11 @@ void TerminalModel::addView(TerminalView* widget)
+ 
+         widget->setUsesMouse( _emulation->programUsesMouse() );
+ 
++        connect( _emulation , SIGNAL(programBracketedPasteModeChanged(bool)) ,
++                 widget , SLOT(setBracketedPasteMode(bool)) );
++
++        widget->setBracketedPasteMode(_emulation->programBracketedPasteMode());
++
+         widget->setScreenWindow(_emulation->createWindow());
+     }
+ 
+diff --git a/libgui/qterminal/libqterminal/unix/TerminalView.cpp b/libgui/qterminal/libqterminal/unix/TerminalView.cpp
+index 17338abb7e..ac3183ae29 100644
+--- a/libgui/qterminal/libqterminal/unix/TerminalView.cpp
++++ b/libgui/qterminal/libqterminal/unix/TerminalView.cpp
+@@ -254,6 +254,7 @@ TerminalView::TerminalView(QWidget *parent)
+   ,_resizing(false)
+   ,_terminalSizeHint(false)
+   ,_terminalSizeStartup(true)
++  ,_disabledBracketedPasteMode(false)
+   ,_actSel(0)
+   ,_wordSelectionMode(false)
+   ,_lineSelectionMode(false)
+@@ -312,6 +313,7 @@ TerminalView::TerminalView(QWidget *parent)
+   //  QCursor::setAutoHideCursor( this, true );
+ 
+   setUsesMouse(true);
++  setBracketedPasteMode(false);
+   setColorTable(base_color_table);
+   setMouseTracking(true);
+ 
+@@ -2312,6 +2314,16 @@ bool TerminalView::usesMouse() const
+   return _mouseMarks;
+ }
+ 
++void TerminalView::setBracketedPasteMode(bool on)
++{
++  _bracketedPasteMode = on;
++}
++bool TerminalView::bracketedPasteMode() const
++{
++    return _bracketedPasteMode;
++}
++
++
+ /* ------------------------------------------------------------------------- */
+ /*                                                                           */
+ /*                               Clipboard                                   */
+@@ -2333,6 +2345,13 @@ void TerminalView::emitSelection(bool useXselection,bool appendReturn)
+   if ( ! text.isEmpty() )
+     {
+       text.replace("\n", "\r");
++      if (bracketedPasteMode() && !_disabledBracketedPasteMode)
++        bracketText(text);
++      else if (text.contains ("\t"))
++        {
++          qWarning ("converting TAB to SPC in pasted text before processing");
++          text.replace ("\t", " ");
++        }
+       QKeyEvent e(QEvent::KeyPress, 0, Qt::NoModifier, text);
+       emit keyPressedSignal(&e); // expose as a big fat keypress event
+ 
+@@ -2340,6 +2359,12 @@ void TerminalView::emitSelection(bool useXselection,bool appendReturn)
+     }
+ }
+ 
++void TerminalView::bracketText(QString& text)
++{
++    text.prepend("\033[200~");
++    text.append("\033[201~");
++}
++
+ void TerminalView::setSelection(const QString& t)
+ {
+   QApplication::clipboard()->setText(t, QClipboard::Selection);
+diff --git a/libgui/qterminal/libqterminal/unix/TerminalView.h b/libgui/qterminal/libqterminal/unix/TerminalView.h
+index 84488d6b22..158fd0c641 100644
+--- a/libgui/qterminal/libqterminal/unix/TerminalView.h
++++ b/libgui/qterminal/libqterminal/unix/TerminalView.h
+@@ -160,6 +160,9 @@ public:
+ 
+     void emitSelection(bool useXselection,bool appendReturn);
+ 
++    /** change and wrap text corresponding to paste mode **/
++    void bracketText(QString& text);
++
+     /**
+      * This enum describes the available shapes for the keyboard cursor.
+      * See setKeyboardCursorShape()
+@@ -379,6 +382,9 @@ public:
+      */
+     void visibility_changed (bool visible);
+ 
++    void disableBracketedPasteMode(bool disable) { _disabledBracketedPasteMode = disable; }
++    bool bracketedPasteModeIsDisabled() const { return _disabledBracketedPasteMode; }
++
+ public slots:
+ 
+     /**
+@@ -455,6 +461,9 @@ public slots:
+     /** See setUsesMouse() */
+     bool usesMouse() const;
+ 
++    void setBracketedPasteMode(bool bracketedPasteMode);
++    bool bracketedPasteMode() const;
++
+ signals:
+ 
+     void interrupt_signal (void);
+@@ -666,6 +675,8 @@ private:
+     bool _terminalSizeHint;
+     bool _terminalSizeStartup;
+     bool _mouseMarks;
++    bool _bracketedPasteMode;
++    bool _disabledBracketedPasteMode;
+ 
+     QPoint  _iPntSel; // initial selection point
+     QPoint  _pntSel; // current selection point
+diff --git a/libgui/qterminal/libqterminal/unix/Vt102Emulation.cpp b/libgui/qterminal/libqterminal/unix/Vt102Emulation.cpp
+index 9ff26930aa..a9d248e5ef 100644
+--- a/libgui/qterminal/libqterminal/unix/Vt102Emulation.cpp
++++ b/libgui/qterminal/libqterminal/unix/Vt102Emulation.cpp
+@@ -752,6 +752,11 @@ switch( N )
+     case TY_CSI_PR('h', 1049) : saveCursor(); _screen[1]->clearEntireScreen(); setMode(MODE_AppScreen); break; //XTERM
+     case TY_CSI_PR('l', 1049) : resetMode(MODE_AppScreen); restoreCursor(); break; //XTERM
+ 
++    case TY_CSI_PR('h', 2004) :          setMode      (MODE_BracketedPaste); break; //XTERM
++    case TY_CSI_PR('l', 2004) :        resetMode      (MODE_BracketedPaste); break; //XTERM
++    case TY_CSI_PR('s', 2004) :         saveMode      (MODE_BracketedPaste); break; //XTERM
++    case TY_CSI_PR('r', 2004) :      restoreMode      (MODE_BracketedPaste); break; //XTERM
++
+     //FIXME: weird DEC reset sequence
+     case TY_CSI_PE('p'      ) : /* IGNORED: reset         (        ) */ break;
+ 
+@@ -1137,6 +1142,7 @@ void Vt102Emulation::resetModes()
+   resetMode(MODE_Mouse1001); saveMode(MODE_Mouse1001);
+   resetMode(MODE_Mouse1002); saveMode(MODE_Mouse1002);
+   resetMode(MODE_Mouse1003); saveMode(MODE_Mouse1003);
++  resetMode(MODE_BracketedPaste);  saveMode(MODE_BracketedPaste);
+ 
+   resetMode(MODE_AppScreen); saveMode(MODE_AppScreen);
+   // here come obsolete modes
+@@ -1157,6 +1163,10 @@ void Vt102Emulation::setMode(int m)
+         emit programUsesMouseChanged(false);
+     break;
+ 
++    case MODE_BracketedPaste:
++        emit programBracketedPasteModeChanged(true);
++    break;
++
+     case MODE_AppScreen : _screen[1]->clearSelection();
+                           setScreen(1);
+     break;
+@@ -1180,6 +1190,10 @@ void Vt102Emulation::resetMode(int m)
+         emit programUsesMouseChanged(true);
+     break;
+ 
++    case MODE_BracketedPaste:
++        emit programBracketedPasteModeChanged(false);
++    break;
++
+     case MODE_AppScreen : _screen[0]->clearSelection();
+                           setScreen(0);
+     break;
+diff --git a/libgui/qterminal/libqterminal/unix/Vt102Emulation.h b/libgui/qterminal/libqterminal/unix/Vt102Emulation.h
+index a12853279f..c0c44f5146 100644
+--- a/libgui/qterminal/libqterminal/unix/Vt102Emulation.h
++++ b/libgui/qterminal/libqterminal/unix/Vt102Emulation.h
+@@ -37,15 +37,16 @@
+ #include "unix/Emulation.h"
+ #include "unix/Screen.h"
+ 
+-#define MODE_AppScreen (MODES_SCREEN+0)
+-#define MODE_AppCuKeys (MODES_SCREEN+1)
+-#define MODE_AppKeyPad (MODES_SCREEN+2)
+-#define MODE_Mouse1000 (MODES_SCREEN+3)
+-#define MODE_Mouse1001 (MODES_SCREEN+4)
+-#define MODE_Mouse1002 (MODES_SCREEN+5)
+-#define MODE_Mouse1003 (MODES_SCREEN+6)
+-#define MODE_Ansi      (MODES_SCREEN+7)
+-#define MODE_total     (MODES_SCREEN+8)
++#define MODE_AppScreen      (MODES_SCREEN+0)
++#define MODE_AppCuKeys      (MODES_SCREEN+1)
++#define MODE_AppKeyPad      (MODES_SCREEN+2)
++#define MODE_Mouse1000      (MODES_SCREEN+3)
++#define MODE_Mouse1001      (MODES_SCREEN+4)
++#define MODE_Mouse1002      (MODES_SCREEN+5)
++#define MODE_Mouse1003      (MODES_SCREEN+6)
++#define MODE_Ansi           (MODES_SCREEN+7)
++#define MODE_BracketedPaste (MODES_SCREEN+8)
++#define MODE_total          (MODES_SCREEN+9)
+ 
+ struct DECpar
+ {
+diff --git a/libinterp/corefcn/input.cc b/libinterp/corefcn/input.cc
+index 35a6ac65b7..187f41da42 100644
+--- a/libinterp/corefcn/input.cc
++++ b/libinterp/corefcn/input.cc
+@@ -32,6 +32,7 @@ along with Octave; see the file COPYING.  If not, see
+ #include <cassert>
+ 
+ #include <iostream>
++#include <queue>
+ #include <sstream>
+ #include <string>
+ 
+@@ -1000,7 +1001,7 @@ namespace octave
+   public:
+ 
+     terminal_reader (base_lexer *lxr = nullptr)
+-      : base_reader (lxr)
++      : base_reader (lxr), m_eof (false), m_input_queue ()
+     { }
+ 
+     std::string get_input (bool& eof);
+@@ -1011,6 +1012,9 @@ namespace octave
+ 
+   private:
+ 
++    bool m_eof;
++    std::queue<std::string> m_input_queue;
++
+     static const std::string s_in_src;
+   };
+ 
+@@ -1073,6 +1077,13 @@ namespace octave
+ 
+   const std::string terminal_reader::s_in_src ("terminal");
+ 
++  // If octave_gets returns multiple lines, we cache the input and
++  // return it one line at a time.  Multiple input lines may happen when
++  // using readline and bracketed paste mode is enabled, for example.
++  // Instead of queueing lines here, it might be better to modify the
++  // grammar in the parser to handle multiple lines when working
++  // interactively.  See also bug #59938.
++
+   std::string
+   terminal_reader::get_input (bool& eof)
+   {
+@@ -1080,7 +1091,54 @@ namespace octave
+ 
+     eof = false;
+ 
+-    return octave_gets (eof);
++    if (m_input_queue.empty ())
++      {
++        std::string input = octave_gets (m_eof);
++
++        size_t len = input.size ();
++
++        if (len == 0)
++          {
++            if (m_eof)
++              {
++                eof = m_eof;
++                return input;
++              }
++            else
++              {
++                // Can this happen, or will the string returned from
++                // octave_gets always end in a newline character?
++
++                input = "\n";
++                len = 1;
++              }
++          }
++
++        size_t beg = 0;
++        while (beg < len)
++          {
++            size_t end = input.find ('\n', beg);
++
++            if (end == std::string::npos)
++              {
++                m_input_queue.push (input.substr (beg));
++                break;
++              }
++            else
++              {
++                m_input_queue.push (input.substr (beg, end-beg+1));
++                beg = end + 1;
++              }
++          }
++      }
++
++    std::string retval = m_input_queue.front ();
++    m_input_queue.pop ();
++
++    if (m_input_queue.empty ())
++      eof = m_eof;
++
++    return retval;
+   }
+ 
+   const std::string file_reader::s_in_src ("file");

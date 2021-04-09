@@ -37,7 +37,7 @@
 Name:           octave
 Epoch:          6
 Version:        5.2.0
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -52,6 +52,10 @@ Source3:        octave-5.2.0-docs.tar.lz
 # SUNDIALS 3 support
 # https://savannah.gnu.org/bugs/?52475
 Patch1:         octave-sundials3.patch
+# Fix readline 8.1 bracketed-paste support
+# https://savannah.gnu.org/bugs/?func=detailitem&item_id=59483
+# Backported patches
+Patch2:         octave-readline.patch
 
 Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
@@ -225,9 +229,9 @@ sed -i -e 's/OCTAVE_CHECK_LIB(suitesparseconfig,/OCTAVE_CHECK_LIB(suitesparsecon
 # unneeded patches there
 %if 0%{?fedora}
 %patch1 -p1 -b .sundials3
+%patch2 -p1 -b .readline
 autoreconf -i
 %endif
-
 
 %build
 export AR=%{_bindir}/gcc-ar
@@ -440,6 +444,9 @@ make check %{?el7:|| :}
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Tue Apr 06 2021 Orion Poplawski <orion@nwra.com> - 6:5.2.0-12
+- Backport readline 8.1 support (bz#1946773)
+
 * Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 6:5.2.0-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
