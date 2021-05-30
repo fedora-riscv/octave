@@ -67,7 +67,7 @@ fi \
 # any shared objects.
 %octave_pkg_check \
 %octave_cmd pkg("prefix","%{buildroot}%{octprefix}","%{buildroot}%{octarchprefix}");pkg("local_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("list");pkg("install","-verbose",glob("%{_builddir}/%{buildsubdir}/build/%{octpkg}-%{version}-*.tar.gz"){1,1});pkg("load","%{octpkg}");pkg("list");runtests("%{buildroot}%{octpkgdir}");unlink(pkg("local_list")); \
-/usr/lib/rpm/brp-strip-shared %{__strip} \
+/usr/lib/rpm/brp-strip %{__strip} \
 %{nil}
 
 # preun script - we need to remove our uninstall protection and perhaps

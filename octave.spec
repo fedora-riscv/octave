@@ -37,7 +37,7 @@
 Name:           octave
 Epoch:          6
 Version:        5.2.0
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -444,6 +444,9 @@ make check %{?el7:|| :}
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Sun May 30 2021 Orion Poplawski <orion@nwra.com> - 6:5.2.0-13
+- Use brp-strip instead of brp-strip-shared (bz#1955380)
+
 * Tue Apr 06 2021 Orion Poplawski <orion@nwra.com> - 6:5.2.0-12
 - Backport readline 8.1 support (bz#1946773)
 
