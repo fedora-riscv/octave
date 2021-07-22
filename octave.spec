@@ -37,7 +37,7 @@
 Name:           octave
 Epoch:          6
 Version:        5.2.0
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -444,6 +444,9 @@ make check %{?el7:|| :}
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Thu Jul 22 2021 Fedora Release Engineering <releng@fedoraproject.org> - 6:5.2.0-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
+
 * Sun May 30 2021 Orion Poplawski <orion@nwra.com> - 6:5.2.0-13
 - Use brp-strip instead of brp-strip-shared (bz#1955380)
 
