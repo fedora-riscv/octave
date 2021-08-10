@@ -1,5 +1,5 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%global octave_api api-v55
+%global octave_api api-v56
 
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
@@ -36,8 +36,8 @@
 
 Name:           octave
 Epoch:          6
-Version:        6.2.0
-Release:        2%{?dist}
+Version:        6.3.0
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -426,6 +426,9 @@ make check %{?el7:|| :}
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Tue Aug 10 2021 Orion Poplawski <orion@nwra.com> - 6:6.3.0-1
+- Update to 6.3.0
+
 * Mon Aug 09 2021 Orion Poplawski <orion@nwra.com> - 6:6.2.0-1
 - Update to 6.2.0
 
