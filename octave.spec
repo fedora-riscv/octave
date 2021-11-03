@@ -36,8 +36,8 @@
 
 Name:           octave
 Epoch:          6
-Version:        6.3.0
-Release:        2%{?dist}
+Version:        6.4.0
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -277,6 +277,8 @@ mkdir -p %{buildroot}%{_pkgdocdir}
 cp -ar AUTHORS BUGS ChangeLog examples NEWS README %{buildroot}%{_pkgdocdir}/
 cp -a doc/refcard/*.pdf %{buildroot}%{_pkgdocdir}/
 
+find %{buildroot}%{_libdir} -name \*.la -delete
+
 # No info directory
 rm -f %{buildroot}%{_infodir}/dir
 
@@ -396,7 +398,17 @@ make check
 # FIXME: Create an -emacs package that has the emacs addon
 %config(noreplace) %{_sysconfdir}/ld.so.conf.d/octave-*.conf
 %{_bindir}/octave*
-%{_libdir}/octave/
+%dir %{_libdir}/octave/
+%dir %{_libdir}/octave/%{version}
+%{_libdir}/octave/%{version}/liboctave.so.8*
+%{_libdir}/octave/%{version}/liboctgui.so.6*
+%{_libdir}/octave/%{version}/liboctinterp.so.9*
+%{_libdir}/octave/%{version}/mkoctfile-%{version}
+%{_libdir}/octave/%{version}/oct/
+%{_libdir}/octave/%{version}/octave-config-%{version}
+%{_libdir}/octave/%{version}/site/
+%{_libdir}/octave/packages/
+%{_libdir}/octave/site/
 %{_libexecdir}/octave/
 %{_mandir}/man1/octave*.1.*
 %{_infodir}/liboctave.info*
@@ -418,6 +430,9 @@ make check
 %{_bindir}/mkoctfile
 %{_bindir}/mkoctfile-%{version}%{?rctag}
 %{_includedir}/octave-%{version}%{?rctag}/
+%{_libdir}/octave/%{version}/liboctave.so
+%{_libdir}/octave/%{version}/liboctgui.so
+%{_libdir}/octave/%{version}/liboctinterp.so
 %{_libdir}/pkgconfig/octave.pc
 %{_libdir}/pkgconfig/octinterp.pc
 %{_mandir}/man1/mkoctfile.1.*
@@ -431,6 +446,9 @@ make check
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Wed Nov 03 2021 Orion Poplawski <orion@nwra.com> - 6:6.4.0-1
+- Update to 6.4.0
+
 * Wed Oct 20 2021 Antonio Trande <sagitter@fedoraproject.org> - 6:6.3.0-2
 - Rebuild for sundials-5.8.0
 
