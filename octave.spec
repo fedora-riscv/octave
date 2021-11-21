@@ -37,7 +37,7 @@
 Name:           octave
 Epoch:          6
 Version:        6.4.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -446,6 +446,9 @@ make check
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Sun Nov 21 2021 Orion Poplawski <orion@nwra.com> - 6:6.4.0-2
+- Rebuild for hdf5 1.12.1
+
 * Wed Nov 03 2021 Orion Poplawski <orion@nwra.com> - 6:6.4.0-1
 - Update to 6.4.0
 
