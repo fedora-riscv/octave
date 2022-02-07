@@ -37,7 +37,7 @@
 Name:           octave
 Epoch:          6
 Version:        6.4.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -47,7 +47,8 @@ Source0:        https://ftp.gnu.org/gnu/octave/octave-%{version}.tar.lz
 # RPM macros for helping to build Octave packages
 Source1:        macros.octave
 Source2:        xorg.conf
-# Prebuilt docs from Fedora for EPEL
+# Need updated cdefs.h from gnulib for gcc12
+Patch0:         octave-gcc12.patch
 
 Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
@@ -213,7 +214,7 @@ BuildArch:      noarch
 This package contains documentation for Octave.
 
 %prep
-%setup -q -n %{name}-%{version}%{?rctag}
+%autosetup -p1 -n %{name}-%{version}%{?rctag}
 %if %{with blas64}
 sed -i -e 's/OCTAVE_CHECK_LIB(suitesparseconfig,/OCTAVE_CHECK_LIB(suitesparseconfig64,/' configure.ac
 %endif
@@ -446,6 +447,9 @@ make check
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Mon Feb 07 2022 Orion Poplawski <orion@nwra.com> - 6:6.4.0-5
+- Update gnulib cdefs.h for gcc12 support on ppc64le
+
 * Sat Feb 05 2022 Jiri Vanek <jvanek@redhat.com> - 6:6.4.0-4
 - Rebuilt for java-17-openjdk as system jdk
 
