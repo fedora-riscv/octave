@@ -43,7 +43,7 @@
 %octave_pkg_install \
 mkdir -p %{buildroot}%{octprefix} \
 mkdir -p %{buildroot}%{octarchprefix} \
-%octave_cmd pkg("prefix","%{buildroot}%{octprefix}","%{buildroot}%{octarchprefix}");pkg("global_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("local_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("install","-nodeps","-verbose",glob("%{_builddir}/%{buildsubdir}/build/%{octpkg}-%{version}-*.tar.gz"){1,1});unlink(pkg("local_list"));unlink(pkg("global_list")); \
+%octave_cmd pkg("prefix","%{buildroot}%{octprefix}","%{buildroot}%{octarchprefix}");pkg("global_list",fullfile("%{buildroot}%{octshareprefix}","octave_packages"));pkg("install","-nodeps","-verbose",glob("%{_builddir}/%{buildsubdir}/build/%{octpkg}-%{version}-*.tar.gz"){1,1});unlink(pkg("global_list")); \
 if [ -e %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m ] \
 then \
   mv %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m %{buildroot}%{octpkgdir}/packinfo/on_uninstall.m.orig \

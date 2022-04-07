@@ -1,0 +1,111 @@
+diff --git a/etc/NEWS.7.md b/etc/NEWS.7.md
+index b44e7ac..9d86936 100644
+--- a/etc/NEWS.7.md
++++ b/etc/NEWS.7.md
+@@ -325,6 +325,10 @@ major release after 7):
+   `disable_permutation_matrix` | `optimize_permutation_matrix`
+   `disable_range`              | `optimize_range`
+ 
++  For plot functions, the use of numbers to select line colors in
++  shorthand formats was an undocumented feature that is deprecated in
++  Octave 7 and will be removed from Octave 9.
++
+ - Operators
+ 
+   Operator | Replacement | Description
+@@ -362,7 +366,6 @@ from Octave 8 (or whatever version is the second major release after 6):
+   and a warning is now emitted if it is used, but it will continue to
+   work.
+ 
+-
+ ### Removed functions, properties, and features
+ 
+ The following functions and properties were deprecated in Octave 5
+diff --git a/scripts/help/warning_ids.m b/scripts/help/warning_ids.m
+index 0215e67..0b46c00 100644
+--- a/scripts/help/warning_ids.m
++++ b/scripts/help/warning_ids.m
+@@ -190,6 +190,11 @@
+ ## scheduled for removal from Octave.
+ ## By default, the @code{Octave:deprecated-keyword} warning is enabled.
+ ##
++## @item Octave:deprecated-option
++## If the @code{Octave:deprecated-option} warning is enabled, a
++## warning is issued when an obsolete option or input to a function is used.
++## By default, the @code{Octave:deprecated-option} warning is enabled.
++##
+ ## @item Octave:deprecated-property
+ ## If the @code{Octave:deprecated-property} warning is enabled, a
+ ## warning is issued when Octave encounters a graphics property that
+diff --git a/scripts/plot/util/__pltopt__.m b/scripts/plot/util/__pltopt__.m
+index d91b52d..84d5e78 100644
+--- a/scripts/plot/util/__pltopt__.m
++++ b/scripts/plot/util/__pltopt__.m
+@@ -158,6 +158,12 @@ function [options, valid] = decode_linespec (caller, opt, err_on_invalid)
+     topt = opt(1);
+     n = 1;
+ 
++    if (any (topt == "0":"6"))
++      warning ("Octave:deprecated-option", ...
++               ["%s: using numbers to select line colors is deprecated.  ", ...
++                "Use the corresponding color identifier instead."], caller);
++    endif
++
+     ## LineStyles
+     if (strncmp (opt, "--", 2) || strncmp (opt, "-.", 2))
+       options.linestyle = opt(1:2);
+@@ -181,21 +187,28 @@ function [options, valid] = decode_linespec (caller, opt, err_on_invalid)
+           n = 9;
+         endif
+       endif
++      ## Backward compatibility.  Leave undocumented.
++      if (topt == "@")
++        warning ("Octave:deprecated-option", ...
++                 "%s: marker type '@' is deprecated.  Use '+' instead.", ...
++                 caller);
++        topt = "+";
++      endif
+       options.marker = topt;
+-    ## Color specs
+-    elseif (topt == "k")
++    ## Numeric color specs are for backward compatibility.  Don't document.
++    elseif (topt == "k" || topt == "0")
+       options.color = [0, 0, 0];
+-    elseif (topt == "r")
++    elseif (topt == "r" || topt == "1")
+       if (strncmp (opt, "red", 3))
+         n = 3;
+       endif
+       options.color = [1, 0, 0];
+-    elseif (topt == "g")
++    elseif (topt == "g" || topt == "2")
+       if (strncmp (opt, "green", 5))
+         n = 5;
+       endif
+       options.color = [0, 1, 0];
+-    elseif (topt == "b")
++    elseif (topt == "b" || topt == "3")
+       if (strncmp (opt, "black", 5))
+         options.color = [0, 0, 0];
+         n = 5;
+@@ -210,17 +223,17 @@ function [options, valid] = decode_linespec (caller, opt, err_on_invalid)
+         n = 6;
+       endif
+       options.color = [1, 1, 0];
+-    elseif (topt == "m")
++    elseif (topt == "m" || topt == "4")
+       if (strncmp (opt, "magenta", 7))
+         n = 7;
+       endif
+       options.color = [1, 0, 1];
+-    elseif (topt == "c")
++    elseif (topt == "c" || topt == "5")
+       if (strncmp (opt, "cyan", 4))
+         n = 4;
+       endif
+       options.color = [0, 1, 1];
+-    elseif (topt == "w")
++    elseif (topt == "w" || topt == "6")
+       if (strncmp (opt, "white", 5))
+         n = 5;
+       endif

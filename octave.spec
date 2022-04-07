@@ -1,18 +1,11 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%global octave_api api-v56
+%global octave_api api-v57
 
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 %global builddocs 1
 
-# Use Qt5 on Fedora and EL7+
-%if 0%{?fedora} || 0%{?rhel} >= 7
-%bcond_without qt5
-%else
-%bcond_with qt5
-%endif
-
-%if 0%{?fedora} >= 33
+%if 0%{?fedora}
 %bcond_without flexiblas
 %endif
 %if %{with flexiblas}
@@ -36,8 +29,8 @@
 
 Name:           octave
 Epoch:          6
-Version:        6.4.0
-Release:        5%{?dist}
+Version:        7.1.0
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -47,8 +40,12 @@ Source0:        https://ftp.gnu.org/gnu/octave/octave-%{version}.tar.lz
 # RPM macros for helping to build Octave packages
 Source1:        macros.octave
 Source2:        xorg.conf
-# Need updated cdefs.h from gnulib for gcc12
-Patch0:         octave-gcc12.patch
+# Fix unlink failure on non-existent file in pkg build
+# https://savannah.gnu.org/bugs/index.php?62436
+Patch0:         bug62436.patch
+# Deprecate rather than remove support for old numeric linestyles that broke vfrnav tests
+# https://savannah.gnu.org/bugs/index.php?62470
+Patch1:         octave-linestyles.patch
 
 Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
@@ -77,9 +74,7 @@ BuildRequires:  automake
 BuildRequires:  libtool
 # For validating desktop and appdata files
 BuildRequires:  desktop-file-utils
-%if 0%{?fedora} || 0%{?rhel} >= 7
 BuildRequires:  libappstream-glib
-%endif
 
 BuildRequires:  arpack-devel
 BuildRequires:  %{blaslib}-devel
@@ -115,13 +110,9 @@ BuildRequires:  pcre-devel
 BuildRequires:  portaudio-devel
 BuildRequires:  qhull-devel
 BuildRequires:  qrupdate-devel
-%if %{with qt5}
 BuildRequires:  qscintilla-qt5-devel
 BuildRequires:  qt5-linguist
 BuildRequires:  qt5-qttools-devel
-%else
-BuildRequires:  qscintilla-devel
-%endif
 BuildRequires:  readline-devel
 %if %{with blas64}
 BuildRequires:  suitesparse64-devel
@@ -132,9 +123,7 @@ BuildRequires:  sundials-devel
 BuildRequires:  tex(dvips)
 BuildRequires:  texinfo
 BuildRequires:  texinfo-tex
-%if 0%{?fedora} || 0%{?rhel} >= 7
 BuildRequires:  texlive-collection-fontsrecommended
-%endif
 %if 0%{?rhel} >= 7
 BuildRequires:  texlive-ec
 BuildRequires:  texlive-metapost
@@ -296,9 +285,7 @@ touch %{buildroot}%{_datadir}/%{name}/ls-R
 desktop-file-validate %{buildroot}%{_datadir}/applications/org.octave.Octave.desktop
 # RHEL7 still doesn't like the GNU project_group
 %{?el7:sed -i -e /project_group/d %{buildroot}/%{_datadir}/metainfo/org.octave.Octave.appdata.xml}
-%if 0%{?fedora} || 0%{?rhel} >= 7
 appstream-util validate-relax --nonet %{buildroot}/%{_datadir}/metainfo/org.octave.Octave.appdata.xml
-%endif
 
 # Create directories for add-on packages
 HOST_TYPE=`%{buildroot}%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
@@ -401,9 +388,9 @@ make check
 %{_bindir}/octave*
 %dir %{_libdir}/octave/
 %dir %{_libdir}/octave/%{version}
-%{_libdir}/octave/%{version}/liboctave.so.8*
-%{_libdir}/octave/%{version}/liboctgui.so.6*
-%{_libdir}/octave/%{version}/liboctinterp.so.9*
+%{_libdir}/octave/%{version}/liboctave.so.9*
+%{_libdir}/octave/%{version}/liboctgui.so.8*
+%{_libdir}/octave/%{version}/liboctinterp.so.10*
 %{_libdir}/octave/%{version}/mkoctfile-%{version}
 %{_libdir}/octave/%{version}/oct/
 %{_libdir}/octave/%{version}/octave-config-%{version}
@@ -447,6 +434,9 @@ make check
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Thu Apr 07 2022 Orion Poplawski <orion@nwra.com> - 6:7.1.0-1
+- Update to 7.1.0
+
 * Mon Feb 07 2022 Orion Poplawski <orion@nwra.com> - 6:6.4.0-5
 - Update gnulib cdefs.h for gcc12 support on ppc64le
 
