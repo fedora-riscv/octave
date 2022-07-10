@@ -14,6 +14,13 @@
 %global blaslib openblas
 %endif
 
+# No more Java on i686
+%ifarch %{java_arches}
+%bcond_without java
+%else
+%bcond_with java
+%endif
+
 # Compile with ILP64 BLAS - not yet working
 %bcond_with blas64
 
@@ -30,7 +37,7 @@
 Name:           octave
 Epoch:          6
 Version:        7.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -46,6 +53,8 @@ Patch0:         bug62436.patch
 # Deprecate rather than remove support for old numeric linestyles that broke vfrnav tests
 # https://savannah.gnu.org/bugs/index.php?62470
 Patch1:         octave-linestyles.patch
+# Add needed time.h header
+Patch2:         octave-time.patch
 
 Provides:       octave(api) = %{octave_api}
 Provides:       bundled(gnulib)
@@ -94,9 +103,11 @@ BuildRequires:  gnuplot
 BuildRequires:  gperf
 BuildRequires:  GraphicsMagick-c++-devel
 BuildRequires:  hdf5-devel
+%if %{with java}
 BuildRequires:  java-devel
 %if 0%{?fedora}
 BuildRequires:  javapackages-local
+%endif
 %endif
 BuildRequires:  less
 BuildRequires:  libsndfile-devel
@@ -141,7 +152,9 @@ Requires:       gnuplot
 Requires:       gnuplot-common
 Requires:       hdf5 = %{_hdf5_version}
 Requires:       hicolor-icon-theme
+%if %{with java}
 Requires:       java-headless
+%endif
 Requires:       less
 Requires:       info
 Requires:       texinfo
@@ -218,9 +231,11 @@ export F77=gfortran
 %if !%{builddocs}
 %global disabledocs --disable-docs
 %endif
+%if %{with java}
 # Find libjvm.so for this architecture in generic location
 libjvm=$(find /usr/lib/jvm/jre/lib -name libjvm.so -printf %h)
 export JAVA_HOME=%{java_home}
+%endif
 # JIT support is still experimental, and causes a segfault on ARM.
 # --enable-float-truncate - https://savannah.gnu.org/bugs/?40560
 # sundials headers need to know where to find suitesparse headers
@@ -241,8 +256,10 @@ fi
  %{?disabledocs} \
  --disable-silent-rules \
  --with-blas=%{blaslib}%{?with_blas64:64}  \
+%if %{with java}
  --with-java-includedir=/usr/lib/jvm/java/include \
  --with-java-libdir=$libjvm \
+%endif
  --with-qrupdate \
  --with-amd --with-umfpack --with-colamd --with-ccolamd --with-cholmod \
  --with-cxsparse \
@@ -434,6 +451,9 @@ make check
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Sun Jul 10 2022 Orion Poplawski <orion@nwra.com> - 6:7.1.0-2
+- Drop java for i686 (bz#2104081)
+
 * Thu Apr 07 2022 Orion Poplawski <orion@nwra.com> - 6:7.1.0-1
 - Update to 7.1.0
 
