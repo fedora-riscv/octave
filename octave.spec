@@ -36,8 +36,8 @@
 
 Name:           octave
 Epoch:          6
-Version:        7.1.0
-Release:        3%{?dist}
+Version:        7.2.0
+Release:        1%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -47,12 +47,6 @@ Source0:        https://ftp.gnu.org/gnu/octave/octave-%{version}.tar.lz
 # RPM macros for helping to build Octave packages
 Source1:        macros.octave
 Source2:        xorg.conf
-# Fix unlink failure on non-existent file in pkg build
-# https://savannah.gnu.org/bugs/index.php?62436
-Patch0:         bug62436.patch
-# Deprecate rather than remove support for old numeric linestyles that broke vfrnav tests
-# https://savannah.gnu.org/bugs/index.php?62470
-Patch1:         octave-linestyles.patch
 # Add needed time.h header
 Patch2:         octave-time.patch
 
@@ -451,6 +445,9 @@ make check
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Tue Aug 02 2022 Orion Poplawski <orion@nwra.com> - 6:7.2.0-1
+- Update to 7.2.0
+
 * Fri Jul 22 2022 Fedora Release Engineering <releng@fedoraproject.org> - 6:7.1.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
 
