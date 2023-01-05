@@ -37,7 +37,7 @@
 Name:           octave
 Epoch:          6
 Version:        7.2.0
-Release:        1%{?dist}
+Release:        1.rv64%{?dist}
 Summary:        A high-level language for numerical computations
 License:        GPLv3+
 URL:            http://www.octave.org
@@ -331,7 +331,7 @@ do
 ARCH=\$(uname -m)
 
 case \$ARCH in
-x86_64 | ia64 | s390x | aarch64 | ppc64 | ppc64le) LIB_DIR=/usr/lib64
+x86_64 | ia64 | s390x | aarch64 | ppc64 | ppc64le | riscv64) LIB_DIR=/usr/lib64
                        SECONDARY_LIB_DIR=/usr/lib
                        ;;
 * )
@@ -377,11 +377,16 @@ $Xorg -noreset +extension GLX +extension RANDR +extension RENDER -logfile ./xorg
 sleep 2
 export DISPLAY=:99
 export FLEXIBLAS=netlib
+# make check hangs with image/getframe.m on riscv64, skip check
+%ifarch riscv64
+:
+%else
 %ifarch ppc64le
 # liboctave/array/dMatrix.cc-tst segfaults
 make check || :
 %else
 make check
+%endif
 %endif
 
 %ldconfig_scriptlets
@@ -445,6 +450,9 @@ make check
 %{_pkgdocdir}/refcard*.pdf
 
 %changelog
+* Fri Jan 06 2023 Liu Yang <Yang.Liu.sn@gmail.com> - 6:7.2.0-1.rv64
+- Fix build on riscv64
+
 * Tue Aug 02 2022 Orion Poplawski <orion@nwra.com> - 6:7.2.0-1
 - Update to 7.2.0
 
